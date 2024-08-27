@@ -1,10 +1,11 @@
+require('dotenv').config();
 const { CosmosClient } = require("@azure/cosmos");
 let { sd, ed } = require("./api.js");
 const { setDate } = require("date-fns");
 //klucze powinno być trzymane w azure key vault
-const endpoint = "https://research123.documents.azure.com:443/";
+const endpoint = process.env.URI;
 const key =
-  "NSzazUTHZy6Ih8RLwJI0ejNFtE5hKtjRegvuVM8xq4NOU4G13rdovyaqnOUQiVdj5B1aumMFBgbEACDbFGYUYQ==";
+  process.env.KEY;
 const client = new CosmosClient({ endpoint, key });
 const databaseId = "Test Database";
 const containerId = "Test Database"; //"TestContainerId";
