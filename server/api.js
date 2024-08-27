@@ -1,5 +1,6 @@
 const { reply, queryContainerDecybels } = require("./DatabaseApp.js");
 const bp = require("body-parser");
+const {main} = require("./DatabaseApp.js")
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -10,8 +11,10 @@ app.use(bp.urlencoded({ extended: true }));
 let starterDate = null;
 let enderDate = null;
 
-app.get("/api", (req, res) => {
-  return res.json({ message: reply });
+app.get("/api", async (req, res) => {
+  // return res.json({ message: reply });
+  const result = await main();
+  return res.json({message: result});
 });
 const options = {
   day: "2-digit", // Dzień z zerem na początku
@@ -30,7 +33,7 @@ app.post("/api/data", async (req, res) => {
   exports.sd = starterDate;
   console.log(`api start ${starterDate}, ${enderDate}`);
   exports.ed = enderDate;
-  const result = await queryContainerDecybels();
+  const result = await main();
   console.log(`wynik${result}`);
   return res.json({ message: result });
 });

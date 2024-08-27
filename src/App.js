@@ -83,7 +83,7 @@ function BaseConnect() {
       .then((data) => setData(data.message))
       .catch((err) => console.log(err));
   }, [data]);
-  if (data !== null) {
+  if (data ) {
     for (let i = 0; i <= 1; i++) {
       data[i] = data[i].sort(function (a, b) {
         return new Date(a.date) - new Date(b.date);

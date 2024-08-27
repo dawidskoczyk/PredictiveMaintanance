@@ -1,12 +1,35 @@
 require('dotenv').config();
+const az_identity = require('@azure/identity');
+const az_kv = require('@azure/keyvault-secrets');
 const { CosmosClient } = require("@azure/cosmos");
 let { sd, ed } = require("./api.js");
 const { setDate } = require("date-fns");
 //klucze powinno być trzymane w azure key vault
-const endpoint = process.env.URI;
-const key =
-  process.env.KEY;
+const credential = new az_identity.DefaultAzureCredential();
+const clientkv = new az_kv.SecretClient('https://predictivemaintenance12.vault.azure.net/', credential);
+async function getSecrets() {
+  try {
+    const uriSecret = await clientkv.getSecret('URI');
+    const keySecret = await clientkv.getSecret('KEY');
+
+    const URI = uriSecret.value;
+    const key = keySecret.value;
+    
+    console.log('URI:', URI);
+    console.log('Key:', key);
+    return { URI, key };
+  }
+    catch (err) {
+      console.error('Error retrieving secrets:', err);
+      return null;
+    }
+  }
+  async function main() {
+const {URI, key}  = await getSecrets();
+console.log(URI, key);
+const endpoint = URI;
 const client = new CosmosClient({ endpoint, key });
+console.log(`client ${client}`)
 const databaseId = "Test Database";
 const containerId = "Test Database"; //"TestContainerId";
 const partitionKey = { kind: "Hash", paths: ["/partitionKey"] };
@@ -151,16 +174,25 @@ async function queryContainerDecybels() {
   console.log(`wpisano do tablicy query results ${queryData}`);
   return data[1];
 }
+await createDatabase();
+await readContainer();
+await queryContainer();
+const result = await queryContainerDecybels();
 
-createDatabase()
-  .then(() => readContainer())
-  .then(() => queryContainer())
-  .then(() => queryContainerDecybels()) //createFamilyItem(items2.Temperatura))
-  .catch((error) => {
-    console.log(error);
-  });
+return data;
 
-module.exports = {
-  reply: data,
-  queryContainerDecybels: queryContainerDecybels,
-};
+// createDatabase()
+//   .then(() => readContainer())
+//   .then(() => queryContainer())
+//   .then(() => queryContainerDecybels()) //createFamilyItem(items2.Temperatura))
+//   .catch((error) => {
+//     console.log(error);
+//   });
+  
+// module.exports = {
+//   reply: data,
+//   queryContainerDecybels: queryContainerDecybels,
+// }
+}
+module.exports = {main}
+
