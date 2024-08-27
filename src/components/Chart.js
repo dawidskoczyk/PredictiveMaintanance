@@ -12,31 +12,22 @@ defaults.plugins.title.color = "black";
 
 export const Chart = ({ initialData = [] }) => {
   const [data, setData] = useState([]);
-  if (data !== initialData) setData(initialData);
-  console.log(data[1]);
+  if (data !== initialData) {
+    // initialData[1] = initialData[1].sort(function (a, b) {
+    //   return new Date(a.date) - new Date(b.date);
+    // });
+    setData(initialData);
+  }
   if (!data[0]) {
     return <div>Data is not available</div>;
   }
   return (
-    <div style={{ width: "1000px", height: "500px" }}>
-      <Bar
-        data={{
-          labels: data[0].map((data) => data.time),
-          datasets: [
-            {
-              label: "Ravenue",
-              data: [20, 30, 40],
-            },
-            {
-              label: "Loss",
-              data: data ? data[0].map((data) => data.amount) : [1, 1, 1],
-            },
-          ],
-        }}
-      ></Bar>
+    <div style={{ width: "1000px", height: "500px", marginLeft: "4%" }}>
       <Line
         data={{
-          labels: data[1].map((data) => data.date),
+          labels: data[1].map((data) =>
+            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
+          ),
           datasets: [
             {
               label: "Temperature",
@@ -59,6 +50,25 @@ export const Chart = ({ initialData = [] }) => {
           },
         }}
       ></Line>
+      <Bar
+        data={{
+          labels: data[0].map((data) =>
+            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
+          ),
+          datasets: [
+            {
+              label: "Risk of failure",
+              data: [10, 10, 10, 12, 12, 14, 14, 16, 16, 18, 16, 18],
+              backgroundColor: "red",
+            },
+            {
+              label: "Temperature",
+              data: data ? data[0].map((data) => data.amount) : [1, 1, 1],
+              backgroundColor: "lightblue",
+            },
+          ],
+        }}
+      ></Bar>
     </div>
   );
 };

@@ -83,14 +83,19 @@ function BaseConnect() {
       .then((data) => setData(data.message))
       .catch((err) => console.log(err));
   }, [data]);
+  if (data !== null) {
+    for (let i = 0; i <= 1; i++) {
+      data[i] = data[i].sort(function (a, b) {
+        return new Date(a.date) - new Date(b.date);
+      });
+    }
+  }
 
   return (
     <div>
-      <h1 style={{ color: "blue", marginLeft: 50 }}>
-        {data ? "Testing data from sensors" : "loading..."}
-      </h1>
       {data ? (
         <div>
+          <h2 style={{ marginLeft: "4%" }}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
               <tr>
@@ -98,7 +103,12 @@ function BaseConnect() {
                   Parameter
                 </th>
                 {Array.from({ length: 12 }).map((_, index) => (
-                  <th key={index}>{data[0][index].time}</th>
+                  <th key={index}>
+                    {data[0][index]?.date
+                      .replace("2024-", " ")
+                      .replace("T", " ")
+                      .replace("Z", " ")}
+                  </th>
                 ))}
               </tr>
             </thead>
@@ -130,19 +140,35 @@ function BaseConnect() {
                   </td>
                 ))}
               </tr>
+              <h2 style={{ marginLeft: "4%" }}>Filtered data</h2>
+              <tr>
+                <th style={{ backgroundColor: "black", color: "white" }}>
+                  Parameter
+                </th>
+                {Array.from({ length: 12 }).map((_, index) => (
+                  <th key={index}>
+                    {data[1][index]?.date
+                      .replace("2024-", " ")
+                      .replace("T", " ")
+                      .replace("Z", " ")}
+                  </th>
+                ))}
+              </tr>
               <tr>
                 <td style={{ backgroundColor: "grey", color: "white" }}>
-                  Volume (dB)
+                  Temperature (&#176;C)
                 </td>
                 {Array.from({ length: data[1].length }).map((_, index) => (
                   <td
                     key={index}
                     style={
-                      +data[1][index].amount > thresholdUpdB
+                      +data[1][index].amount > thresholdUpC
                         ? { backgroundColor: "red" }
-                        : +data[1][index].amount < thresholdMediumdB
+                        : +data[1][index].amount > thresholdMediumC
+                        ? { backgroundColor: "orange" }
+                        : +data[1][index].amount > thresholdDownC
                         ? { backgroundColor: "green" }
-                        : { backgroundColor: "orange" }
+                        : { backgroundColor: "cyan" }
                     }
                   >
                     {data[1][index].amount}{" "}

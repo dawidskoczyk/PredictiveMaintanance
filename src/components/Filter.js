@@ -27,17 +27,19 @@ const Filter = ({ onChange, startDate, endDate }) => {
   };
   const [clicked, setClicked] = useState(false);
   return (
-    <div>
-      <button
-        onClick={() => {
-          setClicked((prevState) => !prevState);
+    <div style={{ display: "flex" }}>
+      <div style={{ marginLeft: "2%", paddingTop: "1%" }}>
+        <button
+          onClick={() => {
+            setClicked((prevState) => !prevState);
 
-          if (clicked) window.location.reload();
-        }}
-        className="button-64"
-      >
-        <span>{!clicked ? "Show Date Picker" : "Set Date Range"}</span>
-      </button>
+            // if (clicked) window.location.reload();
+          }}
+          className="button-64"
+        >
+          <span>{!clicked ? "Show Date Picker" : "Set Date Range"}</span>
+        </button>
+      </div>
       {clicked && (
         <div className="datepicker-overlay">
           <DateRangePicker
@@ -51,6 +53,12 @@ const Filter = ({ onChange, startDate, endDate }) => {
           />
         </div>
       )}
+
+      <div>
+        <h1 style={{ color: "blue", marginLeft: 50 }}>
+          Testing data from sensors
+        </h1>
+      </div>
     </div>
   );
 };

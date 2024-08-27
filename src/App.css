@@ -34,6 +34,7 @@ td {
 table {
   border-collapse: collapse;
   margin-left: 50px;
+  min-width: max-content;
 }
 .App-link {
   color: #61dafb;
