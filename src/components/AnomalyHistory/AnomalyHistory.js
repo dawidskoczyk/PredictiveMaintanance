@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { MyCalendar} from './HistoryComponents/BigCalendar';
 export function History() {
   return (
     <div>
@@ -7,6 +8,7 @@ export function History() {
       <Link to="/home">
       <button>Home</button>
     </Link>
+    <MyCalendar></MyCalendar>
     </div>
   );
 }

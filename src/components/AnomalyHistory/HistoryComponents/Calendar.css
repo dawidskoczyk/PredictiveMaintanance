@@ -1,0 +1,30 @@
+.rbc-event{
+background-color: transparent;
+text-align: center;
+color:black;
+}
+.rbc-active{
+    background:lightseagreen !important;
+    padding:"10px";
+}
+.rbc-day-bg{
+    background: darkgray;
+}
+.rbc-off-range-bg{
+    background: lightgray;
+} 
+.rbc-month-header{
+    background: rgb(65, 61, 61);
+    color: aliceblue;
+}
+.rbc-time-slot {
+    flex: 1 0;
+    max-width: 100%;
+}
+.rbc-timeslot-group {
+    min-height:50px;
+}
+.rbc-event-content {
+    overflow-wrap: break-word; /* Ensures long words break and wrap to the next line */
+    word-break: break-word;
+}
