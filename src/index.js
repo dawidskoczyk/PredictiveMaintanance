@@ -4,17 +4,27 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
+import { MsalProvider } from "@azure/msal-react";
+import { PublicClientApplication } from "@azure/msal-browser";
+import { msalConfig } from './azure/AuthConfig';
+// Tworzenie instancji PublicClientApplication
+const pca = new PublicClientApplication(msalConfig);
 
+// Utworzenie korzenia aplikacji
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+// Renderowanie aplikacji
 root.render(
   <React.StrictMode>
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
+    <MsalProvider instance={pca}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </MsalProvider>
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+// Jeśli chcesz mierzyć wydajność swojej aplikacji, przekaż funkcję
+// do logowania wyników (na przykład: reportWebVitals(console.log))
+// lub wyślij do punktu końcowego analityki. Dowiedz się więcej: https://bit.ly/CRA-vitals
 reportWebVitals();
