@@ -5,6 +5,9 @@ import { addDays } from "date-fns";
 //import BaseConnect from "./components/BaseConnect";
 import DatePicker from "./components/Filter.js";
 import { Chart } from "./components/Chart.js";
+import {Menu} from "./components/Menu.js";
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
 let dynamicData = [];
 function App() {
   //const [fetched, setFetch] = useState(false);
@@ -57,13 +60,27 @@ function App() {
   //       .catch((err) => console.log(err));
   //   }
   // }, [dates, fetched, ranges.endDate, ranges.startDate]);
-
+const location = useLocation();
   return (
     <div>
-      <DatePicker onChange={OnChange} />
-      <BaseConnect />
-
-      <ResponsiveExample />
+ {location.pathname === '/history' ? (
+  <>
+        <Menu />
+        <Routes>
+          <Route path="/history" element={<History />} />
+        </Routes>
+        </>
+      ) : (
+        <>
+          <Menu />
+          <Routes>
+            <Route path="/history" element={<History />} />
+          </Routes>
+          <DatePicker onChange={OnChange} />
+          <BaseConnect />
+          <ResponsiveExample />
+        </>
+      )}
     </div>
   );
 }
@@ -132,7 +149,7 @@ function BaseConnect() {
                         : +data[0][index].amount > thresholdMediumC
                         ? { backgroundColor: "orange" }
                         : +data[0][index].amount > thresholdDownC
-                        ? { backgroundColor: "green" }
+                        ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >
@@ -167,7 +184,7 @@ function BaseConnect() {
                         : +data[1][index].amount > thresholdMediumC
                         ? { backgroundColor: "orange" }
                         : +data[1][index].amount > thresholdDownC
-                        ? { backgroundColor: "green" }
+                        ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >

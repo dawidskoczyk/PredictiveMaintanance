@@ -55,7 +55,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
       )}
 
       <div>
-        <h1 style={{ color: "blue", marginLeft: 50 }}>
+        <h1 style={{ color: "blue", marginLeft: 50, marginTop: 20 }}>
           Testing data from sensors
         </h1>
       </div>
