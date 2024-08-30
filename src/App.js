@@ -1,6 +1,7 @@
 import "./App.css";
 import React from 'react';
-import { loginRequest } from './azure/AuthConfig';
+import { loginRequest } from './azure/AuthConfig'; //import configa
+import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal, MsalProvider } from "@azure/msal-react";
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { addDays } from "date-fns";
@@ -10,45 +11,12 @@ import { Chart } from "./components/Chart.js";
 import {Menu} from "./components/Menu.js";
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
-import { useMsal, useIsAuthenticated } from '@azure/msal-react';
-import { InteractionType } from '@azure/msal-browser';
 let dynamicData = [];
 function App() {
   //const [fetched, setFetch] = useState(false);
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
   const [dates, setDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Stan ładowania
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = useIsAuthenticated();
-  const [userDetails, setUserDetails] = useState(null);
-  useEffect(() => {
-    if (!isAuthenticated) {
-      instance.loginRedirect(loginRequest).catch(e => console.error(e));
-    }
-  }, [instance, isAuthenticated]);
-  useEffect(() => {
-    if (isAuthenticated && accounts[0]) {
-      const fetchUserDetails = async () => {
-        try {
-          const response = await instance.acquireTokenSilent({
-            scopes: ["User.Read"],
-            account: accounts[0],
-          });
-          const { accessToken } = response;
-          const userResponse = await fetch("https://graph.microsoft.com/v1.0/me", {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          });
-          const userData = await userResponse.json();
-          setUserDetails(userData);
-        } catch (error) {
-          console.error("Error fetching user details:", error);
-        }
-      };
-      fetchUserDetails();
-    }
-  }, [isAuthenticated, accounts, instance]);
 
   // Funkcja obsługująca wysłanie danych do serwera
   const handleSubmit = async (startDate, endDate) => {
