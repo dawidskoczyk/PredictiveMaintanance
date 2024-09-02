@@ -1,23 +1,27 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
-import { useMsal,useIsAuthenticated  } from '@azure/msal-react';
-import { loginRequest } from '../azure/AuthConfig';
-export function Menu() {
-  const { instance, accounts } = useMsal();
-  const isAuthenticated = useIsAuthenticated(); // Sprawdzenie, czy użytkownik jest zalogowany
+import { Link, useNavigate } from 'react-router-dom';
+export function Menu({ isAuthenticated, setIsAuthenticated }) {
+  // Define custom login and logout handlers
+  const navigate = useNavigate(); // Initialize the useNavigate hook
 
   const handleLogin = () => {
-    instance.loginRedirect(loginRequest)
+    // Redirect to login page or show login form
+    navigate('/login'); // Programmatically navigate to the login page
   };
 
-  // Funkcja obsługująca wylogowanie
   const handleLogout = () => {
-    instance.logoutRedirect({
-      postLogoutRedirectUri: "http://localhost:3000", // Po wylogowaniu przekierowanie na stronę główną
-    });
+    // Handle logout logic
+    console.log("Logout clicked");
+    setIsAuthenticated(false); // Update authentication state
   };
+
+  const handleSignUp = () => {
+    // Redirect to signup page or show signup form
+    navigate('/register'); // Programmatically navigate to the signup page
+  };
+
 
   return (
     <Navbar className="bg-body-tertiary" style={{ width: "100%" }}>
@@ -29,16 +33,21 @@ export function Menu() {
           {isAuthenticated ? (
             <>
               <Navbar.Text style={{ marginRight: "5%" }}>
-                Signed in as: {accounts[0]?.name || 'User'}
+                {/* Signed in as: {accounts[0]?.name || 'User'} */}
               </Navbar.Text>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>
                 🚪 Log Out
               </Navbar.Brand>
             </>
           ) : (
-            <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogin}>
-              🔑 Log In
-            </Navbar.Brand>
+<>
+              <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleSignUp}>
+                ✍️ Sign Up
+              </Navbar.Brand>
+              <Navbar.Brand style={{ marginLeft: "10%", cursor: 'pointer' }} onClick={handleLogin}>
+                🔑 Log In
+              </Navbar.Brand>
+            </>
           )}
         </Navbar.Collapse>
       </Container>
