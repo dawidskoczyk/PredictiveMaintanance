@@ -1,7 +1,5 @@
 import "./App.css";
 import React from 'react';
-import { loginRequest } from './azure/AuthConfig'; //import configa
-import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal, MsalProvider } from "@azure/msal-react";
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { addDays } from "date-fns";
@@ -11,13 +9,25 @@ import { Chart } from "./components/Chart.js";
 import {Menu} from "./components/Menu.js";
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
+import { Login } from './login/SignIn.js';  // Import SignIn component
+import { Register } from './login/SignUp.js';  // Import SignIn component
+import { AuthProvider } from './login/AuthContext.js';  // Import SignIn component
+import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
+
 let dynamicData = [];
 function App() {
   //const [fetched, setFetch] = useState(false);
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
   const [dates, setDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Stan ładowania
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
 
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+    }
+  }, []);
   // Funkcja obsługująca wysłanie danych do serwera
   const handleSubmit = async (startDate, endDate) => {
     // Wysyłanie danych do serwera Express
@@ -69,16 +79,24 @@ const location = useLocation();
     <div>
  {location.pathname === '/history' ? (
   <>
+  
         <Menu />
+        <AuthProvider>
         <Routes>
-          <Route path="/history" element={<History />} />
-        </Routes>
+        <Route path="/history" element={<ProtectedRoute element={<History />} />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+          </Routes>
+          </AuthProvider>
+
         </>
       ) : (
         <>
           <Menu />
           <Routes>
             <Route path="/history" element={<History />} />
+            <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
           </Routes>
           <DatePicker onChange={OnChange} />
           <BaseConnect />
