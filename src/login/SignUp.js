@@ -44,7 +44,7 @@ export const Register = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-                <input
+        <input
           type="password"
           placeholder="Confirm password"
           value={confirmPassword}
