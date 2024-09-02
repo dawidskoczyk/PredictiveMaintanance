@@ -11,8 +11,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect to the "insertDB" database and access its "haiku" collection
-    const database = client.db("TestBase");
-    const haiku = database.collection("TestData");
+    const database = client.db("NormalBase");
+    const haiku = database.collection("NormalData");
     
     // Create a document to insert
     const doc = {
@@ -20,10 +20,7 @@ async function run() {
       timestamp: new Date()
     }
     // Insert the defined document into the "haiku" collection
-    const result = await haiku.insertOne({
-      item: "exampleItem",
-      timestamp: new Date("2024-09-02T09:54:22Z")  // Replace with your desired date and time
-  });
+    const result = await haiku.insertOne(doc);
     // Print the ID of the inserted document
     console.log(`A document was inserted with the _id: ${result.insertedId}`);
   } finally {
