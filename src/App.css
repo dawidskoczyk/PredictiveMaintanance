@@ -4,10 +4,13 @@ body {
 .App {
   text-align: center;
 }
-
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+th{
+  text-align: center !important; 
+  
 }
 
 @media (prefers-reduced-motion: no-preference) {

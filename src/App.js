@@ -137,7 +137,7 @@ function BaseConnect() {
               <tr>
                 <td
                   style={{
-                    width: "150px",
+                    width: "120px",
                     backgroundColor: "purple",
                     color: "white",
                   }}
@@ -149,7 +149,7 @@ function BaseConnect() {
                     key={index}
                     style={
                       +data[0][index].amount > thresholdUpC
-                        ? { backgroundColor: "red" }
+                        ? { backgroundColor: "red"}
                         : +data[0][index].amount > thresholdMediumC
                         ? { backgroundColor: "orange" }
                         : +data[0][index].amount > thresholdDownC
