@@ -11,7 +11,7 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
 import { Login } from './login/SignIn.js';  // Import SignIn component
 import { Register } from './login/SignUp.js';  // Import SignIn component
-import { AuthProvider } from './login/AuthContext.js';  // Import SignIn component
+import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import SignIn component
 import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
 
 let dynamicData = [];
@@ -74,37 +74,38 @@ function App() {
   //       .catch((err) => console.log(err));
   //   }
   // }, [dates, fetched, ranges.endDate, ranges.startDate]);
-const location = useLocation();
-  return (
-    <div>
- {location.pathname === '/history' ? (
-  <>
+  function HomePage() {
+    const { isAuthenticated } = useAuth();
   
-        <Menu />
-        <AuthProvider>
-        <Routes>
+    return (
+      <div>
+        {isAuthenticated ? (
+          <>
+            <DatePicker onChange={OnChange} />
+            <BaseConnect />
+          </>
+        ) : (
+          <div className="home-page">
+            <h2>Welcome to the App</h2>
+            <p>Please log in to access the main features.</p>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+const location = useLocation();
+return (
+    <AuthProvider>
+      <Menu />
+      <Routes>
+        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-          </Routes>
-          </AuthProvider>
-
-        </>
-      ) : (
-        <>
-          <Menu />
-          <Routes>
-            <Route path="/history" element={<History />} />
-            <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-          </Routes>
-          <DatePicker onChange={OnChange} />
-          <BaseConnect />
-          <ResponsiveExample />
-        </>
-      )}
-    </div>
-  );
+      </Routes>
+    </AuthProvider>
+);
 }
 function BaseConnect() {
   const defaultData = [1, 1, 1];
