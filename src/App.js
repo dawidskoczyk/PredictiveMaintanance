@@ -76,6 +76,7 @@ function App() {
   // }, [dates, fetched, ranges.endDate, ranges.startDate]);
   function HomePage() {
     const { isAuthenticated } = useAuth();
+    //const { Authenticated } = false;
   
     return (
       <div>
@@ -99,7 +100,7 @@ return (
     <AuthProvider>
       <Menu />
       <Routes>
-        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
+        <Route path="/home" element={<HomePage />} />
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
@@ -121,15 +122,16 @@ function BaseConnect() {
     fetch("http://localhost:5001/api")
       .then((res) => res.json())
       .then((data) => setData(data.message))
+      .then((data) => console.log(data))
       .catch((err) => console.log(err));
   }, [data]);
-  if (data ) {
-    for (let i = 0; i <= 1; i++) {
-      data[i] = data[i].sort(function (a, b) {
-        return new Date(a.date) - new Date(b.date);
-      });
-    }
-  }
+  // if (data ) {
+  //   for (let i = 0; i <= 1; i++) {
+  //     data[i] = data[i].sort(function (a, b) {
+  //       return new Date(a.date) - new Date(b.date);
+  //     });
+  //   }
+  // }
 
   return (
     <div>
@@ -144,10 +146,10 @@ function BaseConnect() {
                 </th>
                 {Array.from({ length: 12 }).map((_, index) => (
                   <th key={index}>
-                    {data[0][index]?.date
-                      .replace("2024-", " ")
+                    {data[index]?.date
+                      .replace("1900-", " ")
                       .replace("T", " ")
-                      .replace("Z", " ")}
+                      .replace("Z", " ").split('.')[0]}
                   </th>
                 ))}
               </tr>
@@ -167,16 +169,16 @@ function BaseConnect() {
                   <td
                     key={index}
                     style={
-                      +data[0][index].amount > thresholdUpC
+                      +data[index].value > thresholdUpC
                         ? { backgroundColor: "red"}
-                        : +data[0][index].amount > thresholdMediumC
+                        : +data[index].value > thresholdMediumC
                         ? { backgroundColor: "orange" }
-                        : +data[0][index].amount > thresholdDownC
+                        : +data[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >
-                    {data[0][index].amount}{" "}
+                    {data[index].value}{" "}
                   </td>
                 ))}
               </tr>
@@ -187,10 +189,10 @@ function BaseConnect() {
                 </th>
                 {Array.from({ length: 12 }).map((_, index) => (
                   <th key={index}>
-                    {data[1][index]?.date
-                      .replace("2024-", " ")
+                    {data[index]?.date
+                      .replace("1900-", " ")
                       .replace("T", " ")
-                      .replace("Z", " ")}
+                      .replace("Z", " ").split('.')[0]}
                   </th>
                 ))}
               </tr>
@@ -198,20 +200,20 @@ function BaseConnect() {
                 <td style={{ backgroundColor: "grey", color: "white" }}>
                   Temperature (&#176;C)
                 </td>
-                {Array.from({ length: data[1].length }).map((_, index) => (
+                {Array.from({ length: data.length }).map((_, index) => (
                   <td
                     key={index}
                     style={
-                      +data[1][index].amount > thresholdUpC
+                      +data[index].value > thresholdUpC
                         ? { backgroundColor: "red" }
-                        : +data[1][index].amount > thresholdMediumC
+                        : +data[index].value > thresholdMediumC
                         ? { backgroundColor: "orange" }
-                        : +data[1][index].amount > thresholdDownC
+                        : +data[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >
-                    {data[1][index].amount}{" "}
+                    {data[index].value}{" "}
                   </td>
                 ))}
               </tr>

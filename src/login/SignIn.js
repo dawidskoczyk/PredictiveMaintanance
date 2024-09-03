@@ -22,6 +22,7 @@ export const Login = ({ setIsAuthenticated }) => {
       });
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         localStorage.setItem('token', data.token);
         setIsAuthenticated(true);
         navigate('/');

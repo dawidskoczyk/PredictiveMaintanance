@@ -25,13 +25,13 @@ export const Chart = ({ initialData = [] }) => {
     <div style={{ width: "1000px", height: "500px", marginLeft: "4%" }}>
       <Line
         data={{
-          labels: data[1].map((data) =>
-            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
+          labels: data.map((data) =>
+            data.date.replace("1900-", " ").replace("T", " ").replace("Z", "")
           ),
           datasets: [
             {
               label: "Temperature",
-              data: data[1].map((data) => data.amount),
+              data: data.map((data) => data.value),
               backgroundColor: "#064FF0",
               borderColor: "#064FF0",
             },
@@ -52,8 +52,8 @@ export const Chart = ({ initialData = [] }) => {
       ></Line>
       <Bar
         data={{
-          labels: data[0].map((data) =>
-            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
+          labels: data.map((data) =>
+            data.date.replace("1900-", " ").replace("T", " ").replace("Z", "")
           ),
           datasets: [
             {
@@ -63,7 +63,7 @@ export const Chart = ({ initialData = [] }) => {
             },
             {
               label: "Temperature",
-              data: data ? data[0].map((data) => data.amount) : [1, 1, 1],
+              data: data ? data.map((data) => data.value) : [1, 1, 1],
               backgroundColor: "lightblue",
             },
           ],

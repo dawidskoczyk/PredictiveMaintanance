@@ -2,6 +2,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const { reply, queryContainerDecybels } = require("./DatabaseApp.js");
 const bp = require("body-parser");
 const {main} = require("./DatabaseApp.js")
+const {mainoo} = require("./mongo/MongoConnect.js")
 const jwt = require('jsonwebtoken');
 const express = require("express");
 const cors = require("cors");
@@ -26,7 +27,7 @@ let enderDate = null;
 
 app.get("/api", async (req, res) => {
   // return res.json({ message: reply });
-  const result = await main();
+  const result = await mainoo();
   return res.json({message: result});
 });
 const options = {
@@ -79,6 +80,7 @@ app.post('/login', async (req, res) => {
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = jwt.sign({ username }, secret, { expiresIn: '1h' });
       res.json({ token });
+      console.log("wszystko działa w loginie")
     } else {
       res.status(401).send('Invalid credentials');
       console.log("zle dane");
