@@ -9,16 +9,30 @@ export const Register = () => {
   const [email, setMail] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Placeholder logic for registration
-    // Replace with actual API call when backend is ready
-    if (username && password) {
-      alert('Registered successfully!');
-      navigate('/login');
-    } else {
-      alert('Please enter all required fields');
+    if (!username || !password || !confirmPassword || !email) {
+      alert('Please fill in all fields');
+      return;
+    }
+    if (password !== confirmPassword) {
+      alert('Passwords do not match');
+      return;
+    }
+    try {
+      const response = await fetch('http://localhost:5001/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password, email })
+      });
+      if (response.ok) {
+        alert('Registered successfully!');
+        navigate('/login');
+      } else {
+        alert(Error.name);
+      }
+    } catch (err) {
+      alert('An error occurred');
     }
   };
 

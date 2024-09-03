@@ -7,20 +7,31 @@ export const Login = ({ setIsAuthenticated }) => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    // Placeholder logic for authentication
-    // Replace with actual API call when backend is ready
-    if (username && password) {
-      localStorage.setItem('token', 'dummy-jwt-token');
-      setIsAuthenticated(true);
-      navigate('/');
-    } else {
+    if (!username || !password) {
       alert('Please enter username and password');
+      return;
+    }
+
+    try {
+      const response = await fetch('http://localhost:5001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('token', data.token);
+        setIsAuthenticated(true);
+        navigate('/');
+      } else {
+        alert('Invalid credentials');
+      }
+    } catch (err) {
+      alert('An error occurred');
     }
   };
-
   return (
     <div className="login-form">
       <h2>Login</h2>
