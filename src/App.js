@@ -16,12 +16,14 @@ import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj Protected
 import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
 
 let dynamicData = [];
+
 function App() {
   //const [fetched, setFetch] = useState(false);
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
   const [dates, setDates] = useState([]);
   const [isLoading, setIsLoading] = useState(true); // Stan ładowania
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
+  const [dynamicData, setDynamicData] = useState([]);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -48,9 +50,8 @@ function App() {
       const data = await response.json(); // Parsowanie odpowiedzi JSON
       console.log("Odpowiedź z serwera:", data.message);
       setDates(data.message);
+      setDynamicData(data.message);
       //window.location.reload();
-
-      dynamicData = data.message;
     } catch (error) {
       console.error("Błąd:", error);
     }
@@ -82,7 +83,7 @@ function App() {
         {isAuthenticated ? (
           <>
             <DatePicker onChange={OnChange} />
-            <BaseConnect />
+            <BaseConnect dynamicData={dynamicData} />
           </>
         ) : (
           <div className="home-page">
@@ -106,7 +107,7 @@ return (
     </AuthProvider>
 );
 }
-function BaseConnect() {
+function BaseConnect({ dynamicData }) {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
   const thresholdUpC = 33;
@@ -123,6 +124,7 @@ function BaseConnect() {
       .then((data) => console.log(data))
       .catch((err) => console.log(err));
   }, [data]);
+
   // if (data ) {
   //   for (let i = 0; i <= 1; i++) {
   //     data[i] = data[i].sort(function (a, b) {
@@ -130,12 +132,13 @@ function BaseConnect() {
   //     });
   //   }
   // }
+  console.log(dynamicData ? dynamicData : "ni ma danych");
 
   return (
     <div>
       {data ? (
         <div>
-          <h2 style={{ marginLeft: "4%" }}>Latest twelve data points</h2>
+          <h2 style={{ marginLeft: "4%", marginTop:'3%', fontSize:'48px', color:'red'}}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
               <tr>
@@ -180,17 +183,17 @@ function BaseConnect() {
                   </td>
                 ))}
               </tr>
-              <h2 style={{ marginLeft: "4%" }}>Filtered data</h2>
+              <h2 style={{ marginLeft: "4%", marginTop:"20%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
               <tr>
                 <th style={{ backgroundColor: "black", color: "white" }}>
                   Parameter
                 </th>
-                {Array.from({ length: 12 }).map((_, index) => (
+                {Array.from({  length: dynamicData.length }).map((_, index) => (
                   <th key={index}>
-                    {data[index]?.date
-                      .replace("1900-", " ")
+                    {dynamicData[index]?.date
+                      .replace("2024-", " ")
                       .replace("T", " ")
-                      .replace("Z", " ").split('.')[0]}
+                      .replace("Z", " ")}
                   </th>
                 ))}
               </tr>
@@ -198,22 +201,22 @@ function BaseConnect() {
                 <td style={{ backgroundColor: "grey", color: "white" }}>
                   Temperature (&#176;C)
                 </td>
-                {Array.from({ length: data.length }).map((_, index) => (
+                {dynamicData ? Array.from({ length: dynamicData.length }).map((_, index) => (
                   <td
                     key={index}
                     style={
-                      +data[index].value > thresholdUpC
+                      +dynamicData[index].value > thresholdUpC
                         ? { backgroundColor: "red" }
-                        : +data[index].value > thresholdMediumC
+                        : +dynamicData[index].value > thresholdMediumC
                         ? { backgroundColor: "orange" }
-                        : +data[index].value > thresholdDownC
+                        : +dynamicData[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >
-                    {data[index].value}{" "}
+                    {dynamicData[index].value}{" "}
                   </td>
-                ))}
+                )):<p></p>}
               </tr>
               {/* <tr>
               <td>3</td>
@@ -223,7 +226,7 @@ function BaseConnect() {
             </tr> */}
             </tbody>
           </Table>
-          <Chart initialData={data || []} />
+          <Chart initialData={dynamicData || []} />
         </div>
       ) : (
         <p></p>

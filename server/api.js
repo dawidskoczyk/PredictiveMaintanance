@@ -1,7 +1,7 @@
 require('dotenv').config(); // Load environment variables from .env file
 const { reply, queryContainerDecybels } = require("./DatabaseApp.js");
 const bp = require("body-parser");
-const {main} = require("./DatabaseApp.js")
+const {mainFilter} = require("./mongo/MongoConnectFilter.js")
 const {mainoo} = require("./mongo/MongoConnect.js")
 const jwt = require('jsonwebtoken');
 const express = require("express");
@@ -40,14 +40,19 @@ app.post("/api/data", async (req, res) => {
   const endDate = req.body.endDate;
   const startingDate = new Date(startDate);
   const endingDate = new Date(endDate);
+  //endingDate === startingDate ?  endingDate.setHours(endingDate.getHours() + 24):console.log('not the same date');
   starterDate = startingDate?.toISOString();
+  startingDate.setHours(startingDate.getHours() + 2);
+let updatedStarterDate = startingDate.toISOString();
   //console.log(startDate, endDate);
   enderDate = endingDate?.toISOString();
+  endingDate.setHours(endingDate.getHours() + 26);
+  let updatedEndingDate = endingDate.toISOString();
   //console.log("Received data:", data);
-  exports.sd = starterDate;
+  exports.sd = updatedStarterDate;
   console.log(`api start ${starterDate}, ${enderDate}`);
-  exports.ed = enderDate;
-  const result = await main();
+  exports.ed = updatedEndingDate;
+  const result = await mainFilter();
   console.log(`wynik${result}`);
   return res.json({ message: result });
 });

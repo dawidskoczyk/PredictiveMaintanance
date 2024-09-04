@@ -22,7 +22,7 @@ export const Chart = ({ initialData = [] }) => {
     return <div>Data is not available</div>;
   }
   return (
-    <div style={{ width: "1000px", height: "500px", marginLeft: "4%" }}>
+    <div style={{ width: "1200px", height: "500px", marginLeft: "2%" }}>
       <Line
         data={{
           labels: data.map((data) =>
@@ -41,11 +41,13 @@ export const Chart = ({ initialData = [] }) => {
           elements: {
             line: {
               tension: 0.5,
+              showLine: false,
             },
           },
           plugins: {
             title: {
               text: "Temperature Chart",
+              
             },
           },
         }}
@@ -53,7 +55,7 @@ export const Chart = ({ initialData = [] }) => {
       <Bar
         data={{
           labels: data.map((data) =>
-            data.date.replace("1900-", " ").replace("T", " ").replace("Z", "")
+            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
           ),
           datasets: [
             {
@@ -64,7 +66,7 @@ export const Chart = ({ initialData = [] }) => {
             {
               label: "Temperature",
               data: data ? data.map((data) => data.value) : [1, 1, 1],
-              backgroundColor: "lightblue",
+              backgroundColor: data ? data.map((data) => data.value> 32? "red": data.value> 30 ? 'orange':data.value< 23 ? 'blue':'green'):'pink'
             },
           ],
         }}
