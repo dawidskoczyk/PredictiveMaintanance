@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './login.css'; // Importuj plik CSS
+
 
 export const Register = () => {
   const [username, setUsername] = useState('');
@@ -12,11 +15,11 @@ export const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password || !confirmPassword || !email) {
-      alert('Please fill in all fields');
+      toast.error('Please fill in all fields');
       return;
     }
     if (password !== confirmPassword) {
-      alert('Passwords do not match');
+      toast.error('Passwords do not match');
       return;
     }
     try {
@@ -26,13 +29,13 @@ export const Register = () => {
         body: JSON.stringify({ username, password, email })
       });
       if (response.ok) {
-        alert('Registered successfully!');
+        toast.success('Registered successfully! You could login now');
         navigate('/login');
       } else {
-        alert(Error.name);
+        toast.error(Error.name);
       }
     } catch (err) {
-      alert('An error occurred');
+      toast.error('An error occurred');
     }
   };
 

@@ -1,16 +1,20 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css'; // Importuj plik CSS
+import { useAuth } from './AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
 
-export const Login = ({ setIsAuthenticated }) => {
+
+export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const { setIsAuthenticated, setUsername: setAuthUsername } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password) {
-      alert('Please enter username and password');
+      toast.error('Please enter username and password');
       return;
     }
 
@@ -21,16 +25,17 @@ export const Login = ({ setIsAuthenticated }) => {
         body: JSON.stringify({ username, password })
       });
       if (response.ok) {
+        toast.success("Logged in sucesfully");
         const data = await response.json();
-        console.log(data);
         localStorage.setItem('token', data.token);
-        //setIsAuthenticated(true);
+        setIsAuthenticated(true);
+        setAuthUsername(username); // Ustaw imię użytkownika
         navigate('/home');
       } else {
-        alert('Invalid credentials');
+        toast.error("Bad login or password");
       }
     } catch (err) {
-      alert('An error occurred');
+      toast.error('Sites problems, try again later');
     }
   };
   return (

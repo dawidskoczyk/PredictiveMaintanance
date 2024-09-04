@@ -4,20 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
-// Tworzenie instancji PublicClientApplication
-// const pca = new PublicClientApplication(msalConfig);
+import { ToastContainer } from 'react-toastify';
 
-// Utworzenie korzenia aplikacji
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 // Renderowanie aplikacji
 root.render(
   <React.StrictMode>
-    {/* <MsalProvider instance={pca}> */}
       <BrowserRouter>
         <App />
+        <ToastContainer />
       </BrowserRouter>
-    {/* </MsalProvider> */}
   </React.StrictMode>
 );
 

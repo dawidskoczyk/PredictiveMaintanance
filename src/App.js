@@ -13,6 +13,7 @@ import { Login } from './login/SignIn.js';  // Import SignIn component
 import { Register } from './login/SignUp.js';  // Import SignIn component
 import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import SignIn component
 import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
+import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
 
 let dynamicData = [];
 function App() {
@@ -76,8 +77,6 @@ function App() {
   // }, [dates, fetched, ranges.endDate, ranges.startDate]);
   function HomePage() {
     const { isAuthenticated } = useAuth();
-    //const { Authenticated } = false;
-  
     return (
       <div>
         {isAuthenticated ? (
@@ -94,17 +93,16 @@ function App() {
       </div>
     );
   }
-
-const location = useLocation();
 return (
     <AuthProvider>
       <Menu />
       <Routes>
-        <Route path="/home" element={<HomePage />} />
+        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}  />
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
+      
     </AuthProvider>
 );
 }

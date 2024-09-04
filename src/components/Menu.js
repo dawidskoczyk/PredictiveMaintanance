@@ -2,9 +2,13 @@ import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
-export function Menu({ isAuthenticated, setIsAuthenticated }) {
+import { useAuth } from '../login/AuthContext';
+import { ToastContainer, toast } from 'react-toastify';
+export function Menu() {
   // Define custom login and logout handlers
   const navigate = useNavigate(); // Initialize the useNavigate hook
+  const { isAuthenticated, setIsAuthenticated, username } = useAuth(); // Use useAuth to get authentication state and username
+
 
   const handleLogin = () => {
     // Redirect to login page or show login form
@@ -12,9 +16,11 @@ export function Menu({ isAuthenticated, setIsAuthenticated }) {
   };
 
   const handleLogout = () => {
-    // Handle logout logic
     console.log("Logout clicked");
-    setIsAuthenticated(false); // Update authentication state
+    localStorage.removeItem('token');
+    setIsAuthenticated(false);
+    navigate('/login');
+    toast.success("Logged out sucessfully")
   };
 
   const handleSignUp = () => {
@@ -32,15 +38,15 @@ export function Menu({ isAuthenticated, setIsAuthenticated }) {
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
             <>
-              <Navbar.Text style={{ marginRight: "5%" }}>
-                {/* Signed in as: {accounts[0]?.name || 'User'} */}
+              <Navbar.Text style={{ marginRight: "1rem" }}>
+                Witaj: {username}!
               </Navbar.Text>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>
                 🚪 Log Out
               </Navbar.Brand>
             </>
           ) : (
-<>
+            <>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleSignUp}>
                 ✍️ Sign Up
               </Navbar.Brand>
