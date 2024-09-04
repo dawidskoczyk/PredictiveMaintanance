@@ -24,8 +24,8 @@ export const Login = ({ setIsAuthenticated }) => {
         const data = await response.json();
         console.log(data);
         localStorage.setItem('token', data.token);
-        setIsAuthenticated(true);
-        navigate('/');
+        //setIsAuthenticated(true);
+        navigate('/home');
       } else {
         alert('Invalid credentials');
       }

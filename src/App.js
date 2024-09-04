@@ -111,9 +111,9 @@ return (
 function BaseConnect() {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
-  const thresholdUpC = 24;
-  const thresholdMediumC = 22;
-  const thresholdDownC = 20;
+  const thresholdUpC = 33;
+  const thresholdMediumC = 30;
+  const thresholdDownC = 23;
   const thresholdUpdB = 75;
   const thresholdMediumdB = 65;
   const thresholdDowndB = 35;
