@@ -9,7 +9,7 @@ export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const { setIsAuthenticated, setUsername: setAuthUsername } = useAuth();
+  const { login } = useAuth(); // Używamy funkcji login z AuthContext
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,9 +27,7 @@ export const Login = () => {
       if (response.ok) {
         toast.success("Logged in sucesfully");
         const data = await response.json();
-        localStorage.setItem('token', data.token);
-        setIsAuthenticated(true);
-        setAuthUsername(username); // Ustaw imię użytkownika
+        login(data.token, username); // Zapisujemy token i nazwę użytkownika
         navigate('/home');
       } else {
         toast.error("Bad login or password");

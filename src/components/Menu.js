@@ -7,7 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 export function Menu() {
   // Define custom login and logout handlers
   const navigate = useNavigate(); // Initialize the useNavigate hook
-  const { isAuthenticated, setIsAuthenticated, username } = useAuth(); // Use useAuth to get authentication state and username
+  const { isAuthenticated, logout , username } = useAuth(); // Use useAuth to get authentication state and username
 
 
   const handleLogin = () => {
@@ -16,11 +16,13 @@ export function Menu() {
   };
 
   const handleLogout = () => {
-    console.log("Logout clicked");
-    localStorage.removeItem('token');
-    setIsAuthenticated(false);
-    navigate('/login');
-    toast.success("Logged out sucessfully")
+    logout(); // Wywołujemy funkcję logout z AuthContext
+    toast.success('Logged out successfully');
+    navigate('/login');  
+  };
+
+  const handleUserManagement = () => {
+    navigate('/user-management'); // Przejdź do strony zarządzania użytkownikami
   };
 
   const handleSignUp = () => {
@@ -38,7 +40,8 @@ export function Menu() {
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
             <>
-              <Navbar.Text style={{ marginRight: "1rem" }}>
+               <Navbar.Text 
+                style={{ marginRight: "1rem", cursor: 'pointer' }} onClick={handleUserManagement}>
                 Witaj: {username}!
               </Navbar.Text>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>

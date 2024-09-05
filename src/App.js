@@ -12,6 +12,7 @@ import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
 import { Login } from './login/SignIn.js';  // Import SignIn component
 import { Register } from './login/SignUp.js';  // Import SignIn component
 import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import SignIn component
+import { UserManagementPage } from "./userManagement/UserManagementPage.js";
 import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
 import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
 
@@ -99,6 +100,7 @@ return (
       <Menu />
       <Routes>
         <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}  />
+        <Route path="/user-management" element={<UserManagementPage />} /> 
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />

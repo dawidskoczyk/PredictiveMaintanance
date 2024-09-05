@@ -1,100 +1,133 @@
 require('dotenv').config(); // Load environment variables from .env file
-const { reply, queryContainerDecybels } = require("./DatabaseApp.js");
-const bp = require("body-parser");
-const {mainFilter} = require("./mongo/MongoConnectFilter.js")
-const {mainoo} = require("./mongo/MongoConnect.js")
-const jwt = require('jsonwebtoken');
-const express = require("express");
-const cors = require("cors");
+const express = require('express');
 const mongoose = require('mongoose');
-const app = express();
+const bp = require('body-parser');
+const cors = require('cors');
+const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // Import bcrypt
 const { connectToDatabase } = require('./db.js'); // Import the MongoDB connection
+const { mainFilter } = require('./mongo/MongoConnectFilter.js');
+const { mainoo } = require('./mongo/MongoConnect.js');
+
+// Initialize app
+const app = express();
 app.use(cors());
 app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
+
+// Define User model
 const User = mongoose.model('User', new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true }
 }));
+
 const secret = process.env.JWT_SECRET; // Use the secret from environment variables
 
+// Connect to the database
 connectToDatabase();
 
-let starterDate = null;
-let enderDate = null;
-
-app.get("/api", async (req, res) => {
-  // return res.json({ message: reply });
-  const result = await mainoo();
-  return res.json({message: result});
+// Define routes
+app.get('/api', async (req, res) => {
+  try {
+    const result = await mainoo();
+    res.json({ message: result });
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
-const options = {
-  day: "2-digit", // Dzień z zerem na początku
-  month: "2-digit", // Miesiąc bez zera na początku
-  year: "numeric", // Rok pełny
-};
-app.post("/api/data", async (req, res) => {
-  const startDate = req.body.startDate;
-  const endDate = req.body.endDate;
-  const startingDate = new Date(startDate);
-  const endingDate = new Date(endDate);
-  //endingDate === startingDate ?  endingDate.setHours(endingDate.getHours() + 24):console.log('not the same date');
-  starterDate = startingDate?.toISOString();
-  startingDate.setHours(startingDate.getHours() + 2);
-let updatedStarterDate = startingDate.toISOString();
-  //console.log(startDate, endDate);
-  enderDate = endingDate?.toISOString();
-  endingDate.setHours(endingDate.getHours() + 26);
-  let updatedEndingDate = endingDate.toISOString();
-  //console.log("Received data:", data);
-  exports.sd = updatedStarterDate;
-  console.log(`api start ${starterDate}, ${enderDate}`);
-  exports.ed = updatedEndingDate;
-  const result = await mainFilter();
-  console.log(`wynik${result}`);
-  return res.json({ message: result });
+
+app.post('/api/data', async (req, res) => {
+  const { startDate, endDate } = req.body;
+  try {
+    const startingDate = new Date(startDate);
+    const endingDate = new Date(endDate);
+
+    startingDate.setHours(startingDate.getHours() + 2);
+    endingDate.setHours(endingDate.getHours() + 26);
+
+    const result = await mainFilter(startingDate.toISOString(), endingDate.toISOString());
+    res.json({ message: result });
+  } catch (error) {
+    console.error('Error processing data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 });
 
 app.post('/register', async (req, res) => {
-  console.log("register clicked!");
   const { username, password, email } = req.body;
   if (!username || !password || !email) {
     return res.status(400).json({ message: 'Please fill in all fields' });
   }
-  
+
   try {
     const hashedPassword = bcrypt.hashSync(password, 8);
     const newUser = new User({ username, email, password: hashedPassword });
-    console.log(newUser.username);
     await newUser.save();
     res.status(201).send('User registered');
   } catch (err) {
     console.error('Error during registration:', err);
-    res.status(500).json({ message: 'User istnieje' });
+    res.status(500).json({ message: 'User already exists or internal error' });
   }
 });
 
-// Login endpoint
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log("wpisane login:", username);
   try {
     const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.password)) {
       const token = jwt.sign({ username }, secret, { expiresIn: '1h' });
       res.json({ token });
-      console.log("wszystko działa w loginie")
     } else {
       res.status(401).send('Invalid credentials');
-      console.log("zle dane");
     }
   } catch (err) {
     console.error('Error during login:', err);
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+// Define a router for user management
+const userRouter = express.Router();
+
+userRouter.put('/users/:id', async (req, res) => {
+  const { username, role } = req.body;
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { username, role },
+      { new: true }
+    );
+    res.json(updatedUser);
+  } catch (err) {
+    console.error('Error updating user:', err);
+    res.status(500).json({ message: 'Error updating user' });
+  }
+});
+
+userRouter.delete('/users/:id', async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+    res.json({ message: 'User deleted' });
+  } catch (err) {
+    console.error('Error deleting user:', err);
+    res.status(500).json({ message: 'Error deleting user' });
+  }
+});
+
+userRouter.get('/users', async (req, res) => {
+  try {
+    const users = await User.find();
+    res.json(users);
+  } catch (err) {
+    console.error('Error fetching users:', err);
+    res.status(500).json({ message: 'Error fetching users' });
+  }
+});
+
+app.use('/api', userRouter);
+
 app.listen(5001, () => {
-  console.log("listening");
+  console.log('Server listening on port 5001');
 });
