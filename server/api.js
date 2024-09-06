@@ -48,7 +48,7 @@ app.post('/api/data', async (req, res) => {
     startingDate.setHours(startingDate.getHours() + 2);
     endingDate.setHours(endingDate.getHours() + 26);
 
-    const result = await mainFilter(startingDate.toISOString(), endingDate.toISOString());
+    const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
     res.json({ message: result });
   } catch (error) {
     console.error('Error processing data:', error);

@@ -29,10 +29,12 @@ function MyCalendar() {
   const components = {
     event: (props) => {
       const { data } = props.event;
-      if (data.type === 'warning') {
-        return <div style={{ background: 'yellow' }}>{props.title}</div>;
-      } else {
-        return <div style={{ background: 'red' }}>{props.title}</div>;
+      if (data.x > 32) {
+        return <div style={{ background: 'red', color:'white' }}>{data?.x}</div>;
+      } else if (data.x > 30){
+        return <div style={{ background: 'yellow', color:'white' }}>{data?.x}</div>;
+      }else{
+        return <div style={{ background: 'green', color:'white' }}>{data?.x}</div>;
       }
     },
   };

@@ -27,15 +27,15 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect to the "NormalBase" database and access its "NormalData" collection
-    dynamicImport();
-    console.log(`2.startdata ${sd}, enddata ${ed}`);
+    // dynamicImport();
+    // console.log(`2.startdata ${sd}, enddata ${ed}`);
     
     const database = client.db("Cluster001");
     const collection = database.collection("TestData");
     const query = {
       date: {
-          $gte: sd,
-          $lte: ed
+        $gte: startDate,
+        $lte: endDate
       }
   };
     const result = await collection.find(query, {value: 1, date: 1}).sort({date:-1}).toArray();

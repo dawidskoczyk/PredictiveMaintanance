@@ -61,7 +61,7 @@ export const Chart = ({ initialData = [] }) => {
             {
               label: "Risk of failure",
               data: [10, 10, 10, 12, 12, 14, 14, 16, 16, 18, 16, 18],
-              backgroundColor: "red",
+              backgroundColor: "black",
             },
             {
               label: "Temperature",

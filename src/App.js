@@ -42,7 +42,7 @@ function App() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ startDate, endDate }),
+        body: JSON.stringify({ startDate: startDate.toISOString(), endDate: endDate.toISOString() }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -185,7 +185,11 @@ function BaseConnect({ dynamicData }) {
                   </td>
                 ))}
               </tr>
-              <h2 style={{ marginLeft: "4%", marginTop:"20%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
+              </tbody>
+              </Table>
+              <h2 style={{ marginLeft: "4%", marginTop:"5%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
+              <Table responsive>
+              <thead>
               <tr>
                 <th style={{ backgroundColor: "black", color: "white" }}>
                   Parameter
@@ -199,6 +203,8 @@ function BaseConnect({ dynamicData }) {
                   </th>
                 ))}
               </tr>
+              </thead>
+              <tbody>
               <tr>
                 <td style={{ backgroundColor: "grey", color: "white" }}>
                   Temperature (&#176;C)

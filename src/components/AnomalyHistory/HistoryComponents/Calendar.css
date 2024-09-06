@@ -32,3 +32,6 @@ color:black;
     overflow-wrap: break-word; /* Ensures long words break and wrap to the next line */
     word-break: break-word;
 }
+.rbc-event-label{
+    display:none;
+}
