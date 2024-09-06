@@ -42,7 +42,7 @@ export function Menu() {
             <>
                <Navbar.Text 
                 style={{ marginRight: "1rem", cursor: 'pointer' }} onClick={handleUserManagement}>
-                Witaj: {username}!
+                Manage users {username} !
               </Navbar.Text>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>
                 🚪 Log Out
