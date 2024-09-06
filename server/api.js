@@ -5,6 +5,7 @@ const bp = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // Import bcrypt
+const validator = require('validator'); // Import validator for email validation
 const { connectToDatabase } = require('./db.js'); // Import the MongoDB connection
 const { mainFilter } = require('./mongo/MongoConnectFilter.js');
 const { mainoo } = require('./mongo/MongoConnect.js');
@@ -20,7 +21,8 @@ app.use(bp.urlencoded({ extended: true }));
 const User = mongoose.model('User', new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  email: { type: String, required: true }
+  email: { type: String, required: true },
+  role: { type: String, default: 'user' } // Dodaj domyślną rolę
 }));
 
 const secret = process.env.JWT_SECRET; // Use the secret from environment variables
@@ -74,14 +76,14 @@ app.post('/api/dataCal', async (req, res) => {
 
 
 app.post('/register', async (req, res) => {
-  const { username, password, email } = req.body;
+  const { username, password, email, role } = req.body;  // Dodaj 'role'
+  console.log('register');
   if (!username || !password || !email) {
     return res.status(400).json({ message: 'Please fill in all fields' });
   }
-
   try {
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword });
+    const newUser = new User({ username, email, password: hashedPassword, role }); // Dodaj 'role'
     await newUser.save();
     res.status(201).send('User registered');
   } catch (err) {
@@ -110,11 +112,11 @@ app.post('/login', async (req, res) => {
 const userRouter = express.Router();
 
 userRouter.put('/users/:id', async (req, res) => {
-  const { username, role } = req.body;
+  const { username, role } = req.body;  // Dodaj 'role'
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { username, role },
+      { username, role },  // Dodaj 'role'
       { new: true }
     );
     res.json(updatedUser);

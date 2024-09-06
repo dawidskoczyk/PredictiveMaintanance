@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserList } from './UserList';
 import { UserManagement } from './UserManagement';
+import {toast } from 'react-toastify';
+import { Spinner } from 'react-bootstrap';  // Import Spinnera z React Bootstrap
 
 export const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isCreatingUser, setIsCreatingUser] = useState(false); 
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     // Fetch users from the server when the component mounts
@@ -17,7 +19,7 @@ export const UserManagementPage = () => {
         const response = await axios.get('http://localhost:5001/api/users');
         setUsers(response.data);
       } catch (error) {
-        setError('Error fetching users');
+        toast.error('Error fetching users');
         console.error('Error fetching users:', error);
       } finally {
         setLoading(false);
@@ -29,20 +31,26 @@ export const UserManagementPage = () => {
 
   const handleSelectUser = (user) => {
     setSelectedUser(user);
+    setIsCreatingUser(false);  // Nie tworzymy nowego użytkownika, gdy wybieramy istniejącego
   };
 
-  const handleAddUser = async () => {
-    const newUser = { username: 'NewUser', password: 'password', email: 'newuser@example.com', role: 'user' };
+  const handleAddUser = () => {
+    setSelectedUser(null);
+    setIsCreatingUser(true);  // Przełącz na tryb tworzenia użytkownika
+  };
+
+  const handleCreateUser = async (newUser) => {
     setLoading(true);
-    setError(null);
+    setIsCreatingUser(true);
     try {
-      await axios.post('http://localhost:5001/api/register', newUser);
-      // Refresh the user list
+      await axios.post('http://localhost:5001/register', newUser);
       const response = await axios.get('http://localhost:5001/api/users');
       setUsers(response.data);
+      toast.success("New user has been created!");
+      setIsCreatingUser(false);  // Powrót do normalnego trybu po dodaniu
     } catch (error) {
-      setError('Error adding user');
-      console.error('Error adding user:', error);
+      toast.error('Error creating user');
+      console.error('Error creating user:', error);
     } finally {
       setLoading(false);
     }
@@ -51,15 +59,16 @@ export const UserManagementPage = () => {
   const handleRemoveUser = async () => {
     if (selectedUser) {
       setLoading(true);
-      setError(null);
       try {
         await axios.delete(`http://localhost:5001/api/users/${selectedUser._id}`);
         // Refresh the user list
         const response = await axios.get('http://localhost:5001/api/users');
         setUsers(response.data);
+        toast.success("User has been deleted!");
+
         setSelectedUser(null);
       } catch (error) {
-        setError('Error removing user');
+        toast.error("Cannot delete user");
         console.error('Error removing user:', error);
       } finally {
         setLoading(false);
@@ -69,15 +78,15 @@ export const UserManagementPage = () => {
 
   const handleUpdateUser = async (updatedUser) => {
     setLoading(true);
-    setError(null);
     try {
       await axios.put(`http://localhost:5001/api/users/${updatedUser._id}`, updatedUser);
       // Refresh the user list
       const response = await axios.get('http://localhost:5001/api/users');
       setUsers(response.data);
+      toast.success("User has been updated!");
       setSelectedUser(updatedUser);
     } catch (error) {
-      setError('Error updating user');
+      toast.error("Cannot edit user");
       console.error('Error updating user:', error);
     } finally {
       setLoading(false);
@@ -86,15 +95,23 @@ export const UserManagementPage = () => {
 
   return (
     <div>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {loading && <div>Loading...</div>}
-      <UserList
+{loading && (
+        <div className="d-flex justify-content-center" style={{ padding: '20px' }}>
+          <Spinner animation="border" role="status"/>
+        </div>
+      )}      <UserList
         users={users}
+        selectedUser={selectedUser}
         onSelectUser={handleSelectUser}
         onAddUser={handleAddUser}
         onRemoveUser={handleRemoveUser}
       />
-      <UserManagement selectedUser={selectedUser} onUpdateUser={handleUpdateUser} />
+      <UserManagement
+        selectedUser={selectedUser}
+        onUpdateUser={handleUpdateUser}
+        isCreatingUser={isCreatingUser}
+        onCreateUser={handleCreateUser}  // Przekazanie nowej funkcji do tworzenia użytkownika
+      />
     </div>
   );
 };
