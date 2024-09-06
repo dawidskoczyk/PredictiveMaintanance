@@ -26,7 +26,7 @@ export const Chart = ({ initialData = [] }) => {
       <Line
         data={{
           labels: data.map((data) =>
-            data.date.replace("1900-", " ").replace("T", " ").replace("Z", "").split('.')[0]
+            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
           ),
           datasets: [
             {

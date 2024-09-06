@@ -150,7 +150,7 @@ function BaseConnect({ dynamicData }) {
                 {Array.from({ length: 12 }).map((_, index) => (
                   <th key={index}>
                     {data[index]?.date
-                      .replace("1900-", " ")
+                      .replace("2024-", " ")
                       .replace("T", " ")
                       .replace("Z", " ").split('.')[0]}
                   </th>
