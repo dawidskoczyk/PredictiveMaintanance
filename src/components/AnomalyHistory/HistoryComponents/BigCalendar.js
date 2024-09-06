@@ -88,7 +88,10 @@ function MyCalendar() {
         weekEvents.message.forEach((data) => {
           const startDate = new Date(data.date);
           const endDate = new Date(startDate);
-          endDate.setMinutes(startDate.getMinutes() + 15); // Add 15 minutes to the start time
+          endDate.setMinutes(startDate.getMinutes() + 14);
+          endDate.setHours(endDate.getHours() -2)
+          startDate.setHours(startDate.getHours() -2)
+          // Add 15 minutes to the start time
   
           // Push each event into the array
           eventsArray.push({

@@ -109,15 +109,24 @@ return (
     </AuthProvider>
 );
 }
-function BaseConnect({ dynamicData }) {
+function  BaseConnect({ dynamicData }) {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
+  const [dataAnomaly, setDataAnomaly] = useState([]);
   const thresholdUpC = 33;
   const thresholdMediumC = 30;
   const thresholdDownC = 23;
   const thresholdUpdB = 75;
   const thresholdMediumdB = 65;
   const thresholdDowndB = 35;
+
+  // useEffect(() => {
+  //   fetch("http://localhost:5001/api/dataAnomaly")
+  //     .then((res) => res.json())
+  //     .then((data) => setData(data.message))
+  //     .then((data) => console.log(data))
+  //     .catch((err) => console.log(err));
+  // }, [data]);
 
   useEffect(() => {
     fetch("http://localhost:5001/api")
@@ -206,7 +215,7 @@ function BaseConnect({ dynamicData }) {
               </thead>
               <tbody>
               <tr>
-                <td style={{ backgroundColor: "grey", color: "white" }}>
+                <td style={{ backgroundColor: "grey", color: "white", width:'150px' }}>
                   Temperature (&#176;C)
                 </td>
                 {dynamicData ? Array.from({ length: dynamicData.length }).map((_, index) => (
