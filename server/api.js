@@ -47,8 +47,8 @@ app.post('/api/data', async (req, res) => {
     const startingDate = new Date(startDate);
     const endingDate = new Date(endDate);
 
-    startingDate.setHours(startingDate.getHours() - 2);
-    endingDate.setHours(endingDate.getHours() + 22);
+    startingDate.setHours(startingDate.getHours() + 2);
+    endingDate.setHours(endingDate.getHours() + 26);
 
     const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
     res.json({ message: result });
@@ -64,8 +64,8 @@ app.post('/api/dataCal', async (req, res) => {
     const startingDate = new Date(startDate);
     const endingDate = new Date(endDate);
 
-    startingDate.setHours(startingDate.getHours()-2 );
-    endingDate.setHours(endingDate.getHours() +22);
+    startingDate.setHours(startingDate.getHours()+ 2 );
+    endingDate.setHours(endingDate.getHours() +26);
     const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
     res.json({ message: result });
   } catch (error) {
