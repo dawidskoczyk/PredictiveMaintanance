@@ -8,6 +8,7 @@ const bcrypt = require('bcryptjs'); // Import bcrypt
 const { connectToDatabase } = require('./db.js'); // Import the MongoDB connection
 const { mainFilter } = require('./mongo/MongoConnectFilter.js');
 const { mainoo } = require('./mongo/MongoConnect.js');
+const { mainFilterCal } = require('./mongo/MongoConnectFilterCalendar.js');
 
 // Initialize app
 const app = express();
@@ -54,6 +55,23 @@ app.post('/api/data', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
+app.post('/api/dataCal', async (req, res) => {
+  const { startDate, endDate } = req.body;
+  try {
+    const startingDate = new Date(startDate);
+    const endingDate = new Date(endDate);
+
+    startingDate.setHours(startingDate.getHours() -2);
+    endingDate.setHours(endingDate.getHours() +22);
+    const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
+    res.json({ message: result });
+  } catch (error) {
+    console.error('Error processing data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
 
 app.post('/register', async (req, res) => {
   const { username, password, email } = req.body;

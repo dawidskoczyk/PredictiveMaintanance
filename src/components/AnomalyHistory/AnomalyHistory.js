@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { MyCalendar} from './HistoryComponents/BigCalendar';
+import MyCalendar from './HistoryComponents/BigCalendar';
 export function History() {
   return (
     <div>

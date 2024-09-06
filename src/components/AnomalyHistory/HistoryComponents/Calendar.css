@@ -26,7 +26,7 @@ color:black;
     max-width: 100%;
 }
 .rbc-timeslot-group {
-    min-height:50px;
+    min-height:100px;
 }
 .rbc-event-content {
     overflow-wrap: break-word; /* Ensures long words break and wrap to the next line */
