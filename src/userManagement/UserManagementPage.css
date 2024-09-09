@@ -1,0 +1,25 @@
+/* UserManagementPage Styles */
+.d-flex {
+    border-radius: 5px; /* Zaokrąglenie rogów dla spinnera */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Delikatny cień */
+    padding: 20px;
+    background-color: #fff; /* Tło dla spinnera */
+}
+
+/* Przycisk dodawania użytkownika */
+.btn-success {
+    background-color: #4CAF50; /* Zielony */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+/* Przycisk usuwania użytkownika */
+.btn-danger {
+    background-color: #f44336; /* Czerwony */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+}

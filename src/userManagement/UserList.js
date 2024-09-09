@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { FaPlus, FaMinus } from 'react-icons/fa';
+import './UserList.css'; // Upewnij się, że ścieżka jest poprawna
 
 export const UserList = ({ users, selectedUser, onSelectUser, onAddUser, onRemoveUser }) => {
 

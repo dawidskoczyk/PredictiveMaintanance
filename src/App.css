@@ -44,7 +44,10 @@ th{
     animation: App-logo-spin infinite 20s linear;
   }
 }
-
+.rdrStaticRange{
+background-color: transparent;
+color: black;
+}
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
