@@ -4,6 +4,7 @@ import { UserList } from './UserList';
 import { UserManagement } from './UserManagement';
 import {toast } from 'react-toastify';
 import { Spinner } from 'react-bootstrap';  // Import Spinnera z React Bootstrap
+import './UserManagementPage.css'; // Upewnij się, że ścieżka jest poprawna
 
 export const UserManagementPage = () => {
   const [users, setUsers] = useState([]);

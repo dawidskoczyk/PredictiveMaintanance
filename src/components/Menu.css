@@ -1,0 +1,49 @@
+/* Custom CSS for Navbar */
+.navbar {
+    background-color: #f8f9fa; /* Light background color */
+    border-bottom: 1px solid #dee2e6; /* Subtle border at the bottom */
+  }
+  
+  .navbar-brand {
+    color: #343a40; /* Dark color for brand text */
+    font-weight: bold; /* Make brand text bold */
+  }
+  
+  .navbar-brand:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  
+  .navbar-text {
+    color: #343a40; /* Dark color for text */
+  }
+  
+  .navbar-text:hover {
+    color: #007bff; /* Change color on hover */
+  }
+  /* Custom CSS for Buttons */
+.navbar-brand, .navbar-text {
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .navbar-brand:hover, .navbar-text:hover {
+    background-color: #e9ecef; /* Light background on hover */
+    transition: background-color 0.3s ease;
+  }
+  /* Ensure proper spacing and alignment */
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .navbar-toggle {
+    border: 1px solid #007bff; /* Border color for toggle button */
+  }
+  
+  .navbar-collapse {
+    flex-grow: 1;
+    display: flex;
+    justify-content: flex-end;
+  }
+  

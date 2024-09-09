@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Form, Button, Alert } from 'react-bootstrap';
 import {toast } from 'react-toastify';
 import validator from 'validator'; // Import validator
+import './UserManagement.css'; // Upewnij się, że ścieżka jest poprawna
 
 export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCreatingUser }) => {
   const [username, setUsername] = useState('');

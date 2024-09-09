@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../login/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
+import './Menu.css';
 export function Menu() {
   // Define custom login and logout handlers
   const navigate = useNavigate(); // Initialize the useNavigate hook

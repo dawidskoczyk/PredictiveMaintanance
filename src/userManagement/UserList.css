@@ -1,0 +1,38 @@
+    /* UserList Styles */
+div[style*="width: 30%"] {
+    background-color: #f9f9f9; /* Bardzo jasne tło */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+    padding: 20px;
+    margin-top: 20px; /* Odstęp od góry */
+}
+
+/* Stylizacja listy */
+.list-group-item {
+    border-radius: 5px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* Stylizacja przycisków */
+.btn-success {
+    background-color: #4CAF50; /* Zielony */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+.btn-danger {
+    background-color: #f44336; /* Czerwony */
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    font-weight: bold;
+}
+
+/* Stylizacja dla wybranego elementu */
+.list-group-item.active {
+    background-color: #d3d3d3;
+}
