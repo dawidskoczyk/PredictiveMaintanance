@@ -2,7 +2,7 @@ import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
 import React, { useState } from "react";
 import zoomPlugin from 'chartjs-plugin-zoom';
-
+import 'chartjs-adapter-date-fns';
 
 ChartJS.register(zoomPlugin);
 
@@ -50,7 +50,14 @@ export const Chart = ({ initialData = [] }) => {
   if (!data[0]) {
     return <div>Data is not available</div>;
   }
+  let start_date = new Date(data[0].date);
+  let end_date = new Date(data[data.length-1].date);
 
+  let range_min = new Date(data[0].date);  //start date
+  range_min.setDate(range_min.getDate()-10);
+
+  let range_max = new Date(data[data.length-1].date);  //end date
+  range_max.setDate(range_max.getDate()+10);
   return (
     <div style={{ width: "1200px", height: "500px", marginLeft: "2%" }}>
       <Line
@@ -99,13 +106,21 @@ export const Chart = ({ initialData = [] }) => {
   }}
   options={{
     responsive: true,
-  scales: {
-      
-      x: start ? {
-        min: 0, // Start at the first data point
-        max: 99, // Show up to the 100th data point
-      } : {},
-    },
+    // scales: {
+    //   y: {
+    //     type: 'linear',
+    //     beginAtZero: true,
+    //   },
+    //   x: {
+    //     type: 'time',
+    //     time: {
+    //       min: start_date.toDateString(),
+    //       max: end_date.toDateString(),
+    //       unit: 'day',
+    //       stepSize: 1,
+    //     },
+    //   },
+    // },
     plugins: {
       title: {
         display: true,
@@ -123,27 +138,12 @@ export const Chart = ({ initialData = [] }) => {
             enabled: true, // Enable wheel zooming
           },
           mode: 'x',
-          onZoomStart:({chart}) => {
-            if(start){
-              setStart(false);
-              chart.options.scales.x.min = undefined;
-              chart.options.scales.x.max = undefined;
-              chart.update(); 
-            } 
-          },
-          limits: {
-            x: {
-              min: 0, // Set the minimum limit for x-axis
-              max: data.length - 1, // Set the maximum limit for x-axis
-              minRange: 3, // Minimum range for zooming
-            },
-            // y: { min: 10, max: 100 }, // Uncomment and set limits for y-axis if needed
-          },
         },
       },
     },
   }}
 />
+
 
     </div>
   );
