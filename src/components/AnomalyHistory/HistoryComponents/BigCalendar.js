@@ -39,15 +39,33 @@ function MyCalendar() {
     },
   };
 
+
   // Event handler for view changes (e.g., from month to week)
   const handleViewChange = (newView) => {
     setView(newView);
      // Update events based on the new view
   };
+  const handleRangeChange = (range, view) => {
+    let startDate, endDate;
+
+    if (view === 'month') {
+      startDate = moment(range[0]).startOf('month').toDate();
+      endDate = moment(range[range.length - 1]).endOf('month').toDate();
+    } else if (view === 'week') {
+      startDate = moment(range[0]).startOf('week').toDate();
+      endDate = moment(range[range.length - 1]).endOf('week').toDate();
+    } else if (view === 'day') {
+      startDate = moment(range[0]).startOf('day').toDate();
+      endDate = moment(range[range.length - 1]).endOf('day').toDate();
+    }
+
+    console.log('Current range:', range, startDate, endDate);
+    updateEventsForView(view, startDate, endDate);
+  };
+
   
   const handleNavigate = (date, view) => {
     setView(view);
-  
     // Calculate start and end dates based on the view
     let startDate, endDate;
     
@@ -60,7 +78,7 @@ function MyCalendar() {
       startDate = moment(date).startOf('week').toDate();
       endDate = moment(date).endOf('week').toDate();
     }
-  
+  console.log(startDate, endDate);
     updateEventsForView(view, startDate, endDate);
   };
   
@@ -124,8 +142,12 @@ function MyCalendar() {
         endAccessor="end"
         style={{ height: 500 }}
         view={view}
+        //selectable
+       
+        //onSelectSlot={handleSlotSelect}
         onView={handleViewChange} // Event handler for view changes
-        onNavigate={handleNavigate} // Optional: Handle date range changes
+        onNavigate={handleNavigate}
+        onRangeChange={handleRangeChange} // Optional: Handle date range changes
         components={{
           event: components.event,
         }}
