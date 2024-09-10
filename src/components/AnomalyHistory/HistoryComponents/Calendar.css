@@ -71,7 +71,7 @@
 }
 
 button {
-    background-color: #4CAF50; /* Zielony kolor tła */
+    /* background-color: #4CAF50; Zielony kolor tła */
     color: white; /* Kolor tekstu */
     border: 2px solid #388E3C; /* Grubsza ciemnozielona otoczka */
     border-radius: 5px; /* Zaokrąglenie rogów */
@@ -81,7 +81,6 @@ button {
     transition: all 0.3s ease; /* Płynne przejścia */
 }
 button:hover {
-    background-color: #45A049; /* Jaśniejszy zielony kolor tła */
     border-color: #2C6B2F; /* Ciemniejsza ciemnozielona otoczka */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Delikatny cień */
 }

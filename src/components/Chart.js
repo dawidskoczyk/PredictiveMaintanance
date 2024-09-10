@@ -19,24 +19,31 @@ const options = {
   plugins: {
     title: {
       display: true,
+      text: "Temperature Chart",
     },
     zoom: {
       pan: {
-          enabled: true,
-          mode: 'x'
+        enabled: true, // Umożliwia przesuwanie w poziomie
+        mode: 'x',
       },
       zoom: {
-          pinch: {
-              enabled: true       // Enable pinch zooming
-          },
-          wheel: {
-              enabled: true       // Enable wheel zooming
-          },
-          mode: 'x',
-      }
-  }
+        enabled: true, // Umożliwia zoomowanie w poziomie
+        mode: 'x',
+        drag: true, // Umożliwia zoomowanie przez przeciąganie
+        wheel: {
+          enabled: true, // Umożliwia zoomowanie za pomocą scrolla
+        },
+        pinch: {
+          enabled: true, // Umożliwia pinch zoom (dla urządzeń dotykowych)
+        },
+        limits: {
+          x: { min: 0, max: 100 }, // Minimalne i maksymalne wartości zoomu
+        },
+      },
+    },
   },
 };
+
 
 export const Chart = ({ initialData = [] }) => {
   const [data, setData] = useState([]);
@@ -59,92 +66,73 @@ export const Chart = ({ initialData = [] }) => {
   let range_max = new Date(data[data.length-1].date);  //end date
   range_max.setDate(range_max.getDate()+10);
   return (
-    <div style={{ width: "1200px", height: "500px", marginLeft: "2%" }}>
-      <Line
-        data={{
-          labels: data.map((data) =>
-            data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
-          ),
-          datasets: [
-            {
-              label: "Temperature",
-              data: data.map((data) => data.value),
-              backgroundColor: "#064FF0",
-              borderColor: "#064FF0",
-            },
-          ],
-        }}
-        options={{
-          elements: {
-            line: {
-              tension: 0.5,
-              showLine: false,
-            },
-          },
-          plugins: {
-            title: {
-              text: "Temperature Chart",
-              
-            },
-          },
-        }}
-      ></Line>
- <Bar
-  data={{
-    labels: data.map((data) =>
-      data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
-    ),
-    datasets: [
-      {
-        label: "Temperature",
-        data: data.map((data) => data.value),
-        backgroundColor: data.map((data) =>
-          data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
-        ),
-      },
-    ],
-  }}
-  options={{
-    responsive: true,
-    // scales: {
-    //   y: {
-    //     type: 'linear',
-    //     beginAtZero: true,
-    //   },
-    //   x: {
-    //     type: 'time',
-    //     time: {
-    //       min: start_date.toDateString(),
-    //       max: end_date.toDateString(),
-    //       unit: 'day',
-    //       stepSize: 1,
-    //     },
-    //   },
-    // },
-    plugins: {
-      title: {
-        display: true,
-      },
-      zoom: {
-        pan: {
-          enabled: true,
-          mode: 'x',
-        },
-        zoom: {
-          pinch: {
-            enabled: true, // Enable pinch zooming
-          },
-          wheel: {
-            enabled: true, // Enable wheel zooming
-          },
-          mode: 'x',
-        },
-      },
-    },
-  }}
-/>
+    <div>
+      {/* Kontener z suwakiem poziomym dla pierwszego wykresu */}
+      <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+        <div style={{ width: "2000px" }}>
+          {/* Wykres liniowy */}
+          <div style={{ height: "500px" }}>
+            <Line
+              data={{
+                labels: data.map((data) =>
+                  data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
+                ),
+                datasets: [
+                  {
+                    label: "Temperature",
+                    data: data.map((data) => data.value),
+                    backgroundColor: "#064FF0",
+                    borderColor: "#064FF0",
+                  },
+                ],
+              }}
+              options={{
+                ...options,
+                plugins: {
+                  ...options.plugins,
+                  title: {
+                    text: "Zoomable Temperature Chart",
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+      </div>
 
-
+      {/* Kontener z suwakiem poziomym dla drugiego wykresu */}
+      <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+        <div style={{ width: "2000px" }}>
+          {/* Wykres słupkowy */}
+          <div style={{ height: "500px" }}>
+            <Bar
+              data={{
+                labels: data.map((data) =>
+                  data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
+                ),
+                datasets: [
+                  {
+                    label: "Temperature",
+                    data: data.map((data) => data.value),
+                    backgroundColor: data.map((data) =>
+                      data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+                    ),
+                  },
+                ],
+              }}
+              options={{
+                ...options,
+                plugins: {
+                  ...options.plugins,
+                  title: {
+                    text: "Zoomable Temperature Bar Chart",
+                  },
+                },
+              }}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

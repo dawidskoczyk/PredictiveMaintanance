@@ -120,6 +120,7 @@ table {
 .button-64:active,
 .button-64:hover {
   outline: 0;
+  background-color: transparent;
 }
 
 .button-64 span {
