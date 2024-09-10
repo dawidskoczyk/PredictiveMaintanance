@@ -1,6 +1,6 @@
 import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
-import React, { useState,useEffect } from "react";
+import { Bar, Line } from "react-chartjs-2";
+import React, { useState,useRef,useEffect } from "react";
 import zoomPlugin from 'chartjs-plugin-zoom';
 import 'chartjs-adapter-date-fns';
 import annotationPlugin from 'chartjs-plugin-annotation';
@@ -55,10 +55,13 @@ const options = {
 
 export const Chart = ({ initialData = [], thresholds = [] }) => {
   const [data, setData] = useState([]);
-  const [start,setStart] = useState(true);
   const [thresh, setThresh] = useState(thresholds);
+  const [width, setWidth] = useState(2000); // Początkowa szerokość wykresu
 
 
+ // Create refs for both charts to control zoom/pan
+ const lineChartRef = useRef(null);
+ const barChartRef = useRef(null);
 
   useEffect(() => {
     if(thresholds != thresh){
@@ -68,14 +71,33 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
 
   console.log(thresholds);
   if (data !== initialData) {
-    // initialData[1] = initialData[1].sort(function (a, b) {
-    //   return new Date(a.date) - new Date(b.date);
-    // });
     setData(initialData);
   }
   if (!data[0]) {
     return <div>Data is not available</div>;
   }
+
+  const zoomIn = (chartRef) => {
+    chartRef.current.zoom(1.2); // Zoom in 20%
+    updateWidth(1.2); // Zwiększ szerokość wykresu
+
+  };
+
+  const zoomOut = (chartRef) => {
+    chartRef.current.zoom(0.8); // Zoom out 20%
+    updateWidth(0.8); // Zmniejsz szerokość wykresu
+
+  };
+
+  const resetZoom = (chartRef) => {
+    chartRef.current.resetZoom();
+    setWidth(2000); // Reset szerokości do początkowej wartości
+  };
+
+  const updateWidth = (factor) => {
+    setWidth((prevWidth) => prevWidth * factor);
+  };
+
   let start_date = new Date(data[0].date);
   let end_date = new Date(data[data.length-1].date);
 
@@ -84,14 +106,15 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
 
   let range_max = new Date(data[data.length-1].date);  //end date
   range_max.setDate(range_max.getDate()+10);
+
   return (
     <div>
-      {/* Kontener z suwakiem poziomym dla pierwszego wykresu */}
+      {/* Line Chart with Zoom Buttons */}
       <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
-        <div style={{ width: "2000px" }}>
-          {/* Wykres liniowy */}
-          <div style={{ height: "500px" }}>
+        <div style={{ width: "100%  " }}>
+          <div style={{ height: "500px", width: `${width}px` }}>
             <Line
+              ref={lineChartRef} // Reference to the Line chart
               data={{
                 labels: data.map((data) =>
                   data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
@@ -121,10 +144,6 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
                         value: thresh[0],
                         borderColor: 'orange',
                         borderWidth: 2,
-                        label: {
-                          enabled: false,
-                          content: 'Test label'
-                        }
                       },
                       {
                         type: 'line',
@@ -133,28 +152,27 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
                         value: thresh[1],
                         borderColor: 'red',
                         borderWidth: 3,
-                        label: {
-                          enabled: false,
-                          content: 'Test label'
-                        }
                       }
                     ]
                   }
-                  
                 },
               }}
-              
             />
           </div>
         </div>
+        <div>
+              <button style = {{color:"black"}} onClick={() => zoomIn(lineChartRef)}>Zoom In</button>
+              <button style = {{color:"black"}} onClick={() => zoomOut(lineChartRef)}>Zoom Out</button>
+              <button style = {{color:"black"}} onClick={() => resetZoom(lineChartRef)}>Reset Zoom</button>
+            </div>
       </div>
 
-      {/* Kontener z suwakiem poziomym dla drugiego wykresu */}
+      {/* Bar Chart with Zoom Buttons */}
       <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
-        <div style={{ width: "2000px" }}>
-          {/* Wykres słupkowy */}
-          <div style={{ height: "500px" }}>
+        <div style={{ width: "100%" }}>
+          <div style={{ height: "500px", width: `${width}px` }}>
             <Bar
+              ref={barChartRef} // Reference to the Bar chart
               data={{
                 labels: data.map((data) =>
                   data.date.replace("2024-", " ").replace("T", " ").replace("Z", "")
@@ -185,10 +203,6 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
                         value: thresh[0],
                         borderColor: 'yellow',
                         borderWidth: 2,
-                        label: {
-                          enabled: false,
-                          content: 'Test label'
-                        }
                       },
                       {
                         type: 'line',
@@ -197,19 +211,21 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
                         value: thresh[1],
                         borderColor: 'red',
                         borderWidth: 3,
-                        label: {
-                          enabled: false,
-                          content: 'Test label'
-                        }
                       }
                     ]
                   }
                 },
               }}
             />
+
           </div>
         </div>
       </div>
+      <div>
+              <button style = {{color:"black"}} onClick={() => zoomIn(barChartRef)}>Zoom In</button>
+              <button style = {{color:"black"}} onClick={() => zoomOut(barChartRef)}>Zoom Out</button>
+              <button style = {{color:"black"}} onClick={() => resetZoom(barChartRef)}>Reset Zoom</button>
+            </div>
     </div>
   );
 };
