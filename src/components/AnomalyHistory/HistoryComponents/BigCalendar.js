@@ -3,6 +3,7 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './Calendar.css'; 
 import { useState, useEffect } from 'react';
+import { previousDay } from 'date-fns';
 
 const localizer = momentLocalizer(moment);
 
@@ -24,7 +25,8 @@ const myEventsList = [
 function MyCalendar() {
   const [view, setView] = useState('month');
   const [dataWeek, setDataWeek] = useState([]);
-  const [myEventsListWeek, setMyEventsListWeek] = useState(myEventsList);  // Initialize with myEventsList
+  const [myEventsListWeek, setMyEventsListWeek] = useState(myEventsList);
+  const [myEventsWarnings, setMyEventsWarnings] = useState([]);   // Initialize with myEventsList
 
   const components = {
     event: (props) => {
@@ -119,7 +121,12 @@ function MyCalendar() {
             data: { x: data.value, type: data.thing } // Data object for the event
           });
         });
-  
+
+        const filtered = weekEvents.message.filter((data)=> data.value> 30)
+        const previousDate = filtered[0].date.split('T')[0];
+        filtered.forEach((data)=>{if(data.date.split('T')[0] === previousDate){
+          
+        }})
         // Set the state with the accumulated events array
         setMyEventsListWeek(eventsArray);
         console.log(myEventsListWeek);

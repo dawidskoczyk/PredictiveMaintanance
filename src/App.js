@@ -113,12 +113,24 @@ function  BaseConnect({ dynamicData }) {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
   const [dataAnomaly, setDataAnomaly] = useState([]);
+  const [thresholds, setThresholds] = useState([30,32]);
+  const [isVisible, setIsVisible] = useState(false);
+  // useState(() => {
+  //   const saved = window.localStorage.getItem('isVisible');
+  //   return saved !== null ? JSON.parse(saved) : false;
+  // });
   const thresholdUpC = 33;
   const thresholdMediumC = 30;
   const thresholdDownC = 23;
   const thresholdUpdB = 75;
   const thresholdMediumdB = 65;
   const thresholdDowndB = 35;
+
+  // useEffect(() => {
+  //   window.localStorage.setItem('isVisible', JSON.stringify(isVisible));
+
+
+  // }, [isVisible]);
 
   // useEffect(() => {
   //   fetch("http://localhost:5001/api/dataAnomaly")
@@ -144,6 +156,22 @@ function  BaseConnect({ dynamicData }) {
   //   }
   // }
   console.log(dynamicData ? dynamicData : "ni ma danych");
+
+  const handleChange = event => {
+  
+    setIsVisible(current => !current);
+  };
+  const handleThresh = (index, value) => {
+    if(index===1){
+      if(thresholds[0]>=value) return;
+    }
+    if(index===0){
+      if(thresholds[1]<=value) return;
+    }
+    const newThresholds = [...thresholds];
+    newThresholds[index] = value;
+    setThresholds(newThresholds);
+  }
 
   return (
     <div>
@@ -243,7 +271,13 @@ function  BaseConnect({ dynamicData }) {
             </tr> */}
             </tbody>
           </Table>
-          <Chart initialData={dynamicData || []} />
+          <h2>Pick your own Thresholds<input type='checkbox' name='thresh'  value={isVisible} onChange={handleChange} style={{marginLeft:'2%'}}/></h2>
+         {isVisible ? <><label>Threshold warning</label>
+          <input type="number" placeholder="" name='warn' value={thresholds[0]}  onChange={(e) => handleThresh(0, e.target.value)} style={{marginLeft:'1.7%'}}></input><br/>
+          <label>Threshold critical</label>
+          <input type="number" name='crit' value={thresholds[1]}  onChange={(e) => handleThresh(1, e.target.value)} style={{marginLeft:'2.7%'}} ></input></>: ''}
+          <div>{thresholds[0]!== 30 || thresholds[1]!==32 ?<button style={{color:'black', marginTop:'2%'}}onClick={()=>{setThresholds([30,32])}}>Reset Thresholds to defaults</button>:""}</div>
+          <Chart initialData={dynamicData || []} thresholds={thresholds || []} />
         </div>
       ) : (
         <p></p>

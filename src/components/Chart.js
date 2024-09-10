@@ -1,8 +1,11 @@
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import zoomPlugin from 'chartjs-plugin-zoom';
 import 'chartjs-adapter-date-fns';
+import annotationPlugin from 'chartjs-plugin-annotation';
+
+ChartJS.register(annotationPlugin);
 
 ChartJS.register(zoomPlugin);
 
@@ -16,6 +19,7 @@ defaults.plugins.title.color = "black";
 
 const options = {
   responsive: true,
+ 
   plugins: {
     title: {
       display: true,
@@ -23,18 +27,22 @@ const options = {
     },
     zoom: {
       pan: {
+        modifierKey: 'ctrl',
         enabled: true, // Umożliwia przesuwanie w poziomie
         mode: 'x',
       },
       zoom: {
+        
         enabled: true, // Umożliwia zoomowanie w poziomie
         mode: 'x',
         drag: true, // Umożliwia zoomowanie przez przeciąganie
         wheel: {
-          enabled: true, // Umożliwia zoomowanie za pomocą scrolla
+          enabled: true,
+          modifierKey: 'ctrl', // Umożliwia zoomowanie za pomocą scrolla
         },
         pinch: {
-          enabled: true, // Umożliwia pinch zoom (dla urządzeń dotykowych)
+          enabled: true,
+          modifierKey: 'ctrl', // Umożliwia pinch zoom (dla urządzeń dotykowych)
         },
         limits: {
           x: { min: 0, max: 100 }, // Minimalne i maksymalne wartości zoomu
@@ -45,9 +53,19 @@ const options = {
 };
 
 
-export const Chart = ({ initialData = [] }) => {
+export const Chart = ({ initialData = [], thresholds = [] }) => {
   const [data, setData] = useState([]);
   const [start,setStart] = useState(true);
+  const [thresh, setThresh] = useState(thresholds);
+ 
+
+  useEffect(() => {
+    if(thresholds != thresh){
+    setThresh(thresholds);
+  }}, [thresholds]); 
+ 
+
+  console.log(thresholds);
   if (data !== initialData) {
     // initialData[1] = initialData[1].sort(function (a, b) {
     //   return new Date(a.date) - new Date(b.date);
@@ -93,8 +111,38 @@ export const Chart = ({ initialData = [] }) => {
                   title: {
                     text: "Zoomable Temperature Chart",
                   },
+                  annotation: {
+                    annotations: [
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[0],
+                        borderColor: 'orange',
+                        borderWidth: 2,
+                        label: {
+                          enabled: false,
+                          content: 'Test label'
+                        }
+                      },
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[1],
+                        borderColor: 'red',
+                        borderWidth: 3,
+                        label: {
+                          enabled: false,
+                          content: 'Test label'
+                        }
+                      }
+                    ]
+                  }
+                  
                 },
               }}
+              
             />
           </div>
         </div>
@@ -127,6 +175,34 @@ export const Chart = ({ initialData = [] }) => {
                   title: {
                     text: "Zoomable Temperature Bar Chart",
                   },
+                  annotation: {
+                    annotations: [
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[0],
+                        borderColor: 'yellow',
+                        borderWidth: 2,
+                        label: {
+                          enabled: false,
+                          content: 'Test label'
+                        }
+                      },
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[1],
+                        borderColor: 'red',
+                        borderWidth: 3,
+                        label: {
+                          enabled: false,
+                          content: 'Test label'
+                        }
+                      }
+                    ]
+                  }
                 },
               }}
             />
