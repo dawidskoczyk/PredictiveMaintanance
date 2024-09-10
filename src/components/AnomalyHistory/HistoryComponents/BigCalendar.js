@@ -121,15 +121,23 @@ function MyCalendar() {
             data: { x: data.value, type: data.thing } // Data object for the event
           });
         });
-
+        const accumulateArray = [];
         const filtered = weekEvents.message.filter((data)=> data.value> 30)
         const previousDate = filtered[0].date.split('T')[0];
-        filtered.forEach((data)=>{if(data.date.split('T')[0] === previousDate){
-          
-        }})
+        const afterFilter = filtered.reduce((data, event)=>{ 
+          const eventDate = event.date.split('T')[0];
+          if (data[eventDate]) {
+            data[eventDate] += 1; // Increment count if date exists
+          } else {
+            data[eventDate] = 1;  // Initialize count if date doesn't exist
+          }
+        })
+        console.log(afterFilter);
+
+        
         // Set the state with the accumulated events array
         setMyEventsListWeek(eventsArray);
-        console.log(myEventsListWeek);
+       // console.log(myEventsListWeek);
       } catch (error) {
         console.error('Error fetching week events:', error);
       

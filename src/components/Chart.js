@@ -57,7 +57,8 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
   const [data, setData] = useState([]);
   const [start,setStart] = useState(true);
   const [thresh, setThresh] = useState(thresholds);
- 
+
+
 
   useEffect(() => {
     if(thresholds != thresh){

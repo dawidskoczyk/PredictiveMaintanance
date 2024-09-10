@@ -16,9 +16,24 @@ const client = new MongoClient(uri, {
   }
 });
 
+function runPythonScript() {
+
+    const spawn = require("child_process").spawn;
+    const pythonProcess = spawn('python', ["./pythonAnom.py"]);
+
+    pythonProcess.stdout.on('data', (data) => {
+      console.log(data);
+      return data;
+     });
+     
+     
+}
+
 async function run() {
   try {
     // Connect to the "NormalBase" database and access its "NormalData" collection
+    const pythonData = await runPythonScript();
+    console.log('z pytona',pythonData);
     const database = client.db("Cluster001");
     const collection = database.collection("TestData");
     const result = await collection.find({}, {value: 1, date: 1}).sort({date:-1}).limit(12).toArray();
