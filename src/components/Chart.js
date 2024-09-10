@@ -38,7 +38,8 @@ const options = {
         drag: true, // Umożliwia zoomowanie przez przeciąganie
         wheel: {
           enabled: true,
-          modifierKey: 'ctrl', // Umożliwia zoomowanie za pomocą scrolla
+          modifierKey: 'ctrl',
+          speed:'2' // Umożliwia zoomowanie za pomocą scrolla
         },
         pinch: {
           enabled: true,

@@ -83,6 +83,32 @@ function MyCalendar() {
   console.log(startDate, endDate);
     updateEventsForView(view, startDate, endDate);
   };
+  const eventsArrayReduced = [];
+  const eventsArray = [];
+ const handleReduce=(filtered)=>{
+  // Use reduce with an initial value (empty object)
+  const afterFilter = filtered.reduce((Reducedata, event) => {
+    const eventDate = event.date.split('T')[0]; // Get only the date part (YYYY-MM-DD)
+    
+    if (Reducedata[eventDate]) {
+      Reducedata[eventDate] += 1; // Increment count if date exists
+    } else {
+      Reducedata[eventDate] = 1;  // Initialize count if date doesn't exist
+    }
+    
+    return Reducedata; // Return the accumulator!
+  }, {}); // Initial value is an empty object
+  
+  // Use Object.entries to iterate over the object
+  Object.entries(afterFilter).forEach(([date, count]) => {
+    eventsArrayReduced.push({
+      title: date,        // Dynamically create title from date
+      start: new Date(Date.parse(date)),        // Actual start date
+      end: new Date(Date.parse(date)),          // End date (same date, could modify if needed)
+      data: { x: count, type: 'sum' } // Data object with the count
+    });
+  });
+ }
   
 
   const updateEventsForView = async (newView, startDate, endDate) => {
@@ -103,7 +129,7 @@ function MyCalendar() {
         setDataWeek(weekEvents.message); // Assuming you're storing events in state
   
         // Create an array to accumulate events
-        const eventsArray = [];
+        
   
         weekEvents.message.forEach((data) => {
           const startDate = new Date(data.date);
@@ -121,22 +147,33 @@ function MyCalendar() {
             data: { x: data.value, type: data.thing } // Data object for the event
           });
         });
-        const accumulateArray = [];
-        const filtered = weekEvents.message.filter((data)=> data.value> 30)
-        const previousDate = filtered[0].date.split('T')[0];
-        const afterFilter = filtered.reduce((data, event)=>{ 
-          const eventDate = event.date.split('T')[0];
-          if (data[eventDate]) {
-            data[eventDate] += 1; // Increment count if date exists
-          } else {
-            data[eventDate] = 1;  // Initialize count if date doesn't exist
-          }
-        })
-        console.log(afterFilter);
-
+       
+        if (weekEvents.message && newView==='month') {
+          const filtered = weekEvents.message.filter((data) => data.value > 30 && data.value <= 32);
+          const filteredCrit = weekEvents.message.filter((data) => data.value > 32);
         
+          handleReduce(filtered);
+          handleReduce(filteredCrit);
+        
+          console.log(eventsArrayReduced);
+        }
+console.log(newView);
+if (newView === 'month') {
+  if (Array.isArray(eventsArrayReduced) && eventsArrayReduced.length > 0) {
+    setMyEventsListWeek(eventsArrayReduced);
+  } else {
+    console.error("eventsArrayReduced is empty or invalid");
+  }
+} else if (newView === 'week') {
+  if (Array.isArray(eventsArray) && eventsArray.length > 0) {
+    setMyEventsListWeek(eventsArray);
+  } else {
+    console.error("eventsArray is empty or invalid");
+  }
+}
+
         // Set the state with the accumulated events array
-        setMyEventsListWeek(eventsArray);
+        
        // console.log(myEventsListWeek);
       } catch (error) {
         console.error('Error fetching week events:', error);
