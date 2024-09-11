@@ -68,8 +68,14 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
     if(thresholds != thresh){
     setThresh(thresholds);
   }}, [thresholds]); 
- 
-
+  useEffect(() => {
+  if (lineChartRef.current && barChartRef.current) {
+    const lineChart = lineChartRef.current;
+    const barChart = barChartRef.current;
+    lineChart.zoom(1.8); // Set initial zoom level for line chart
+    barChart.zoom(1.8);  // Set initial zoom level for bar chart
+  }
+}, [data]);
   console.log(thresholds);
   if (data !== initialData) {
     setData(initialData);
@@ -80,14 +86,15 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
 
   const zoomIn = (chartRef) => {
     chartRef.current.zoom(1.2); // Zoom in 20%
+
     updateWidth(1.2); // Zwiększ szerokość wykresu
 
   };
 
   const zoomOut = (chartRef) => {
     chartRef.current.zoom(0.8); // Zoom out 20%
+    if(width >= 2000 )
     updateWidth(0.8); // Zmniejsz szerokość wykresu
-
   };
 
   const resetZoom = (chartRef) => {
@@ -110,64 +117,6 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
 
   return (
     <div>
-      {/* Line Chart with Zoom Buttons */}
-      <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
-        <div style={{ width: "100%  " }}>
-          <div style={{ height: "500px", width: `${width}px` }}>
-            <Line
-              ref={lineChartRef} // Reference to the Line chart
-              data={{
-                labels: data.map((data) =>
-                  data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
-                ),
-                datasets: [
-                  {
-                    label: "Temperature",
-                    data: data.map((data) => data.value),
-                    backgroundColor: "#064FF0",
-                    borderColor: "#064FF0",
-                  },
-                ],
-              }}
-              options={{
-                ...options,
-                plugins: {
-                  ...options.plugins,
-                  title: {
-                    text: "Zoomable Temperature Chart",
-                  },
-                  annotation: {
-                    annotations: [
-                      {
-                        type: 'line',
-                        mode: 'horizontal',
-                        scaleID: 'y',
-                        value: thresh[0],
-                        borderColor: 'orange',
-                        borderWidth: 2,
-                      },
-                      {
-                        type: 'line',
-                        mode: 'horizontal',
-                        scaleID: 'y',
-                        value: thresh[1],
-                        borderColor: 'red',
-                        borderWidth: 3,
-                      }
-                    ]
-                  }
-                },
-              }}
-            />
-          </div>
-        </div>
-        <div>
-              <button style = {{color:"black"}} onClick={() => zoomIn(lineChartRef)}>Zoom In</button>
-              <button style = {{color:"black"}} onClick={() => zoomOut(lineChartRef)}>Zoom Out</button>
-              <button style = {{color:"black"}} onClick={() => resetZoom(lineChartRef)}>Reset Zoom</button>
-            </div>
-      </div>
-
       {/* Bar Chart with Zoom Buttons */}
       <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
         <div style={{ width: "100%" }}>
@@ -227,6 +176,62 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
               <button style = {{color:"black"}} onClick={() => zoomOut(barChartRef)}>Zoom Out</button>
               <button style = {{color:"black"}} onClick={() => resetZoom(barChartRef)}>Reset Zoom</button>
             </div>
+            <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+        <div style={{ width: "100%  " }}>
+          <div style={{ height: "500px", width: `${width}px` }}>
+            <Line
+              ref={lineChartRef} // Reference to the Line chart
+              data={{
+                labels: data.map((data) =>
+                  data.date.replace("2024-", " ").replace("T", " ").replace("Z", "").split('.')[0]
+                ),
+                datasets: [
+                  {
+                    label: "Temperature",
+                    data: data.map((data) => data.value),
+                    backgroundColor: "#064FF0",
+                    borderColor: "#064FF0",
+                  },
+                ],
+              }}
+              options={{
+                ...options,
+                plugins: {
+                  ...options.plugins,
+                  title: {
+                    text: "Zoomable Temperature Chart",
+                  },
+                  annotation: {
+                    annotations: [
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[0],
+                        borderColor: 'orange',
+                        borderWidth: 2,
+                      },
+                      {
+                        type: 'line',
+                        mode: 'horizontal',
+                        scaleID: 'y',
+                        value: thresh[1],
+                        borderColor: 'red',
+                        borderWidth: 3,
+                      }
+                    ]
+                  }
+                },
+              }}
+            />
+          </div>
+        </div>
+        <div>
+              <button style = {{color:"black"}} onClick={() => zoomIn(lineChartRef)}>Zoom In</button>
+              <button style = {{color:"black"}} onClick={() => zoomOut(lineChartRef)}>Zoom Out</button>
+              <button style = {{color:"black"}} onClick={() => resetZoom(lineChartRef)}>Reset Zoom</button>
+            </div>
+      </div>
     </div>
   );
 };

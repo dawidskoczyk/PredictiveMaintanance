@@ -224,7 +224,64 @@ function  BaseConnect({ dynamicData }) {
               </tr>
               </tbody>
               </Table>
-              <h2 style={{ marginLeft: "4%", marginTop:"5%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
+              
+          
+          <div className="thresholds-container">
+      <div className="thresholds-form">
+        <h2>
+          Pick your own Thresholds
+          <input
+            type='checkbox'
+            name='thresh'
+            value={isVisible}
+            onChange={handleChange}
+            style={{ marginLeft: '2%' }}
+          />
+        </h2>
+        {isVisible && (
+          <>
+            <div className="threshold-inputs">
+              <label>Threshold warning</label>
+              <input
+                type="number"
+                placeholder=""
+                name='warn'
+                value={thresholds[0]}
+                onChange={(e) => handleThresh(0, e.target.value)}
+                className="threshold-input"
+              />
+              <br />
+              <label>Threshold critical</label>
+              <input
+                type="number"
+                name='crit'
+                value={thresholds[1]}
+                onChange={(e) => handleThresh(1, e.target.value)}
+                className="threshold-input"
+              />
+            </div>
+            <div className="reset-button">
+              {thresholds[0] !== 30 || thresholds[1] !== 32 ? (
+                <button
+                  style={{ color: 'black', marginTop: '2%' }}
+                  onClick={() => setThresholds([30, 32])}
+                >
+                  Reset Thresholds to defaults
+                </button>
+              ) : ''}
+            </div>
+          </>
+        )}
+      </div>
+      <div className="chart-container">
+        <Chart initialData={dynamicData || []} thresholds={thresholds || []} />
+      </div>
+    </div>
+        </div>
+      ) : (
+        <p></p>
+      )}
+      <h2 style={{ marginLeft: "4%", marginTop:"5%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
               <Table responsive>
               <thead>
               <tr>
@@ -271,18 +328,8 @@ function  BaseConnect({ dynamicData }) {
             </tr> */}
             </tbody>
           </Table>
-          <h2>Pick your own Thresholds<input type='checkbox' name='thresh'  value={isVisible} onChange={handleChange} style={{marginLeft:'2%'}}/></h2>
-         {isVisible ? <><label>Threshold warning</label>
-          <input type="number" placeholder="" name='warn' value={thresholds[0]}  onChange={(e) => handleThresh(0, e.target.value)} style={{marginLeft:'1.7%'}}></input><br/>
-          <label>Threshold critical</label>
-          <input type="number" name='crit' value={thresholds[1]}  onChange={(e) => handleThresh(1, e.target.value)} style={{marginLeft:'2.7%'}} ></input></>: ''}
-          <div>{thresholds[0]!== 30 || thresholds[1]!==32 ?<button style={{color:'black', marginTop:'2%'}}onClick={()=>{setThresholds([30,32])}}>Reset Thresholds to defaults</button>:""}</div>
-          <Chart initialData={dynamicData || []} thresholds={thresholds || []} />
-        </div>
-      ) : (
-        <p></p>
-      )}
     </div>
+    
   );
 }
 // to na dole nie działa

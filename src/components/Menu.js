@@ -1,13 +1,14 @@
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../login/AuthContext';
 import { ToastContainer, toast } from 'react-toastify';
 import './Menu.css';
 export function Menu() {
   // Define custom login and logout handlers
   const navigate = useNavigate(); // Initialize the useNavigate hook
+  const location = useLocation(); // Get the current location
   const { isAuthenticated, logout , username } = useAuth(); // Use useAuth to get authentication state and username
 
 
@@ -31,18 +32,22 @@ export function Menu() {
     navigate('/register'); // Programmatically navigate to the signup page
   };
 
+  const isActive = (path) => location.pathname === path;
 
   return (
     <Navbar className="bg-body-tertiary" style={{ width: "100%" }}>
       <Container>
-        <Navbar.Brand style={{ marginLeft: "-4%" }} as={Link} to="/home">🏠 Home</Navbar.Brand>
-        <Navbar.Brand as={Link} to="/history">🗄️ Anomaly History</Navbar.Brand>
+        <Navbar.Brand style={{ marginLeft: "-4%" }} as={Link} to="/home" className={isActive('/home') ? 'active-link' : ''} // Apply active-link class if this is the active path
+        >🏠 Home</Navbar.Brand>
+        <Navbar.Brand as={Link} to="/history" className={isActive('/history') ? 'active-link' : ''}>🗄️ Anomaly History</Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
             <>
                <Navbar.Text 
-                style={{ marginRight: "1rem", cursor: 'pointer' }} onClick={handleUserManagement}>
+                style={{ marginRight: "1rem", cursor: 'pointer' }} onClick={handleUserManagement}
+                className={isActive('/user-management') ? 'active-link' : ''} // Apply active-link class if this is the active path
+                >
                 Manage users {username} !
               </Navbar.Text>
               <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>

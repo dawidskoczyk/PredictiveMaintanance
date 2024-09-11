@@ -42,6 +42,7 @@ function MyCalendar() {
   const components = {
     event: (props) => {
       const { data } = props.event;
+      if (view != 'month') {
       if (data.x > 32) {
         return <div style={{ background: 'red', color:'white' }}>{data?.x}</div>;
       } else if (data.x > 30){
@@ -49,6 +50,16 @@ function MyCalendar() {
       }else{
         return <div style={{ background: 'green', color:'white' }}>{data?.x}</div>;
       }
+    }
+    else {
+      if(data.type == 'warning'){
+        return <div style={{ background: 'red', color:'white' }}>{data?.x}</div>;
+
+      }
+      else if(data.type == 'critical') {
+        return <div style={{ background: 'orange', color:'white' }}>{data?.x}</div>;
+      }
+    }
     },
   };
 
@@ -96,7 +107,7 @@ function MyCalendar() {
   };
   const eventsArrayReduced = [];
   const eventsArray = [];
- const handleReduce=(filtered)=>{
+ const handleReduce=(filtered, type)=>{
   // Use reduce with an initial value (empty object)
   const afterFilter = filtered.reduce((Reducedata, event) => {
     const eventDate = event.date.split('T')[0]; // Get only the date part (YYYY-MM-DD)
@@ -116,7 +127,7 @@ function MyCalendar() {
       title: date,        // Dynamically create title from date
       start: new Date(Date.parse(date)),        // Actual start date
       end: new Date(Date.parse(date)),          // End date (same date, could modify if needed)
-      data: { x: count, type: 'sum' } // Data object with the count
+      data: { x: count, type: type } // Data object with the count
     });
   });
  }
@@ -163,9 +174,9 @@ function MyCalendar() {
           const filtered = weekEvents.message.filter((data) => data.value > 30 && data.value <= 32);
           const filteredCrit = weekEvents.message.filter((data) => data.value > 32);
         
-          handleReduce(filtered);
-          handleReduce(filteredCrit);
-        
+          handleReduce(filtered, 'warning');
+          handleReduce(filteredCrit, 'critical');
+          
           console.log(eventsArrayReduced);
         }
 console.log(newView);

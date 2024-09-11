@@ -89,6 +89,78 @@ table {
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+/* Thresholds.css */
+.thresholds-container {
+  padding: 20px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.thresholds-form {
+  width: 100%;
+  max-width: 600px;
+  margin-bottom: 20px;
+}
+
+.thresholds-form h2 {
+  font-size: 1.5rem;
+  color: #343a40;
+}
+
+.checkbox {
+  margin-left: 10px;
+}
+
+.threshold-inputs {
+  margin-top: 20px; /* Increased space between heading and inputs */
+  align-items: center;
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px; /* Increased space between input groups */
+}
+
+.input-group label {
+  margin-right: 15px; /* Increased space between label and input */
+  flex-shrink: 0;
+}
+
+.threshold-input {
+  padding: 8px; /* Added padding for better visual appeal */
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  width: 120px; /* Increased width for better usability */
+}
+
+.reset-button {
+  margin-top: 20px; /* Increased space above the reset button */
+}
+
+.reset-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px; /* Increased padding for a better button size */
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+}
+
+.reset-btn:hover {
+  background-color: #0056b3;
+}
+
+.chart-container {
+  width: 100%;
+  max-width: 1200px;
+  margin-top: 20px;
+}
 
 /* CSS */
 .button-64 {
