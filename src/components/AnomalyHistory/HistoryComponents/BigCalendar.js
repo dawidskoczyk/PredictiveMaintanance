@@ -7,6 +7,7 @@ import { previousDay } from 'date-fns';
 
 const localizer = momentLocalizer(moment);
 
+
 const myEventsList = [
   {
     title: '6 warnings',
@@ -27,6 +28,16 @@ function MyCalendar() {
   const [dataWeek, setDataWeek] = useState([]);
   const [myEventsListWeek, setMyEventsListWeek] = useState(myEventsList);
   const [myEventsWarnings, setMyEventsWarnings] = useState([]);   // Initialize with myEventsList
+
+  useEffect(() => {
+    // On component mount, trigger updateEventsForView with the current month view
+    const today = new Date();
+    const startDate = moment(today).startOf('month').toDate();
+    const endDate = moment(today).endOf('month').toDate();
+    
+    // Call the updateEventsForView function with the initial values
+    updateEventsForView(view, startDate, endDate);
+  }, []); // Empty dependency array ensures this runs only on component mount
 
   const components = {
     event: (props) => {
