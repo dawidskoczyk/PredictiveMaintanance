@@ -68,7 +68,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
           </button>
 
           {clicked && (
-            <div className="datepicker-overlay" style={{ marginRight: '20px' }}>
+            <div className="datepicker-overlay" style={{ marginLeft: '200px' }}>
               <DateRangePicker
                 onChange={handleOnChange}
                 showSelectionPreview={true}

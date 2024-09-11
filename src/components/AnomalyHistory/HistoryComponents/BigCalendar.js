@@ -101,6 +101,10 @@ function MyCalendar() {
       // For week view, calculate the start and end of the current week
       startDate = moment(date).startOf('week').toDate();
       endDate = moment(date).endOf('week').toDate();
+    }else if (view === 'day') {
+      // For week view, calculate the start and end of the current week
+      startDate = moment(date).startOf('day').toDate();
+      endDate = moment(date).endOf('day').toDate();
     }
   console.log(startDate, endDate);
     updateEventsForView(view, startDate, endDate);
@@ -186,7 +190,7 @@ if (newView === 'month') {
   } else {
     console.error("eventsArrayReduced is empty or invalid");
   }
-} else if (newView === 'week') {
+} else  {
   if (Array.isArray(eventsArray) && eventsArray.length > 0) {
     setMyEventsListWeek(eventsArray);
   } else {

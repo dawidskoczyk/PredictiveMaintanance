@@ -271,6 +271,7 @@ function  BaseConnect({ dynamicData }) {
           </>
         )}
       </div>
+      <h3 style={{color:'blue'}}>Press ctrl to move and zoom charts</h3>
       <div className="chart-container">
         <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
       </div>
@@ -328,13 +329,13 @@ function  BaseConnect({ dynamicData }) {
           </Table>
     </div>
     
-  );
+  )
 }
 // to na dole nie działa
 function ResponsiveExample() {
   // Only update state if `dynamic` has data and is different from `dynamicData`
 
-  return <div></div>;
+  return <div></div>
 }
 
 export default App;

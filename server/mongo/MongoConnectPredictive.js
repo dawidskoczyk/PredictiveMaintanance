@@ -16,8 +16,8 @@ async function run() {
   try {
     // Connect to the "NormalBase" database and access its "NormalData" collection
     const database = client.db("Final01");
-    const collection = database.collection("predictedTest2");
-    const result = await collection.find({}, {date: 1, predicted_count: 1}).sort({date:1}).toArray();
+    const collection = database.collection("predictedFinal");
+    const result = await collection.find({}, {date: 1, predicted_count: 1, recorded_count: 1}).sort({date:1}).toArray();
     console.log('predict', result);
     return result;
   } catch (error) {

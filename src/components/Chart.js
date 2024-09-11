@@ -39,7 +39,7 @@ const options = {
         wheel: {
           enabled: true,
           modifierKey: 'ctrl',
-          speed:'2' // Umożliwia zoomowanie za pomocą scrolla
+          speed:'3' // Umożliwia zoomowanie za pomocą scrolla
         },
         pinch: {
           enabled: true,
@@ -88,52 +88,98 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
  <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
  <div style={{ width: "100%" }}>
    <div style={{ height: "500px", width: `${width}px` }}>
-     <Bar
-       ref={barChartRef} // Reference to the Bar chart
-       data={{
-         labels: predictiveData.map((data) =>
-           data.date.split('T')[0]
-         ),
-         datasets: [
-           {
-             label: "Temperature",
-             data: predictiveData.map((data) => data.predicted_count),
-             backgroundColor: predictiveData.map((data) =>
-               data.value >  thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
-             ),
-           },
-         ],
-       }}
-       options={{
-         ...options,
-         plugins: {
-           ...options.plugins,
-           title: {
-             text: "Zoomable Predictive Bar Chart",
-           },
-           annotation: {
-             annotations: [
-               {
-                 type: 'line',
-                 mode: 'horizontal',
-                 scaleID: 'y',
-                 value: thresh[0],
-                 borderColor: 'yellow',
-                 borderWidth: 2,
-               },
-               {
-                 type: 'line',
-                 mode: 'horizontal',
-                 scaleID: 'y',
-                 value: thresh[1],
-                 borderColor: 'red',
-                 borderWidth: 3,
-               }
-             ]
-           }
-         },
-       }}
-     />
+   <Bar
+  ref={barChartRef} // Reference to the Bar chart
+  data={{
+    labels: predictiveData.map((data) =>
+      data.date.split('T')[0]
+    ),
+    datasets: [
+      {
+        label: "Predicted amount",
+        data: predictiveData.map((data) => data.predicted_count),
+        backgroundColor: predictiveData.map((data) =>
+          'blue'
+          //data.predicted_count > thresh[1] ? "red" : data.predicted_count > thresh[0] ? "orange" : data.predicted_count < 23 ? "blue" : "orange"
+        ),
+      },
+      {
+        label: "Real amount",
+        data: predictiveData.map((data) => data.recorded_count),
+        backgroundColor: predictiveData.map((data) =>
+          //data.recorded_count > thresh[1] ? "black" : data.recorded_count > thresh[0] ? "yellow" : data.recorded_count < 23 ? "lightgreen" : "yellow"
+        'lightgreen'
+      ),
+      },
+    ],
+  }}
+  options={{
+    ...options,
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          generateLabels: function(chart) {
+            return [
+              {
+                text: 'Real data',
+                fillStyle: 'lightgreen', // Color matching the condition in the 'Predicted amount' dataset
+              },
+              {
+                text: 'Predicted data',
+                fillStyle: 'blue', // Color matching the condition in the 'Predicted amount' dataset
+              },
+              {
+                text: 'High Risk',
+                fillStyle: 'red', // Color for 'Real amount' dataset > Threshold 1
+              },
+              {
+                text: 'Warning',
+                fillStyle: 'orange', // Color for 'Real amount' dataset > Threshold 0
+              },
+              {
+                text: 'Low Risk',
+                fillStyle: 'green', // Color for 'Real amount' dataset < 23
+              }
+            ];
+          }
+        }
+      },
+      title: {
+        display: true,
+        text: "Predictive Anomaly Amount",
+      },
+      annotation: {
+        annotations: [
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 23,
+            borderColor: 'orange',
+            borderWidth: 2,
+          },
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 28,
+            borderColor: 'red',
+            borderWidth: 3,
+          },
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 15,
+            borderColor: 'green',
+            borderWidth: 3,
+          }
+        ]
+      }
+    },
+  }}
+/>
 
    </div>
  </div>
@@ -179,56 +225,102 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
 
   return (
     <div>
-       {/* Bar Chart with Zoom Buttons */}
- <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+{/* Bar Chart with Zoom Buttons */}
+<div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
  <div style={{ width: "100%" }}>
    <div style={{ height: "500px", width: `${width}px` }}>
-     <Bar
-       ref={barChartRef} // Reference to the Bar chart
-       data={{
-         labels: predictiveData.map((data) =>
-           data.date.split('T')[0]
-         ),
-         datasets: [
-           {
-             label: "Temperature",
-             data: predictiveData.map((data) => data.predicted_count),
-             backgroundColor: predictiveData.map((data) =>
-               data.value > thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
-             ),
-           },
-         ],
-       }}
-       options={{
-         ...options,
-         plugins: {
-           ...options.plugins,
-           title: {
-             text: "Zoomable Predictive Bar Chart",
-           },
-           annotation: {
-             annotations: [
-               {
-                 type: 'line',
-                 mode: 'horizontal',
-                 scaleID: 'y',
-                 value: thresh[0],
-                 borderColor: 'yellow',
-                 borderWidth: 2,
-               },
-               {
-                 type: 'line',
-                 mode: 'horizontal',
-                 scaleID: 'y',
-                 value: thresh[1],
-                 borderColor: 'red',
-                 borderWidth: 3,
-               }
-             ]
-           }
-         },
-       }}
-     />
+   <Bar
+  ref={barChartRef} // Reference to the Bar chart
+  data={{
+    labels: predictiveData.map((data) =>
+      data.date.split('T')[0]
+    ),
+    datasets: [
+      {
+        label: "Predicted amount",
+        data: predictiveData.map((data) => data.predicted_count),
+        backgroundColor: predictiveData.map((data) =>
+          'blue'
+          //data.predicted_count > thresh[1] ? "red" : data.predicted_count > thresh[0] ? "orange" : data.predicted_count < 23 ? "blue" : "orange"
+        ),
+      },
+      {
+        label: "Real amount",
+        data: predictiveData.map((data) => data.recorded_count),
+        backgroundColor: predictiveData.map((data) =>
+          //data.recorded_count > thresh[1] ? "black" : data.recorded_count > thresh[0] ? "yellow" : data.recorded_count < 23 ? "lightgreen" : "yellow"
+        'lightgreen'
+      ),
+      },
+    ],
+  }}
+  options={{
+    ...options,
+    plugins: {
+      legend: {
+        display: true,
+        labels: {
+          generateLabels: function(chart) {
+            return [
+              {
+                text: 'Real data',
+                fillStyle: 'lightgreen', // Color matching the condition in the 'Predicted amount' dataset
+              },
+              {
+                text: 'Predicted data',
+                fillStyle: 'blue', // Color matching the condition in the 'Predicted amount' dataset
+              },
+              {
+                text: 'High Risk',
+                fillStyle: 'red', // Color for 'Real amount' dataset > Threshold 1
+              },
+              {
+                text: 'Warning',
+                fillStyle: 'orange', // Color for 'Real amount' dataset > Threshold 0
+              },
+              {
+                text: 'Low Risk',
+                fillStyle: 'green', // Color for 'Real amount' dataset < 23
+              }
+            ];
+          }
+        }
+      },
+      title: {
+        display: true,
+        text: "Predicted Anomaly Amount",
+      },
+      annotation: {
+        annotations: [
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 23,
+            borderColor: 'orange',
+            borderWidth: 2,
+          },
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 28,
+            borderColor: 'red',
+            borderWidth: 3,
+          },
+          {
+            type: 'line',
+            mode: 'horizontal',
+            scaleID: 'y',
+            value: 15,
+            borderColor: 'green',
+            borderWidth: 3,
+          }
+        ]
+      }
+    },
+  }}
+/>
 
    </div>
  </div>
@@ -250,7 +342,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
                 ),
                 datasets: [
                   {
-                    label: "Temperature",
+                    label: " Filtered Data Temperature",
                     data: data.map((data) => data.value),
                     backgroundColor: data.map((data) =>
                       data.value > thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
@@ -262,8 +354,37 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
                 ...options,
                 plugins: {
                   ...options.plugins,
+                  legend: {
+                    display: true,
+                    labels: {
+                      generateLabels: function(chart) {
+                        return [
+                          {
+                            text: 'Normal condition ',
+                            fillStyle: 'green', // Color matching the condition in the 'Predicted amount' dataset
+                          },
+                          {
+                            text: 'High Risk',
+                            fillStyle: 'red', // Color for 'Real amount' dataset > Threshold 1
+                          },
+                          {
+                            text: 'Warning',
+                            fillStyle: 'orange', // Color for 'Real amount' dataset > Threshold 0
+                          },
+                          {
+                            text: 'Warning Line',
+                            fillStyle: 'blue', // Color for 'Real amount' dataset > Threshold 0
+                          },
+                          {
+                            text: 'Critical Line',
+                            fillStyle: 'red', // Color for 'Real amount' dataset > Threshold 0
+                          },
+                        ];
+                      }
+                    }
+                  },
                   title: {
-                    text: "Zoomable Temperature Bar Chart",
+                    text: " Filtered Data Temperature",
                   },
                   annotation: {
                     annotations: [
@@ -272,7 +393,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
                         mode: 'horizontal',
                         scaleID: 'y',
                         value: thresh[0],
-                        borderColor: 'yellow',
+                        borderColor: 'blue',
                         borderWidth: 2,
                       },
                       {
@@ -318,9 +439,26 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
               options={{
                 ...options,
                 plugins: {
-                  ...options.plugins,
+                  ...options.plugins, legend: {
+                    display: true,
+                    labels: {
+                      generateLabels: function(chart) {
+                        return [
+ 
+                          {
+                            text: 'High Risk',
+                            fillStyle: 'red', // Color for 'Real amount' dataset > Threshold 1
+                          },
+                          {
+                            text: 'Warning',
+                            fillStyle: 'orange', // Color for 'Real amount' dataset > Threshold 0
+                          },
+                        ];
+                      }
+                    }
+                  },
                   title: {
-                    text: "Zoomable Temperature Chart",
+                    text: "Temperature ",
                   },
                   annotation: {
                     annotations: [
