@@ -42,28 +42,29 @@ const Filter = ({ onChange, startDate, endDate }) => {
   return (
 <div style={{ margin: '20px' }}>
       {/* Image Heading */}
-      <div style={{ display: "flex", alignItems: "center", marginBottom: '20px', textAlign: 'center' }}>
+      <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
+      <h1 style={{ color: "green" }}>
+          State of the engine:
+        </h1>
         <img 
           src={green} 
           alt="Engine State" 
-          style={{ height: '50px', width: 'auto', marginRight: '20px' }}
+          style={{ height: '50px', width: 'auto', marginRight: '20px', marginLeft: "20px" }}
         />
-        <h1 style={{ color: "green" }}>
-          Actual state of the engine
-        </h1>
+        
       </div>
 
       {/* Flex Container for Date Picker and Heading */}
-      <div style={{ display: "flex"}}>
+      <div style={{ display: "flex", border: "dashed"}}>
         {/* Date Picker Section */}
           <button
             onClick={() => {
               setClicked((prevState) => !prevState);
             }}
             className="button-64"
-            style={{ marginRight: '20px', marginBottom: '10px' }}
+            style={{ marginRight: '20px', marginBottom: '10px', marginTop: "10px"}}
           >
-            <span>{!clicked ? "Show Date Picker" : "Set Date Range"}</span>
+            <span>{!clicked ? "Date Picker" : "Set Date Range"}</span>
           </button>
 
           {clicked && (
@@ -82,14 +83,14 @@ const Filter = ({ onChange, startDate, endDate }) => {
 
         {/* Blue Headings Section */}
         <span style={{
-  fontSize: '30px',          // Font size
-  color: 'blue',             // Text color
+  fontSize: '20px',          // Font size
+  color: 'black',             // Text color
   fontWeight: 'bold',        // Font weight
-  marginTop: '10px',         // Space above the element
+  marginTop: '20px',         // Space above the element
   display: 'block',          // Ensures it takes full width (optional)
   textAlign: 'center',       // Center the text (optional)
 }}>
-  Testing data from sensors
+  Select range of data from sensors
 </span>
       </div>
     </div>
