@@ -49,7 +49,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
           style={{ height: '50px', width: 'auto', marginRight: '20px' }}
         />
         <h1 style={{ color: "green" }}>
-          Actual state of engine
+          Actual state of the engine
         </h1>
       </div>
 

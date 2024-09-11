@@ -171,8 +171,8 @@ function MyCalendar() {
         });
        
         if (weekEvents.message && newView==='month') {
-          const filtered = weekEvents.message.filter((data) => data.value > 30 && data.value <= 32);
-          const filteredCrit = weekEvents.message.filter((data) => data.value > 32);
+          const filtered = weekEvents.message.filter((data) => data.value > 28 && data.value <= 30);
+          const filteredCrit = weekEvents.message.filter((data) => data.value > 30);
         
           handleReduce(filtered, 'warning');
           handleReduce(filteredCrit, 'critical');

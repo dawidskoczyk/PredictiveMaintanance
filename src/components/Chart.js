@@ -99,7 +99,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
              label: "Temperature",
              data: predictiveData.map((data) => data.predicted_count),
              backgroundColor: predictiveData.map((data) =>
-               data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+               data.value >  thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
              ),
            },
          ],
@@ -194,7 +194,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
              label: "Temperature",
              data: predictiveData.map((data) => data.predicted_count),
              backgroundColor: predictiveData.map((data) =>
-               data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+               data.value > thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
              ),
            },
          ],
@@ -253,7 +253,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
                     label: "Temperature",
                     data: data.map((data) => data.value),
                     backgroundColor: data.map((data) =>
-                      data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+                      data.value > thresh[1] ? "red" : data.value > thresh[0] ? "orange" : data.value < 23 ? "blue" : "green"
                     ),
                   },
                 ],

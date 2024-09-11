@@ -115,7 +115,7 @@ function  BaseConnect({ dynamicData }) {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
   const [dataAnomaly, setDataAnomaly] = useState([]);
-  const [thresholds, setThresholds] = useState([30,32]);
+  const [thresholds, setThresholds] = useState([28,30]);
   const [isVisible, setIsVisible] = useState(false);
   const [dynamicPredictiveData, setDynamicPredictiveData] = useState([]);
   // useState(() => {
@@ -207,9 +207,9 @@ function  BaseConnect({ dynamicData }) {
                   <td
                     key={index}
                     style={
-                      +data[index].value > thresholdUpC
+                      +data[index].value > thresholds[1]
                         ? { backgroundColor: "red"}
-                        : +data[index].value > thresholdMediumC
+                        : +data[index].value > thresholds[0]
                         ? { backgroundColor: "orange" }
                         : +data[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
@@ -259,10 +259,10 @@ function  BaseConnect({ dynamicData }) {
               />
             </div>
             <div className="reset-button">
-              {thresholds[0] !== 30 || thresholds[1] !== 32 ? (
+              {thresholds[0] !== 28 || thresholds[1] !== 30 ? (
                 <button
                   style={{ color: 'black', marginTop: '2%' }}
-                  onClick={() => setThresholds([30, 32])}
+                  onClick={() => setThresholds([28, 30])}
                 >
                   Reset Thresholds to defaults
                 </button>
@@ -305,9 +305,9 @@ function  BaseConnect({ dynamicData }) {
                   <td
                     key={index}
                     style={
-                      +dynamicData[index].value > thresholdUpC
+                      +dynamicData[index].value > thresholds[1]
                         ? { backgroundColor: "red" }
-                        : +dynamicData[index].value > thresholdMediumC
+                        : +dynamicData[index].value > thresholds[0]
                         ? { backgroundColor: "orange" }
                         : +dynamicData[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
