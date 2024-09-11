@@ -38,7 +38,7 @@ async function run() {
     // Insert the defined document into the "NormalData" collection
     //const result = await collection.insertMany(documents);
     // Print the ID of the inserted document
-    console.log(`A document was inserted with the _id: ${result}`);
+   // console.log(`A document was inserted with the _id: ${result}`);
     return result;
     
   } catch (error) {

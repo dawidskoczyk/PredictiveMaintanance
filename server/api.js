@@ -10,6 +10,7 @@ const { connectToDatabase } = require('./db.js'); // Import the MongoDB connecti
 const { mainFilter } = require('./mongo/MongoConnectFilter.js');
 const { mainoo } = require('./mongo/MongoConnect.js');
 const { mainFilterCal } = require('./mongo/MongoConnectFilterCalendar.js');
+const { Predictive } = require('./mongo/MongoConnectPredictive.js');
 
 // Initialize app
 const app = express();
@@ -51,6 +52,18 @@ app.post('/api/data', async (req, res) => {
     endingDate.setHours(endingDate.getHours() + 26);
 
     const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
+    
+    res.json({ message: result });
+  } catch (error) {
+    console.error('Error processing data:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+app.post('/api/dataPred', async (req, res) => {
+  try {
+    const result = await Predictive();
+    console.log('predictive', result)
     res.json({ message: result });
   } catch (error) {
     console.error('Error processing data:', error);

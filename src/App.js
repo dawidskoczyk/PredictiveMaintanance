@@ -25,6 +25,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true); // Stan ładowania
   const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
   const [dynamicData, setDynamicData] = useState([]);
+ 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -52,6 +53,7 @@ function App() {
       console.log("Odpowiedź z serwera:", data.message);
       setDates(data.message);
       setDynamicData(data.message);
+      //setDynamicPredictiveData()
       //window.location.reload();
     } catch (error) {
       console.error("Błąd:", error);
@@ -115,6 +117,7 @@ function  BaseConnect({ dynamicData }) {
   const [dataAnomaly, setDataAnomaly] = useState([]);
   const [thresholds, setThresholds] = useState([30,32]);
   const [isVisible, setIsVisible] = useState(false);
+  const [dynamicPredictiveData, setDynamicPredictiveData] = useState([]);
   // useState(() => {
   //   const saved = window.localStorage.getItem('isVisible');
   //   return saved !== null ? JSON.parse(saved) : false;
@@ -126,20 +129,6 @@ function  BaseConnect({ dynamicData }) {
   const thresholdMediumdB = 65;
   const thresholdDowndB = 35;
 
-  // useEffect(() => {
-  //   window.localStorage.setItem('isVisible', JSON.stringify(isVisible));
-
-
-  // }, [isVisible]);
-
-  // useEffect(() => {
-  //   fetch("http://localhost:5001/api/dataAnomaly")
-  //     .then((res) => res.json())
-  //     .then((data) => setData(data.message))
-  //     .then((data) => console.log(data))
-  //     .catch((err) => console.log(err));
-  // }, [data]);
-
   useEffect(() => {
     fetch("http://localhost:5001/api")
       .then((res) => res.json())
@@ -148,13 +137,22 @@ function  BaseConnect({ dynamicData }) {
       .catch((err) => console.log(err));
   }, [data]);
 
-  // if (data ) {
-  //   for (let i = 0; i <= 1; i++) {
-  //     data[i] = data[i].sort(function (a, b) {
-  //       return new Date(a.date) - new Date(b.date);
-  //     });
-  //   }
-  // }
+  useEffect(() => {
+    fetch("http://localhost:5001/api/dataPred", {
+      method: 'POST', // Change to POST request
+      headers: {
+        'Content-Type': 'application/json', // Specify content type as JSON
+      },
+      body: JSON.stringify({ /* Add any data you want to send in the request body */ }),
+    })
+    .then((res) => res.json())
+    .then((data) => {
+      setDynamicPredictiveData(data.message); // Update state with the response
+      console.log(data); // Log the data for debugging
+    })
+    .catch((err) => console.error(err)); // Handle any errors
+  }, []); // Empty dependency array to run once on mount
+  
   console.log(dynamicData ? dynamicData : "ni ma danych");
 
   const handleChange = event => {
@@ -274,7 +272,7 @@ function  BaseConnect({ dynamicData }) {
         )}
       </div>
       <div className="chart-container">
-        <Chart initialData={dynamicData || []} thresholds={thresholds || []} />
+        <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
       </div>
     </div>
         </div>

@@ -1,12 +1,8 @@
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const fs = require('fs');
 var bodyParser = require('body-parser');
-async function mainoo(){
+async function Predictive(){
 const uri = "mongodb+srv://dawidskoczyk:qnw2yamzo26C3asK@youngdevelopers.vww82.mongodb.net/?retryWrites=true&w=majority&appName=YoungDevelopers";
-const temp = [];
-const time = [];
-const documents = [];
-const filePath = "./Temp_data.txt";
 
 const client = new MongoClient(uri, {
   serverApi: {
@@ -19,12 +15,10 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect to the "NormalBase" database and access its "NormalData" collection
-    const database = client.db("Cluster001");
-    const collection = database.collection("TestData");
-    const result = await collection.find({}, {value: 1, date: 1}).sort({date:-1}).limit(12).toArray();
-    // Insert the defined document into the "NormalData" collection
-    //const result = await collection.insertMany(documents);
-    // Print the ID of the inserted document
+    const database = client.db("Final01");
+    const collection = database.collection("predictedTest2");
+    const result = await collection.find({}, {date: 1, predicted_count: 1}).sort({date:-1}).toArray();
+    console.log('predict', result);
     return result;
   } catch (error) {
     console.error('Błąd podczas wstawiania dokumentu:', error);
@@ -37,4 +31,4 @@ async function run() {
 let res = run().catch(console.dir);
 return res;
 }
-module.exports = {mainoo}
+module.exports = {Predictive}

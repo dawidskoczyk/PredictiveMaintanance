@@ -54,8 +54,9 @@ const options = {
 };
 
 
-export const Chart = ({ initialData = [], thresholds = [] }) => {
+export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= [] }) => {
   const [data, setData] = useState([]);
+  const [predictiveData, setPredictiveData] = useState([]);
   const [thresh, setThresh] = useState(thresholds);
   const [width, setWidth] = useState(2000); // Początkowa szerokość wykresu
 
@@ -77,11 +78,72 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
   }
 }, [data]);
   console.log(thresholds);
-  if (data !== initialData) {
+  if (data !== initialData || predictiveData!==predictiveDataPar) {
     setData(initialData);
+    setPredictiveData(predictiveDataPar);
   }
   if (!data[0]) {
-    return <div>Data is not available</div>;
+    return <>;
+ {/* Bar Chart with Zoom Buttons */}
+ <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+ <div style={{ width: "100%" }}>
+   <div style={{ height: "500px", width: `${width}px` }}>
+     <Bar
+       ref={barChartRef} // Reference to the Bar chart
+       data={{
+         labels: predictiveData.map((data) =>
+           data.date.split('T')[0]
+         ),
+         datasets: [
+           {
+             label: "Temperature",
+             data: predictiveData.map((data) => data.predicted_count),
+             backgroundColor: predictiveData.map((data) =>
+               data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+             ),
+           },
+         ],
+       }}
+       options={{
+         ...options,
+         plugins: {
+           ...options.plugins,
+           title: {
+             text: "Zoomable Predictive Bar Chart",
+           },
+           annotation: {
+             annotations: [
+               {
+                 type: 'line',
+                 mode: 'horizontal',
+                 scaleID: 'y',
+                 value: thresh[0],
+                 borderColor: 'yellow',
+                 borderWidth: 2,
+               },
+               {
+                 type: 'line',
+                 mode: 'horizontal',
+                 scaleID: 'y',
+                 value: thresh[1],
+                 borderColor: 'red',
+                 borderWidth: 3,
+               }
+             ]
+           }
+         },
+       }}
+     />
+
+   </div>
+ </div>
+</div>
+<div>
+       <button style = {{color:"black"}} onClick={() => zoomIn(barChartRef)}>Zoom In</button>
+       <button style = {{color:"black"}} onClick={() => zoomOut(barChartRef)}>Zoom Out</button>
+       <button style = {{color:"black"}} onClick={() => resetZoom(barChartRef)}>Reset Zoom</button>
+     </div><div>Filterd Data is not available</div></>
+
   }
 
   const zoomIn = (chartRef) => {
@@ -117,6 +179,7 @@ export const Chart = ({ initialData = [], thresholds = [] }) => {
 
   return (
     <div>
+      
       {/* Bar Chart with Zoom Buttons */}
       <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
         <div style={{ width: "100%" }}>
