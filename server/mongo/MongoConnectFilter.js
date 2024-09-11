@@ -38,7 +38,7 @@ async function run() {
         $lte: endDate
       }
   };
-    const result = await collection.find(query, {value: 1, date: 1}).sort({date:-1}).toArray();
+    const result = await collection.find(query, {value: 1, date: 1}).sort({date:1}).toArray();
     // Insert the defined document into the "NormalData" collection
     //const result = await collection.insertMany(documents);
     // Print the ID of the inserted document
