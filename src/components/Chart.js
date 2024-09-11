@@ -179,7 +179,65 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
 
   return (
     <div>
-      
+       {/* Bar Chart with Zoom Buttons */}
+ <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+ <div style={{ width: "100%" }}>
+   <div style={{ height: "500px", width: `${width}px` }}>
+     <Bar
+       ref={barChartRef} // Reference to the Bar chart
+       data={{
+         labels: predictiveData.map((data) =>
+           data.date.split('T')[0]
+         ),
+         datasets: [
+           {
+             label: "Temperature",
+             data: predictiveData.map((data) => data.predicted_count),
+             backgroundColor: predictiveData.map((data) =>
+               data.value > 32 ? "red" : data.value > 30 ? "orange" : data.value < 23 ? "blue" : "green"
+             ),
+           },
+         ],
+       }}
+       options={{
+         ...options,
+         plugins: {
+           ...options.plugins,
+           title: {
+             text: "Zoomable Predictive Bar Chart",
+           },
+           annotation: {
+             annotations: [
+               {
+                 type: 'line',
+                 mode: 'horizontal',
+                 scaleID: 'y',
+                 value: thresh[0],
+                 borderColor: 'yellow',
+                 borderWidth: 2,
+               },
+               {
+                 type: 'line',
+                 mode: 'horizontal',
+                 scaleID: 'y',
+                 value: thresh[1],
+                 borderColor: 'red',
+                 borderWidth: 3,
+               }
+             ]
+           }
+         },
+       }}
+     />
+
+   </div>
+ </div>
+</div>
+<div>
+       <button style = {{color:"black"}} onClick={() => zoomIn(barChartRef)}>Zoom In</button>
+       <button style = {{color:"black"}} onClick={() => zoomOut(barChartRef)}>Zoom Out</button>
+       <button style = {{color:"black"}} onClick={() => resetZoom(barChartRef)}>Reset Zoom</button>
+     </div>
       {/* Bar Chart with Zoom Buttons */}
       <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
         <div style={{ width: "100%" }}>
