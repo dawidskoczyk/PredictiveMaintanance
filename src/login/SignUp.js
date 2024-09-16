@@ -12,6 +12,11 @@ export const Register = () => {
   const [email, setMail] = useState('');
   const navigate = useNavigate();
 
+  const isStrongPassword = (password) => {
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}$/;
+    return passwordRegex.test(password);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!username || !password || !confirmPassword || !email) {
@@ -22,6 +27,33 @@ export const Register = () => {
       toast.error('Passwords do not match');
       return;
     }
+
+    if (!isStrongPassword(password)) {
+      toast.error('Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character.');
+      return;
+    }
+
+    try {
+      const checkResponse = await fetch('http://localhost:5001/check-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, username })
+      });
+  
+      const { emailExists, usernameExists } = await checkResponse.json();
+      if (emailExists) {
+        toast.error('E-mail already registered');
+        return;
+      }
+      if (usernameExists) {
+        toast.error('Username already taken');
+        return;
+      }
+    } catch (err) {
+      toast.error('Error checking email or username');
+      return;
+    }
+
     try {
       const response = await fetch('http://localhost:5001/register', {
         method: 'POST',

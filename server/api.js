@@ -60,6 +60,27 @@ app.post('/api/data', async (req, res) => {
   }
 });
 
+app.post('/check-email', async (req, res) => {
+  const { email, username } = req.body;
+
+  try {
+    const existingUserByEmail = await User.findOne({ email });
+    const existingUserByUsername = await User.findOne({ username });
+
+    if (existingUserByEmail) {
+      return res.json({ emailExists: true, usernameExists: false });
+    } 
+    if (existingUserByUsername) {
+      return res.json({ emailExists: false, usernameExists: true });
+    } 
+    return res.json({ emailExists: false, usernameExists: false });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
 app.post('/api/dataPred', async (req, res) => {
   try {
     const result = await Predictive();
