@@ -15,7 +15,7 @@ import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import SignI
 import { UserManagementPage } from "./userManagement/UserManagementPage.js";
 import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
 import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
-
+import { GraphanaCharts } from "./components/GraphanaCharts.js";
 let dynamicData = [];
 
 function App() {
@@ -116,7 +116,7 @@ function  BaseConnect({ dynamicData }) {
   const [data, setData] = useState(null);
   const [dataAnomaly, setDataAnomaly] = useState([]);
   const [thresholds, setThresholds] = useState([28,30]);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [dynamicPredictiveData, setDynamicPredictiveData] = useState([]);
   // useState(() => {
   //   const saved = window.localStorage.getItem('isVisible');
@@ -272,6 +272,7 @@ function  BaseConnect({ dynamicData }) {
         )}
       </div>
       <h3 style={{color:'blue'}}>Press ctrl to move and zoom charts</h3>
+      <GraphanaCharts/>
       <div className="chart-container">
         <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
       </div>

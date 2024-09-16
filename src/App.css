@@ -12,7 +12,7 @@ th{
   text-align: center !important; 
   
 }
-
+h4{text-align: center;}
 
 /* Stylizacja dla Toastów */
 .Toastify__toast {
