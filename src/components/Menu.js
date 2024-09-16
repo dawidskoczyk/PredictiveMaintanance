@@ -9,7 +9,7 @@ export function Menu() {
   // Define custom login and logout handlers
   const navigate = useNavigate(); // Initialize the useNavigate hook
   const location = useLocation(); // Get the current location
-  const { isAuthenticated, logout , username } = useAuth(); // Use useAuth to get authentication state and username
+  const { isAuthenticated,username, role, logout} = useAuth(); // Use useAuth to get authentication state and username
 
 
   const handleLogin = () => {
@@ -37,29 +37,57 @@ export function Menu() {
   return (
     <Navbar className="bg-body-tertiary" style={{ width: "100%" }}>
       <Container>
-        <Navbar.Brand style={{ marginLeft: "-4%" }} as={Link} to="/home" className={isActive('/home') ? 'active-link' : ''} // Apply active-link class if this is the active path
-        >🏠 Home</Navbar.Brand>
-        <Navbar.Brand as={Link} to="/history" className={isActive('/history') ? 'active-link' : ''}>🗄️ Anomaly History</Navbar.Brand>
+        <Navbar.Brand
+          style={{ marginLeft: "-4%" }}
+          as={Link}
+          to="/home"
+          className={isActive('/home') ? 'active-link' : ''}
+        >
+          🏠 Home
+        </Navbar.Brand>
+        <Navbar.Brand
+          as={Link}
+          to="/history"
+          className={isActive('/history') ? 'active-link' : ''}
+        >
+          🗄️ Anomaly History
+        </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse className="justify-content-end">
           {isAuthenticated ? (
             <>
-               <Navbar.Text 
-                style={{ marginRight: "1rem", cursor: 'pointer' }} onClick={handleUserManagement}
-                className={isActive('/user-management') ? 'active-link' : ''} // Apply active-link class if this is the active path
-                >
-                Manage users {username} !
+              <Navbar.Text style={{ marginRight: "1rem" }}>
+                Welcome, {username}!
+ 
               </Navbar.Text>
-              <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleLogout}>
+              {role === 'admin' && (
+                <Navbar.Text
+                  style={{ marginRight: "1rem", cursor: 'pointer' }}
+                  onClick={handleUserManagement}
+                  className={isActive('/user-management') ? 'active-link' : ''}
+                >
+                  Manage Users
+                </Navbar.Text>
+              )}
+              <Navbar.Brand
+                style={{ marginRight: "-5%", cursor: 'pointer' }}
+                onClick={handleLogout}
+              >
                 🚪 Log Out
               </Navbar.Brand>
             </>
           ) : (
             <>
-              <Navbar.Brand style={{ marginRight: "-5%", cursor: 'pointer' }} onClick={handleSignUp}>
+              <Navbar.Brand
+                style={{ marginRight: "-5%", cursor: 'pointer' }}
+                onClick={handleSignUp}
+              >
                 ✍️ Sign Up
               </Navbar.Brand>
-              <Navbar.Brand style={{ marginLeft: "10%", cursor: 'pointer' }} onClick={handleLogin}>
+              <Navbar.Brand
+                style={{ marginLeft: "10%", cursor: 'pointer' }}
+                onClick={handleLogin}
+              >
                 🔑 Log In
               </Navbar.Brand>
             </>

@@ -23,7 +23,7 @@ const User = mongoose.model('User', new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
-  role: { type: String, default: 'user' } // Dodaj domyślną rolę
+  role: { type: String } // Ensure default is set
 }));
 
 const secret = process.env.JWT_SECRET; // Use the secret from environment variables
@@ -110,14 +110,15 @@ app.post('/api/dataCal', async (req, res) => {
 
 
 app.post('/register', async (req, res) => {
-  const { username, password, email, role } = req.body;  // Dodaj 'role'
-  console.log('register');
+  const { username, password, email, role } = req.body;  // Ensure role is passed
+
   if (!username || !password || !email) {
     return res.status(400).json({ message: 'Please fill in all fields' });
   }
+
   try {
     const hashedPassword = bcrypt.hashSync(password, 8);
-    const newUser = new User({ username, email, password: hashedPassword, role }); // Dodaj 'role'
+    const newUser = new User({ username, email, password: hashedPassword, role: role }); // Set default role if not provided
     await newUser.save();
     res.status(201).send('User registered');
   } catch (err) {
@@ -146,11 +147,12 @@ app.post('/login', async (req, res) => {
 const userRouter = express.Router();
 
 userRouter.put('/users/:id', async (req, res) => {
-  const { username, role } = req.body;  // Dodaj 'role'
+  const { username, email, role } = req.body;
+
   try {
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
-      { username, role },  // Dodaj 'role'
+      { username, role: role },  // Set default role if not provided
       { new: true }
     );
     res.json(updatedUser);
