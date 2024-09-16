@@ -1,33 +1,34 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Form, Button, Alert } from 'react-bootstrap';
-import {toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import validator from 'validator'; // Import validator
-import './UserManagement.css'; // Upewnij się, że ścieżka jest poprawna
+import { useAuth } from '../login/AuthContext'; // Import AuthProvider for current user
+import './UserManagement.css'; // Ensure this path is correct
 
 export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCreatingUser }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');  // Nowe pole dla e-maila
-  const [role, setRole] = useState('user');
+  const [email, setEmail] = useState('');
+  const [role, setRole] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (selectedUser && !isCreatingUser) {
+      console.log('Selected User:', selectedUser); // Log selectedUser to verify data
       setUsername(selectedUser.username);
-      setRole(selectedUser.role);
-      setEmail(selectedUser.email);  // Pobieranie e-maila, jeśli aktualizujemy
+      setRole(selectedUser.role); // Check if role is coming through correctly
+      setEmail(selectedUser.email);
     } else if (isCreatingUser) {
       setUsername('');
       setPassword('');
-      setEmail('');  // Resetowanie e-maila
-      setRole('user');
+      setEmail('');
     }
   }, [selectedUser, isCreatingUser]);
 
   const handleSave = async () => {
     setLoading(true);
-
+    console.log(role);
     // Validate fields
     if (!username || !email || (isCreatingUser && !password)) {
       toast.error('Please fill in all fields.');
@@ -50,11 +51,12 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
 
     try {
       if (isCreatingUser) {
-        const newUser = { username, password, email, role };
+        const newUser = { username, password, email, role }; // Default role for new users
         await onCreateUser(newUser);
       } else {
-        const updatedUser = { ...selectedUser, username, role };
+        const updatedUser = { ...selectedUser, username, email };
         if (password) updatedUser.password = password;
+          updatedUser.role = role;
         await onUpdateUser(updatedUser);
       }
     } catch (err) {
@@ -63,9 +65,10 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
       setLoading(false);
     }
   };
+
   return (
     <div style={{ width: '60%', float: 'right', padding: '10px' }}>
-      <h3>{isCreatingUser ? 'Create user' : 'Manage users!'}</h3>  {/* Dynamiczny tytuł */}
+      <h3>{isCreatingUser ? 'Create user' : 'Manage users!'}</h3>  {/* Dynamic title */}
 
       <Form>
         <Form.Group>
@@ -79,7 +82,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
         </Form.Group>
 
         <Form.Group>
-          <Form.Label>Email</Form.Label>  {/* Nowe pole dla email */}
+          <Form.Label>Email</Form.Label>
           <Form.Control
             type="email"
             placeholder="Enter email"
@@ -97,13 +100,26 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             onChange={(e) => setPassword(e.target.value)}
           />
         </Form.Group>
-<Form.Group>
-  <Form.Label>Role</Form.Label>
-  <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
-    <option value="user">User</option>
-    <option value="admin">Admin</option>
-  </Form.Control>
-</Form.Group>
+
+        {isCreatingUser && (
+          <Form.Group>
+            <Form.Label>Role</Form.Label>
+            <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </Form.Control>
+          </Form.Group>
+        )}
+
+        {!isCreatingUser && (
+          <Form.Group>
+            <Form.Label>Role</Form.Label>
+            <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </Form.Control>
+          </Form.Group>
+        )}
 
         <Button
           variant="primary"
@@ -127,6 +143,6 @@ UserManagement.propTypes = {
     role: PropTypes.string
   }),
   onUpdateUser: PropTypes.func.isRequired,
-  onCreateUser: PropTypes.func.isRequired,  // Nowy prop do tworzenia użytkownika
-  isCreatingUser: PropTypes.bool.isRequired  // Nowy prop określający tryb
+  onCreateUser: PropTypes.func.isRequired,
+  isCreatingUser: PropTypes.bool.isRequired  // Flag to indicate if creating user
 };

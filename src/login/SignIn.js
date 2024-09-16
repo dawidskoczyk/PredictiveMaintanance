@@ -54,9 +54,7 @@ export const Login = () => {
         />
         <button type="submit">Login</button>
       </form>
-      <div className="form-footer">
-        <p>Don't have an account? <a href="/register">Sign Up</a></p>
-      </div>
+
     </div>
   );
 }
