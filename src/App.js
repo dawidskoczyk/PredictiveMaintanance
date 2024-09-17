@@ -131,7 +131,7 @@ function  BaseConnect({ dynamicData }) {
     fetch("http://localhost:5001/api")
       .then((res) => res.json())
       .then((data) => setData(data.message))
-      .then((data) => console.log(data))
+      //.then((data) => console.log(data))
       .catch((err) => console.log(err));
   }, [data]);
 
@@ -151,7 +151,7 @@ function  BaseConnect({ dynamicData }) {
     .catch((err) => console.error(err)); // Handle any errors
   }, []); // Empty dependency array to run once on mount
   
-  console.log(dynamicData ? dynamicData : "ni ma danych");
+  //console.log(dynamicData ? dynamicData : "ni ma danych");
 
   const handleChange = event => {
   
@@ -270,7 +270,7 @@ function  BaseConnect({ dynamicData }) {
         )}
       </div>
       <h3 style={{color:'blue'}}>Press ctrl to move and zoom charts</h3>
-      <GraphanaCharts/>
+      <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
       <div className="chart-container">
         <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
       </div>

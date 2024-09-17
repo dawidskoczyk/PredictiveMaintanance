@@ -77,7 +77,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
     barChart.zoom(1.8);  // Set initial zoom level for bar chart
   }
 }, [data]);
-  console.log(thresholds);
+  //console.log(thresholds);
   if (data !== initialData || predictiveData!==predictiveDataPar) {
     setData(initialData);
     setPredictiveData(predictiveDataPar);
