@@ -6,26 +6,58 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
     const [thresh, setThresh] = useState(thresholds);
     const [liveDataGraph, setLiveDataGraph] = useState(liveData);
     const [anomalyCount, setAnomalyCount] = useState(0);
+    const [critAnomalyCount, setCritAnomalyCount] = useState(0);
+    const [thresholdsUpdated, setThresholdsUpdated] = useState(false);
 
     const countAnomaly = () => {
         const initialValue = 0;
-        const anomaly = data?.reduce((accumulator, currentValue) => 
-            currentValue.value > thresh[0] ? accumulator + 1 : accumulator, 
+        const initialValue1 = 0;
+        const firstDate = liveDataGraph[0].date.split('T')[0];
+        const oneDate = [];
+    
+        liveDataGraph?.forEach((value) => {
+            if (value.date.split('T')[0] === firstDate) oneDate.push(value);
+        });
+    
+        console.log('Filtered data for one date:', oneDate);
+    
+        const thresholdValue0 = parseInt(thresh[0], 10); // Convert thresh[0] to integer
+        const thresholdValue1 = parseInt(thresh[1], 10); // Convert thresh[1] to integer
+    
+        const anomaly = oneDate?.reduce((accumulator, currentValue) => 
+            currentValue.value > thresholdValue0 ? accumulator + 1 : accumulator, 
             initialValue
         );
+        console.log('Anomaly count:', anomaly);
         setAnomalyCount(anomaly);
+    
+        const anomalyCrit = oneDate?.reduce((accumulator, currentValue) => 
+            currentValue.value > thresholdValue1 ? accumulator + 1 : accumulator, 
+            initialValue1
+        );
+        console.log('Critical anomaly count:', anomalyCrit);
+        setCritAnomalyCount(anomalyCrit);
     };
-
-    // When thresholds change, update the threshold and recalculate anomalies
+    
+    // When thresholds change, update the threshold and set the flag
     useEffect(() => {
         setThresh(thresholds);
-        countAnomaly();
+        setThresholdsUpdated(true);
     }, [thresholds]);
+    
+    // Call countAnomaly when thresholds have been updated
+    useEffect(() => {
+        if (thresholdsUpdated) {
+            countAnomaly();
+            setThresholdsUpdated(false); // Reset the flag
+        }
+    }, [thresholdsUpdated]);
+    
 
     // When dynamic data changes, update data and recalculate anomalies
     useEffect(() => {
         setData(dynamicData);
-        countAnomaly();
+        //countAnomaly();
     }, [dynamicData]);
 
     // When live data changes, update live data for the chart
@@ -36,7 +68,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
     return (
         <div style={{ display: 'flex' }}>
             <div>
-                <h4>Actual Temperature of device</h4>
+                <h5>Actual Temperature of device</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
@@ -70,11 +102,11 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                     }}
                     value={liveDataGraph[0]?.value || 23}
                     minValue={10}
-                    maxValue={35}
+                    maxValue={40}
                 />
             </div>
             <div>
-                <h4>Risk of failure</h4>
+                <h5>Risk of failure</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
@@ -95,7 +127,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                 />
             </div>
             <div>
-                <h4>Amount of warnings</h4>
+                <h5>Amount of warnings</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
@@ -129,6 +161,43 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                     value={anomalyCount}
                     minValue={0}
                     maxValue={70}
+                />
+            </div>
+            <div>
+                <h5>Amount of critical warnings</h5>
+                <GaugeComponent
+                    type="semicircle"
+                    arc={{
+                        width: 0.2,
+                        padding: 0.005,
+                        cornerRadius: 1,
+                        subArcs: [
+                            { limit: 5, color: '#00FF15', showTick: true, tooltip: { text: 'ok amount of anomalies' }},
+                            { limit: 15, color: 'yellow', showTick: true, tooltip: { text: 'warning amount of anomalies!' }},
+                            { limit: 30, color: 'orange', showTick: true, tooltip: { text: 'high amount of anomalies!' }},
+                            { color: '#EA4228', tooltip: { text: 'Too high amount of anomalies!' }}
+                        ]
+                    }}
+                    pointer={{
+                        color: '#345243',
+                        length: 0.80,
+                        width: 15
+                    }}
+                    labels={{
+                        valueLabel: { formatTextValue: value => value + ' anomalies' },
+                        tickLabels: {
+                            type: 'outer',
+                            valueConfig: { formatTextValue: value => value + 'ºC', fontSize: 10 },
+                            ticks: [
+                                { value: 5 },
+                                { value: 15 },
+                                { value: 30 }
+                            ]
+                        }
+                    }}
+                    value={critAnomalyCount}
+                    minValue={0}
+                    maxValue={50}
                 />
             </div>
         </div>

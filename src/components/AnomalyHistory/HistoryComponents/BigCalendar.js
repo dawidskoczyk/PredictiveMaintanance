@@ -52,13 +52,24 @@ function MyCalendar() {
       }
     }
     else {
-      if(data.type == 'warning'){
-        return <div style={{ background: 'red', color:'white' }}>{data?.x}</div>;
-
-      }
-      else if(data.type == 'critical') {
-        return <div style={{ background: 'orange', color:'white' }}>{data?.x}</div>;
-      }
+      if (data.type === 'warning' || data.type === 'critical') {
+        const percentage = (data.x / 96) * 100; // Convert to percentage
+    
+        return (
+            <div style={{ 
+                background: `linear-gradient(to right, ${
+                    data.type === 'critical' ? 'red' : 'orange'
+                } ${percentage}%, transparent ${percentage}%)`,
+                color: 'white',
+                width: '100%', // Ensure full width
+                height: '30px', // Adjust height as needed
+                border: '1px solid black' // Optional, for better visibility
+            }}>
+                {data.x}
+            </div>
+        );
+    }
+    
     }
     },
   };

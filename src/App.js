@@ -158,11 +158,14 @@ function  BaseConnect({ dynamicData }) {
     setIsVisible(current => !current);
   };
   const handleThresh = (index, value) => {
+    
     if(index===1){
       if(thresholds[0]>=value) return;
+      if(value>=40) return; 
     }
     if(index===0){
       if(thresholds[1]<=value) return;
+      if(value<=23) return;
     }
     const newThresholds = [...thresholds];
     newThresholds[index] = value;
@@ -173,7 +176,7 @@ function  BaseConnect({ dynamicData }) {
     <div>
       {data ? (
         <div>
-          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'48px', color:'red'}}>Latest twelve data points</h2>
+          <h2 style={{ marginLeft: "40%", marginTop:'2%', fontSize:'28px', color:'red'}}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
               <tr>
