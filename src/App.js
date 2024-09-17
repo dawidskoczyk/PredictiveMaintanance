@@ -15,6 +15,7 @@ import { UserManagementPage } from "./userManagement/UserManagementPage.js";
 import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
 import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
 import { GraphanaCharts } from "./components/GraphanaCharts.js";
+import { rgb } from "chroma-js";
 let dynamicData = [];
 
 function App() {
@@ -172,15 +173,15 @@ function  BaseConnect({ dynamicData }) {
   return (
     <div>
       {data ? (
-        <div>
-          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'48px', color:'red'}}>Latest twelve data points</h2>
-          <Table responsive>
+        <div >
+          {/* <h2 style={{ marginLeft: "2%", marginTop:'2%', fontSize:'48px', color:'red'}}>Latest data:</h2> */}
+          <Table responsive style= {{width: "90%"}}>
             <thead>
               <tr>
                 <th style={{ backgroundColor: "black", color: "white" }}>
-                  Parameter
+                  Date:
                 </th>
-                {Array.from({ length: 12 }).map((_, index) => (
+                {Array.from({ length: 10}).map((_, index) => (
                   <th key={index}>
                     {data[index]?.date
                       .replace("2024-", " ")
@@ -201,16 +202,16 @@ function  BaseConnect({ dynamicData }) {
                 >
                   Temperature (&#176;C)
                 </td>
-                {Array.from({ length: 12 }).map((_, index) => (
+                {Array.from({ length: 10 }).map((_, index) => (
                   <td
                     key={index}
                     style={
                       +data[index].value > thresholds[1]
-                        ? { backgroundColor: "red"}
+                        ? { backgroundColor: rgb(237, 25, 21)} //  235, 52, 52
                         : +data[index].value > thresholds[0]
-                        ? { backgroundColor: "orange" }
+                        ? { backgroundColor: rgb(237, 140, 21) } // 235, 155, 52
                         : +data[index].value > thresholdDownC
-                        ? { backgroundColor: "lightgreen" }
+                        ? { backgroundColor: rgb(58, 235, 52) } // 
                         : { backgroundColor: "cyan" }
                     }
                   >
@@ -225,7 +226,7 @@ function  BaseConnect({ dynamicData }) {
           <div className="thresholds-container">
       <div className="thresholds-form">
         <h2>
-          Pick your own Thresholds
+          Set Thresholds
           <input
             type='checkbox'
             name='thresh'
