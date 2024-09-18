@@ -42,7 +42,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
   return (
 <div style={{ margin: '20px' }}>
       {/* Image Heading */}
-      <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
+      {/* <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
       <h1 style={{ color: "green" }}>
           State of the engine:
         </h1>
@@ -52,7 +52,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
           style={{ height: '50px', width: 'auto', marginRight: '20px', marginLeft: "20px" }}
         />
         
-      </div>
+      </div> */}
 
       {/* Flex Container for Date Picker and Heading */}
       <div style={{ display: "flex", border: "dashed"}}>
