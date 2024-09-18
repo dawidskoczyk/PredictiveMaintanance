@@ -5,6 +5,7 @@ const bp = require('body-parser');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // Import bcrypt
+const nodemailer = require('nodemailer'); // Import nodemailer
 const validator = require('validator'); // Import validator for email validation
 const { connectToDatabase } = require('./db.js'); // Import the MongoDB connection
 const { mainFilter } = require('./mongo/MongoConnectFilter.js');
@@ -23,10 +24,18 @@ const User = mongoose.model('User', new mongoose.Schema({
   username: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   email: { type: String, required: true },
-  role: { type: String } // Ensure default is set
+  role: { type: String, default: 'user' } // Ensure default is set
 }));
 
 const secret = process.env.JWT_SECRET; // Use the secret from environment variables
+
+const transporter = nodemailer.createTransport({
+  service: 'Gmail', // or another email service provider
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS
+  }
+});
 
 // Connect to the database
 connectToDatabase();
@@ -130,10 +139,18 @@ app.post('/register', async (req, res) => {
 app.post('/login', async (req, res) => {
   const { username, password } = req.body;
   try {
+    // Szukamy użytkownika w bazie danych
     const user = await User.findOne({ username });
+
+    // Jeśli użytkownik istnieje i hasło się zgadza
     if (user && bcrypt.compareSync(password, user.password)) {
-      const token = jwt.sign({ username }, secret, { expiresIn: '1h' });
-      res.json({ token });
+      const token = jwt.sign(
+        { username: user.username, role: user.role, email: user.email }, // Include email in the token
+        secret,
+        { expiresIn: '1h' }
+      );
+      // Zwracamy token, nazwę użytkownika i rolę
+      res.json({ token, username: user.username, role: user.role, email: user.email });
     } else {
       res.status(401).send('Invalid credentials');
     }
@@ -142,6 +159,7 @@ app.post('/login', async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 });
+
 
 // Define a router for user management
 const userRouter = express.Router();
@@ -182,6 +200,31 @@ userRouter.get('/users', async (req, res) => {
   }
 });
 
+app.post('/api/send-email', async (req, res) => {
+  const { to, subject, text } = req.body;
+
+  if (!to || !subject || !text) {
+    console.error('Missing required fields:', { to, subject, text });
+    return res.status(400).json({ error: 'Missing required fields: to, subject, or text' });
+  }
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to,
+    subject,
+    text
+  };
+
+  try {
+    console.log('Sending email with options:', mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('Email sent:', info.response);
+    res.status(200).json({ message: `Email sent: ${info.response}` });
+  } catch (error) {
+    console.error('Error sending email:', error);
+    res.status(500).json({ error: 'Error sending email' });
+  }
+});
 app.use('/api', userRouter);
 
 app.listen(5001, () => {

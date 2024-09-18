@@ -12,6 +12,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   useEffect(() => {
     if (selectedUser && !isCreatingUser) {
@@ -26,9 +27,28 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
     }
   }, [selectedUser, isCreatingUser]);
 
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = ''; // Chrome requires returnValue to be set
+      }
+    };
+    
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, [isDirty]);
+
+  const handleInputChange = (setter) => (e) => {
+    setter(e.target.value);
+    setIsDirty(true); // Mark the form as dirty when any input changes
+  };
+
   const handleSave = async () => {
     setLoading(true);
-    console.log(role);
+    setIsDirty(false); // Reset dirty flag on save
     // Validate fields
     if (!username || !email || (isCreatingUser && !password)) {
       toast.error('Please fill in all fields.');
@@ -77,7 +97,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             type="text"
             placeholder="Enter nickname"
             value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            onChange={handleInputChange(setUsername)}
           />
         </Form.Group>
 
@@ -87,7 +107,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             type="email"
             placeholder="Enter email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleInputChange(setEmail)}
           />
         </Form.Group>
 
@@ -97,29 +117,17 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             type="password"
             placeholder="Enter new password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleInputChange(setPassword)}
           />
         </Form.Group>
 
-        {isCreatingUser && (
-          <Form.Group>
-            <Form.Label>Role</Form.Label>
-            <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </Form.Control>
-          </Form.Group>
-        )}
-
-        {!isCreatingUser && (
-          <Form.Group>
-            <Form.Label>Role</Form.Label>
-            <Form.Control as="select" value={role} onChange={(e) => setRole(e.target.value)}>
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </Form.Control>
-          </Form.Group>
-        )}
+        <Form.Group>
+          <Form.Label>Role</Form.Label>
+          <Form.Control as="select" value={role} onChange={handleInputChange(setRole)}>
+            <option value="user">User</option>
+            <option value="admin">Admin</option>
+          </Form.Control>
+        </Form.Group>
 
         <Button
           variant="primary"
