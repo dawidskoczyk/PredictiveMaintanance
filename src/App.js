@@ -21,10 +21,10 @@ let dynamicData = [];
 
 function App() {
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
-  const [dates, setDates] = useState([]);
+  
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [dynamicData, setDynamicData] = useState([]);
+  
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -33,32 +33,7 @@ function App() {
     }
   }, []);
 
-  const handleSubmit = async (startDate, endDate) => {
-    console.log(`handle submit start ${startDate} koniec ${endDate}`);
-    try {
-      const response = await fetch("http://localhost:5001/api/data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ startDate: startDate.toISOString(), endDate: endDate.toISOString() }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
 
-      const data = await response.json();
-      console.log("Odpowiedź z serwera:", data.message);
-      setDates(data.message);
-      setDynamicData(data.message);
-    } catch (error) {
-      console.error("Błąd:", error);
-    }
-  };
-
-  const OnChange = (newRanges) => {
-    handleSubmit(newRanges.startDate, newRanges.endDate);
-  };
 
   function HomePage() {
     const { isAuthenticated } = useAuth();
@@ -66,8 +41,8 @@ function App() {
       <div>
         {isAuthenticated ? (
           <>
-            <DatePicker onChange={OnChange} />
-            <BaseConnect dynamicData={dynamicData} />
+            
+            <BaseConnect  />
           </>
         ) : (
           <div className="home-page">
@@ -92,13 +67,15 @@ function App() {
   );
 }
 
-function BaseConnect({ dynamicData }) {
+function BaseConnect() {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
   const [dataAnomaly, setDataAnomaly] = useState([]);
   const [thresholds, setThresholds] = useState([28, 30]);
   const [isVisible, setIsVisible] = useState(true);
   const [dynamicPredictiveData, setDynamicPredictiveData] = useState([]);
+  const [dynamicData, setDynamicData] = useState([]);
+  const [dates, setDates] = useState([]);
 
   const thresholdUpC = 33;
   const thresholdMediumC = 30;
@@ -133,6 +110,33 @@ function BaseConnect({ dynamicData }) {
     setIsVisible(current => !current);
   };
 
+  const handleSubmit = async (startDate, endDate) => {
+    console.log(`handle submit start ${startDate} koniec ${endDate}`);
+    try {
+      const response = await fetch("http://localhost:5001/api/data", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ startDate: startDate.toISOString(), endDate: endDate.toISOString() }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Odpowiedź z serwera:", data.message);
+      setDates(data.message);
+      setDynamicData(data.message);
+    } catch (error) {
+      console.error("Błąd:", error);
+    }
+  };
+
+  const OnChange = (newRanges) => {
+    handleSubmit(newRanges.startDate, newRanges.endDate);
+  };
+
   const handleThresh = (index, value) => {
     if (index === 1) {
       if (thresholds[0] >= value || value >= 40) return;
@@ -149,7 +153,7 @@ function BaseConnect({ dynamicData }) {
     <div>
       {data ? (
         <div>
-          <h2 style={{ marginLeft: "4%", marginTop: '2%', fontSize: '48px', color: 'red' }}>Latest twelve data points</h2>
+           <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
           <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
@@ -169,7 +173,7 @@ function BaseConnect({ dynamicData }) {
             <tbody>
               <tr>
                 <td style={{ width: "120px", backgroundColor: "purple", color: "white" }}>Temperature (&#176;C)</td>
-                {Array.from({ length: 10 }).map((_, index) => (
+                {Array.from({ length: 12 }).map((_, index) => (
                   <td
                     key={index}
                     style={
@@ -191,7 +195,7 @@ function BaseConnect({ dynamicData }) {
 
           <div className="thresholds-container">
             <div className="thresholds-form">
-              <h2>
+              <h2 style={{ marginLeft: '30%'}}>
                 Hide Thresholds
                 <input
                   type='checkbox'
@@ -236,12 +240,14 @@ function BaseConnect({ dynamicData }) {
                 </>
               )}
             </div>
+            </div>
+            <DatePicker onChange={OnChange} />
             <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3>
-            <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
+           
             <div className="chart-container">
               <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData || []} />
             </div>
-          </div>
+          
         </div>
       ) : (
         <p></p>
@@ -265,7 +271,7 @@ function BaseConnect({ dynamicData }) {
         <tbody>
           <tr>
             <td style={{ width: "120px", backgroundColor: "purple", color: "white" }}>Temperature (&#176;C)</td>
-            {Array.from({ length: 10 }).map((_, index) => (
+            {Array.from({ length: 12 }).map((_, index) => (
               <td
                 key={index}
                 style={

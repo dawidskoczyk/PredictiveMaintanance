@@ -91,19 +91,19 @@ table {
 }
 /* Thresholds.css */
 .thresholds-container {
-  padding: 20px;
+  padding:20px;
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   display: flex;
-  flex-direction: column;
+  flex-direction:column;
   align-items: center;
+  padding-left: 80px;
 }
 
 .thresholds-form {
   width: 100%;
   max-width: 600px;
-  margin-bottom: 20px;
 }
 
 .thresholds-form h2 {
@@ -118,13 +118,13 @@ table {
 .threshold-inputs {
   margin-top: 20px; /* Increased space between heading and inputs */
   align-items: center;
+  display: flex;
 }
 
 .input-group {
   display: flex;
   align-items: center;
-  margin-bottom: 15px; /* Increased space between input groups */
-}
+  }
 
 .input-group label {
   margin-right: 15px; /* Increased space between label and input */
@@ -133,6 +133,7 @@ table {
 
 .threshold-input {
   padding: 8px; /* Added padding for better visual appeal */
+  margin-right:5%;
   border: 1px solid #ced4da;
   border-radius: 4px;
   width: 120px; /* Increased width for better usability */
