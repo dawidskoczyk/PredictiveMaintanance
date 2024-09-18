@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserList } from './UserList';
 import { UserManagement } from './UserManagement';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from 'react-bootstrap';
@@ -13,7 +14,7 @@ export const UserManagementPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isCreatingUser, setIsCreatingUser] = useState(false); 
   const [loading, setLoading] = useState(false);
-  const { isAuthenticated, role } = useAuth(); // Access role directly from context
+  const { isAuthenticated, role, email, username } = useAuth(); // Access role and email directly from context
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -49,7 +50,6 @@ export const UserManagementPage = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email: newUser.email, username: newUser.username})
-        
       });
 
       const { emailExists, usernameExists } = await checkResponse.json();
@@ -90,6 +90,10 @@ export const UserManagementPage = () => {
   };
 
   const handleRemoveUser = async () => {
+    if(selectedUser.username === username){
+      toast.error("You can't delete yourself Admin!");
+      return;
+    }
     if (selectedUser) {
       setLoading(true);
       try {
@@ -124,6 +128,35 @@ export const UserManagementPage = () => {
     }
   };
 
+  const handleSendEmail = async () => {
+    if (!email) {
+      toast.error('No user email available');
+      return;
+    } 
+
+    try {
+      const response = await fetch('http://localhost:5001/api/send-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          to: email, // Ensure this matches the backend expected field
+          subject: 'Notification',
+          text: 'This is a test email from your React app!'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      toast.success(data.message);
+    } catch (error) {
+      toast.error('Failed to send email', error);
+      console.error('Error sending email:', error);
+    }
+  };
+
   return (
     <div>
       
@@ -147,6 +180,12 @@ export const UserManagementPage = () => {
   onCreateUser={handleCreateUser}
   isCreatingUser={isCreatingUser}
 />
+      <button
+        style={{ marginTop: '20px' }}
+        onClick={handleSendEmail}
+      >
+                Send Test Email
+                </button>
     </div>
   );
 };

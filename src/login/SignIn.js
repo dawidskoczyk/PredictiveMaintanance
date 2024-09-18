@@ -27,7 +27,7 @@ export const Login = () => {
       if (response.ok) {
         toast.success("Logged in sucesfully");
         const data = await response.json();
-        login(data.token, username); // Zapisujemy token i nazwę użytkownika
+        login(data.token, data.username, data.role, data.email); // Zapisujemy token i nazwę użytkownika
         navigate('/home');
       } else {
         toast.error("Bad login or password");

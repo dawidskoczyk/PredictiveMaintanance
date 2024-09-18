@@ -78,12 +78,7 @@ export function Menu() {
             </>
           ) : (
             <>
-              <Navbar.Brand
-                style={{ marginRight: "-5%", cursor: 'pointer' }}
-                onClick={handleSignUp}
-              >
-                ✍️ Sign Up
-              </Navbar.Brand>
+              
               <Navbar.Brand
                 style={{ marginLeft: "10%", cursor: 'pointer' }}
                 onClick={handleLogin}
