@@ -139,7 +139,7 @@ export const UserManagementPage = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          to: email, // Ensure this matches the backend expected field
+          to: selectedUser.email, // Ensure this matches the backend expected field
           subject: 'Notification',
           text: 'This is a test email from your React app!'
         })
@@ -150,9 +150,9 @@ export const UserManagementPage = () => {
       }
 
       const data = await response.json();
-      toast.success(data.message);
+      toast.success("Testing mail has been send to: ", selectedUser.email);
     } catch (error) {
-      toast.error('Failed to send email', error);
+      toast.error('Failed to send email', error); 
       console.error('Error sending email:', error);
     }
   };
@@ -178,14 +178,12 @@ export const UserManagementPage = () => {
   selectedUser={selectedUser} // Ensure selectedUser includes `role`
   onUpdateUser={handleUpdateUser}
   onCreateUser={handleCreateUser}
-  isCreatingUser={isCreatingUser}
-/>
+  isCreatingUser={isCreatingUser}/>
       <button
-        style={{ marginTop: '20px' }}
-        onClick={handleSendEmail}
-      >
-                Send Test Email
-                </button>
+      style={{ marginTop: '20px', backgroundColor: 'yellowgreen', color: 'white' }}
+      onClick={handleSendEmail}>
+        Send Test Email
+      </button>
     </div>
   );
 };
