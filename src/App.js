@@ -61,7 +61,7 @@ function App() {
         <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
         <Route path="/user-management" element={<ProtectedRoute element={<UserManagementPage />} />} />
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
-        <Route path="/login" element={<ProtectedRoute element={<Login />}/>} />
+        <Route path="/login" element={<Login/>} />
       </Routes>
     </AuthProvider>
   );
