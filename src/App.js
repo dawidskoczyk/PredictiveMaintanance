@@ -177,7 +177,7 @@ function  BaseConnect({ dynamicData }) {
     <div>
       {data ? (
         <div>
-          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'48px', color:'red'}}>Latest twelve data points</h2>
+          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
               <tr>
