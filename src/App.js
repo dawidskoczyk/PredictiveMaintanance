@@ -3,29 +3,28 @@ import React from 'react';
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { addDays } from "date-fns";
-//import BaseConnect from "./components/BaseConnect";
 import DatePicker from "./components/Filter.js";
 import { Chart } from "./components/Chart.js";
-import {Menu} from "./components/Menu.js";
+import { Menu } from "./components/Menu.js";
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
 import { Login } from './login/SignIn.js';  // Import SignIn component
-import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import SignIn component
+import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import AuthContext
 import { UserManagementPage } from "./userManagement/UserManagementPage.js";
-import {ProtectedRoute } from './login/ProtectedRoute.js'; // Importuj ProtectedRoute
-import { ToastContainer } from 'react-toastify';  // Importuj ToastContainer
+import { ProtectedRoute } from './login/ProtectedRoute.js'; // Import ProtectedRoute
+import { ToastContainer } from 'react-toastify';  // Import ToastContainer
 import { GraphanaCharts } from "./components/GraphanaCharts.js";
 import { rgb } from "chroma-js";
+import { toast } from 'react-toastify';
+
 let dynamicData = [];
 
 function App() {
-  //const [fetched, setFetch] = useState(false);
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
   const [dates, setDates] = useState([]);
-  const [isLoading, setIsLoading] = useState(true); // Stan ładowania
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Auth state
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [dynamicData, setDynamicData] = useState([]);
- 
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -33,10 +32,9 @@ function App() {
       setIsAuthenticated(true);
     }
   }, []);
-  // Funkcja obsługująca wysłanie danych do serwera
+
   const handleSubmit = async (startDate, endDate) => {
-    // Wysyłanie danych do serwera Express
-    console.log(` handle submit start ${startDate} koniec ${endDate}`);
+    console.log(`handle submit start ${startDate} koniec ${endDate}`);
     try {
       const response = await fetch("http://localhost:5001/api/data", {
         method: "POST",
@@ -49,36 +47,19 @@ function App() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data = await response.json(); // Parsowanie odpowiedzi JSON
+      const data = await response.json();
       console.log("Odpowiedź z serwera:", data.message);
       setDates(data.message);
       setDynamicData(data.message);
-      //setDynamicPredictiveData()
-      //window.location.reload();
     } catch (error) {
       console.error("Błąd:", error);
     }
   };
 
-  // Funkcja obsługująca zmianę zakresu
   const OnChange = (newRanges) => {
-    // console.log(newRanges.startDate.toLocaleDateString());
-
-    //setRanges(newRanges);
-    //console.log(`klikanko${ranges.startDate}, ${ranges.endDate}`);
-    // Wywołanie handleSubmit po zaktualizowaniu zakresów
     handleSubmit(newRanges.startDate, newRanges.endDate);
   };
 
-  // useEffect(() => {
-  //   if (fetched && ranges.startDate && ranges.endDate) {
-  //     fetch("http://localhost:5001/api")
-  //       .then((res) => res.json())
-  //       .then((data) => setDates(data.message))
-  //       .then(() => setFetch(false))
-  //       .catch((err) => console.log(err));
-  //   }
-  // }, [dates, fetched, ranges.endDate, ranges.startDate]);
   function HomePage() {
     const { isAuthenticated } = useAuth();
     return (
@@ -97,30 +78,28 @@ function App() {
       </div>
     );
   }
-return (
+
+  return (
     <AuthProvider>
       <Menu />
       <Routes>
-        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />}  />
-        <Route path="/user-management" element={<UserManagementPage />} /> 
+        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
+        <Route path="/user-management" element={<ProtectedRoute element={<UserManagementPage />} />} />
         <Route path="/history" element={<ProtectedRoute element={<History />} />} />
-        <Route path="/login" element={<Login />} />
+        <Route path="/login" element={<ProtectedRoute element={<Login />}/>} />
       </Routes>
-      
     </AuthProvider>
-);
+  );
 }
-function  BaseConnect({ dynamicData }) {
+
+function BaseConnect({ dynamicData }) {
   const defaultData = [1, 1, 1];
   const [data, setData] = useState(null);
   const [dataAnomaly, setDataAnomaly] = useState([]);
-  const [thresholds, setThresholds] = useState([28,30]);
+  const [thresholds, setThresholds] = useState([28, 30]);
   const [isVisible, setIsVisible] = useState(true);
   const [dynamicPredictiveData, setDynamicPredictiveData] = useState([]);
-  // useState(() => {
-  //   const saved = window.localStorage.getItem('isVisible');
-  //   return saved !== null ? JSON.parse(saved) : false;
-  // });
+
   const thresholdUpC = 33;
   const thresholdMediumC = 30;
   const thresholdDownC = 23;
@@ -132,214 +111,180 @@ function  BaseConnect({ dynamicData }) {
     fetch("http://localhost:5001/api")
       .then((res) => res.json())
       .then((data) => setData(data.message))
-      //.then((data) => console.log(data))
       .catch((err) => console.log(err));
   }, [data]);
 
   useEffect(() => {
     fetch("http://localhost:5001/api/dataPred", {
-      method: 'POST', // Change to POST request
+      method: 'POST',
       headers: {
-        'Content-Type': 'application/json', // Specify content type as JSON
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ /* Add any data you want to send in the request body */ }),
     })
-    .then((res) => res.json())
-    .then((data) => {
-      setDynamicPredictiveData(data.message); // Update state with the response
-      console.log(data); // Log the data for debugging
-    })
-    .catch((err) => console.error(err)); // Handle any errors
-  }, []); // Empty dependency array to run once on mount
-  
-  //console.log(dynamicData ? dynamicData : "ni ma danych");
+      .then((res) => res.json())
+      .then((data) => {
+        setDynamicPredictiveData(data.message);
+        console.log(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
 
   const handleChange = event => {
-  
     setIsVisible(current => !current);
   };
+
   const handleThresh = (index, value) => {
-    
-    if(index===1){
-      if(thresholds[0]>=value) return;
-      if(value>=40) return; 
+    if (index === 1) {
+      if (thresholds[0] >= value || value >= 40) return;
     }
-    if(index===0){
-      if(thresholds[1]<=value) return;
-      if(value<=23) return;
+    if (index === 0) {
+      if (thresholds[1] <= value || value <= 23) return;
     }
     const newThresholds = [...thresholds];
     newThresholds[index] = value;
     setThresholds(newThresholds);
-  }
+  };
 
   return (
     <div>
       {data ? (
         <div>
-          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'48px', color:'red'}}>Latest twelve data points</h2>
+          <h2 style={{ marginLeft: "4%", marginTop: '2%', fontSize: '48px', color: 'red' }}>Latest twelve data points</h2>
           <Table responsive>
             <thead>
               <tr>
-                <th style={{ backgroundColor: "black", color: "white" }}>
-                  Date:
-                </th>
-                {Array.from({ length: 10}).map((_, index) => (
+                <th style={{ backgroundColor: "black", color: "white" }}>Date:</th>
+                {Array.from({ length: 12 }).map((_, index) => (
                   <th key={index}>
                     {data[index]?.date
                       .replace("2024-", " ")
                       .replace("T", " ")
-                      .replace("Z", " ").split('.')[0]}
+                      .replace("Z", " ")
+                      .split('.')[0]}
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td
-                  style={{
-                    width: "120px",
-                    backgroundColor: "purple",
-                    color: "white",
-                  }}
-                >
-                  Temperature (&#176;C)
-                </td>
+                <td style={{ width: "120px", backgroundColor: "purple", color: "white" }}>Temperature (&#176;C)</td>
                 {Array.from({ length: 10 }).map((_, index) => (
                   <td
                     key={index}
                     style={
                       +data[index].value > thresholds[1]
-                        ? { backgroundColor: rgb(237, 25, 21)} //  235, 52, 52
-                        : +data[index].value > thresholds[0]
-                        ? { backgroundColor: rgb(237, 140, 21) } // 235, 155, 52
-                        : +data[index].value > thresholdDownC
-                        ? { backgroundColor: rgb(58, 235, 52) } // 
-                        : { backgroundColor: "cyan" }
-                    }
-                  >
-                    {data[index].value}{" "}
-                  </td>
-                ))}
-              </tr>
-              </tbody>
-              </Table>
-              
-          
-          <div className="thresholds-container">
-      <div className="thresholds-form">
-        <h2>
-          Hide Thresholds
-          <input
-            type='checkbox'
-            name='thresh'
-            value={isVisible}
-            onChange={handleChange}
-            style={{ marginLeft: '2%' }}
-          />
-        </h2>
-        {isVisible && (
-          <>
-            <div className="threshold-inputs">
-              <label style={{minWidth:'150px'}}>Threshold warning</label>
-              <input
-                type="number"
-                placeholder=""
-                name='warn'
-                value={thresholds[0]}
-                onChange={(e) => handleThresh(0, e.target.value)}
-                className="threshold-input"
-              />
-              <br />
-              <label style={{minWidth:'150px'}}>Threshold critical</label>
-              <input
-                type="number"
-                name='crit'
-                value={thresholds[1]}
-                onChange={(e) => handleThresh(1, e.target.value)}
-                className="threshold-input"
-              />
-            </div>
-            <div className="reset-button">
-              {thresholds[0] !== 28 || thresholds[1] !== 30 ? (
-                <button
-                  style={{ color: 'black', marginTop: '2%' }}
-                  onClick={() => setThresholds([28, 30])}
-                >
-                  Reset Thresholds to defaults
-                </button>
-              ) : ''}
-            </div>
-          </>
-        )}
-      </div>
-      
-      <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
-      <div className="chart-container">
-      <h3 style={{color:'blue', textAlign:'center'}}>Press ctrl to move and zoom charts</h3>
-        <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
-      </div>
-    </div>
-        </div>
-      ) : (
-        <p></p>
-      )}
-      <h2 style={{ marginLeft: "4%", marginTop:"5%", color:"blue", fontSize:"48px" }}>Filtered data</h2>
-              <Table responsive>
-              <thead>
-              <tr>
-                <th style={{ backgroundColor: "black", color: "white" }}>
-                  Parameter
-                </th>
-                {Array.from({  length: dynamicData.length }).map((_, index) => (
-                  <th key={index}>
-                    {dynamicData[index]?.date
-                      .replace("2024-", " ")
-                      .replace("T", " ")
-                      .replace("Z", " ")}
-                  </th>
-                ))}
-              </tr>
-              </thead>
-              <tbody>
-              <tr>
-                <td style={{ backgroundColor: "grey", color: "white", width:'150px' }}>
-                  Temperature (&#176;C)
-                </td>
-                {dynamicData ? Array.from({ length: dynamicData.length }).map((_, index) => (
-                  <td
-                    key={index}
-                    style={
-                      +dynamicData[index].value > thresholds[1]
                         ? { backgroundColor: "red" }
-                        : +dynamicData[index].value > thresholds[0]
+                        : +data[index].value > thresholds[0]
                         ? { backgroundColor: "orange" }
-                        : +dynamicData[index].value > thresholdDownC
+                        : +data[index].value > thresholdDownC
                         ? { backgroundColor: "lightgreen" }
                         : { backgroundColor: "cyan" }
                     }
                   >
-                    {dynamicData[index].value}{" "}
+                    {data[index].value}
                   </td>
-                )):<p></p>}
+                ))}
               </tr>
-              {/* <tr>
-              <td>3</td>
-              {Array.from({ length: 12 }).map((_, index) => (
-                <td key={index}>Table cell {index}</td>
-              ))}
-            </tr> */}
             </tbody>
           </Table>
-    </div>
-    
-  )
-}
-// to na dole nie działa
-function ResponsiveExample() {
-  // Only update state if `dynamic` has data and is different from `dynamicData`
 
-  return <div></div>
+          <div className="thresholds-container">
+            <div className="thresholds-form">
+              <h2>
+                Hide Thresholds
+                <input
+                  type='checkbox'
+                  name='thresh'
+                  value={isVisible}
+                  onChange={handleChange}
+                  style={{ marginLeft: '2%' }}
+                />
+              </h2>
+              {isVisible && (
+                <>
+                  <div className="threshold-inputs">
+                    <label style={{ minWidth: '150px' }}>Threshold warning</label>
+                    <input
+                      type="number"
+                      placeholder=""
+                      name='warn'
+                      value={thresholds[0]}
+                      onChange={(e) => handleThresh(0, e.target.value)}
+                      className="threshold-input"
+                    />
+                    <br />
+                    <label style={{ minWidth: '150px' }}>Threshold critical</label>
+                    <input
+                      type="number"
+                      name='crit'
+                      value={thresholds[1]}
+                      onChange={(e) => handleThresh(1, e.target.value)}
+                      className="threshold-input"
+                    />
+                  </div>
+                  <div className="reset-button">
+                    {thresholds[0] !== 28 || thresholds[1] !== 30 ? (
+                      <button
+                        style={{ color: 'black', marginTop: '2%' }}
+                        onClick={() => setThresholds([28, 30])}
+                      >
+                        Reset Thresholds to defaults
+                      </button>
+                    ) : ''}
+                  </div>
+                </>
+              )}
+            </div>
+            <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3>
+            <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
+            <div className="chart-container">
+              <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData || []} />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <p></p>
+      )}
+      <h2 style={{ marginLeft: "4%", marginTop: "5%", color: "blue", fontSize: "48px" }}>Filtered data</h2>
+      <Table responsive>
+        <thead>
+          <tr>
+            <th style={{ backgroundColor: "black", color: "white" }}>Date:</th>
+            {Array.from({ length: 12 }).map((_, index) => (
+              <th key={index}>
+                {dynamicData[index]?.date
+                  .replace("2024-", " ")
+                  .replace("T", " ")
+                  .replace("Z", " ")
+                  .split('.')[0]}
+              </th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style={{ width: "120px", backgroundColor: "purple", color: "white" }}>Temperature (&#176;C)</td>
+            {Array.from({ length: 10 }).map((_, index) => (
+              <td
+                key={index}
+                style={
+                  +dynamicData[index]?.value > thresholds[1]
+                    ? { backgroundColor: "red" }
+                    : +dynamicData[index]?.value > thresholds[0]
+                    ? { backgroundColor: "orange" }
+                    : +dynamicData[index]?.value > thresholdDownC
+                    ? { backgroundColor: "lightgreen" }
+                    : { backgroundColor: "cyan" }
+                }
+              >
+                {dynamicData[index]?.value}
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </Table>
+    </div>
+  );
 }
 
 export default App;
