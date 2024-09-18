@@ -150,9 +150,9 @@ export const UserManagementPage = () => {
       }
 
       const data = await response.json();
-      toast.success("Testing mail has been send to: ", selectedUser.email);
+      toast.success("Testing mail has been send  " + selectedUser.email);
     } catch (error) {
-      toast.error('Failed to send email', error); 
+      toast.error("Choose user to send email!"); 
       console.error('Error sending email:', error);
     }
   };
