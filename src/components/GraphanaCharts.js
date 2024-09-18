@@ -66,7 +66,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
     }, [liveData]);
 
     return (
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex',justifyContent: "center", margin: "0 auto", marginTop: "15%", marginBottom: "5%"}}>
             <div>
                 <h5>Actual Temperature of device</h5>
                 <GaugeComponent

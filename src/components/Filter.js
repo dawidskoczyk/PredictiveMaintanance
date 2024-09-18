@@ -40,7 +40,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
   };
 
   return (
-<div style={{ margin: '20px' }}>
+<div style={{ margin: '20px', marginLeft: "45px"}}>
       {/* Image Heading */}
       {/* <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
       <h1 style={{ color: "green" }}>
@@ -55,14 +55,14 @@ const Filter = ({ onChange, startDate, endDate }) => {
       </div> */}
 
       {/* Flex Container for Date Picker and Heading */}
-      <div style={{ display: "flex", border: "dashed"}}>
+      <div style={{ display: "flex", border: "dashed", width: "97.5%", justifyContent: "center"}}>
         {/* Date Picker Section */}
           <button
             onClick={() => {
               setClicked((prevState) => !prevState);
             }}
             className="button-64"
-            style={{ marginRight: '20px', marginBottom: '10px', marginTop: "10px"}}
+            style={{ marginRight: '0px', marginBottom: '10px', marginTop: "10px"}}
           >
             <span>{!clicked ? "Date Picker" : "Set Date Range"}</span>
           </button>
@@ -87,8 +87,8 @@ const Filter = ({ onChange, startDate, endDate }) => {
   color: 'black',             // Text color
   fontWeight: 'bold',        // Font weight
   marginTop: '20px',         // Space above the element
-  display: 'block',          // Ensures it takes full width (optional)
-  textAlign: 'center',       // Center the text (optional)
+           // Ensures it takes full width (optional)
+  textAlign: 'left',       // Center the text (optional)
 }}>
   Select range of data from sensors
 </span>

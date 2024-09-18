@@ -154,11 +154,11 @@ function BaseConnect() {
       {data ? (
         <div>
            <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
-          <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2>
-          <Table responsive>
+          {/* <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2> */}
+          {/* <Table responsive style={{ width: "90%"}}>
             <thead>
               <tr>
-                <th style={{ backgroundColor: "black", color: "white" }}>Date:</th>
+                <th style={{ backgroundColor: "black", color: "white"}}>Date:</th>
                 {Array.from({ length: 12 }).map((_, index) => (
                   <th key={index}>
                     {data[index]?.date
@@ -191,23 +191,19 @@ function BaseConnect() {
                 ))}
               </tr>
             </tbody>
-          </Table>
+          </Table> */}
 
           <div className="thresholds-container">
             <div className="thresholds-form">
-              <h2 style={{ marginLeft: '30%'}}>
-                Hide Thresholds
-                <input
-                  type='checkbox'
-                  name='thresh'
-                  value={isVisible}
-                  onChange={handleChange}
-                  style={{ marginLeft: '2%' }}
-                />
-              </h2>
+              
               {isVisible && (
                 <>
+                    <h2 style={{textAlign: "center", marginTop: "15px"}}>
+                      Set Thresholds: 
+                    </h2>
                   <div className="threshold-inputs">
+                    
+
                     <label style={{ minWidth: '150px' }}>Threshold warning</label>
                     <input
                       type="number"
@@ -217,7 +213,7 @@ function BaseConnect() {
                       onChange={(e) => handleThresh(0, e.target.value)}
                       className="threshold-input"
                     />
-                    <br />
+                    
                     <label style={{ minWidth: '150px' }}>Threshold critical</label>
                     <input
                       type="number"
@@ -242,7 +238,7 @@ function BaseConnect() {
             </div>
             </div>
             <DatePicker onChange={OnChange} />
-            <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3>
+            {/* <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3> */}
            
             <div className="chart-container">
               <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData || []} />

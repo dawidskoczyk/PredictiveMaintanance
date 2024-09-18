@@ -91,17 +91,22 @@ table {
 }
 /* Thresholds.css */
 .thresholds-container {
-  padding:20px;
-  background-color: #f8f9fa;
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 95%;
+  padding:10px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  background-color: white;
+  border-radius: 2px;
+  border: dashed;
   display: flex;
   flex-direction:column;
   align-items: center;
-  padding-left: 80px;
+  padding-left: 0px;
+  margin: 0 auto;
 }
 
 .thresholds-form {
+
   width: 100%;
   max-width: 600px;
 }
@@ -116,9 +121,11 @@ table {
 }
 
 .threshold-inputs {
-  margin-top: 20px; /* Increased space between heading and inputs */
+  margin-top: 10px; /* Increased space between heading and inputs */
   align-items: center;
   display: flex;
+  flex-direction: row;
+  
 }
 
 .input-group {
@@ -132,11 +139,13 @@ table {
 }
 
 .threshold-input {
-  padding: 8px; /* Added padding for better visual appeal */
+  padding: 2px; /* Added padding for better visual appeal */
   margin-right:5%;
   border: 1px solid #ced4da;
   border-radius: 4px;
-  width: 120px; /* Increased width for better usability */
+  width: 80px; /* Increased width for better usability */
+  font-size: 16px;
+  text-align: center;
 }
 
 .reset-button {
@@ -180,7 +189,7 @@ table {
   justify-content: center;
   line-height: 1em;
   max-width: 100%;
-  min-width: 100px;
+  min-width: 10px;
   padding: 3px;
   text-decoration: none;
   user-select: none;
