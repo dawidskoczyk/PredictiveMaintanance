@@ -229,7 +229,7 @@ function  BaseConnect({ dynamicData }) {
           <div className="thresholds-container">
       <div className="thresholds-form">
         <h2>
-          Set Thresholds
+          Hide Thresholds
           <input
             type='checkbox'
             name='thresh'
@@ -241,7 +241,7 @@ function  BaseConnect({ dynamicData }) {
         {isVisible && (
           <>
             <div className="threshold-inputs">
-              <label>Threshold warning</label>
+              <label style={{minWidth:'150px'}}>Threshold warning</label>
               <input
                 type="number"
                 placeholder=""
@@ -251,7 +251,7 @@ function  BaseConnect({ dynamicData }) {
                 className="threshold-input"
               />
               <br />
-              <label>Threshold critical</label>
+              <label style={{minWidth:'150px'}}>Threshold critical</label>
               <input
                 type="number"
                 name='crit'
@@ -273,9 +273,10 @@ function  BaseConnect({ dynamicData }) {
           </>
         )}
       </div>
-      <h3 style={{color:'blue'}}>Press ctrl to move and zoom charts</h3>
+      
       <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
       <div className="chart-container">
+      <h3 style={{color:'blue', textAlign:'center'}}>Press ctrl to move and zoom charts</h3>
         <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData|| []} />
       </div>
     </div>

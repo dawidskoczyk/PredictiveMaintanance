@@ -105,7 +105,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
       },
       {
         label: "Real amount",
-        data: predictiveData.map((data) => data.recorded_count),
+        data: predictiveData.map((data) => data.actual_count),
         backgroundColor: predictiveData.map((data) =>
           //data.recorded_count > thresh[1] ? "black" : data.recorded_count > thresh[0] ? "yellow" : data.recorded_count < 23 ? "lightgreen" : "yellow"
         'lightgreen'
