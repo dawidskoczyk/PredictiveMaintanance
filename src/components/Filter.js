@@ -40,7 +40,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
   };
 
   return (
-<div style={{ margin: '20px', marginLeft: "45px"}}>
+<div style={{display: "flex"}}>
       {/* Image Heading */}
       {/* <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
       <h1 style={{ color: "green" }}>
@@ -54,21 +54,32 @@ const Filter = ({ onChange, startDate, endDate }) => {
         
       </div> */}
 
-      {/* Flex Container for Date Picker and Heading */}
-      <div style={{ display: "flex", border: "dashed", width: "97.5%", justifyContent: "center"}}>
+      {/* Flex Container for Date Picker and Heading    border: "dashed",*/}
+      <div style={{ display: "flex", width: "90%", margin: "0 auto", marginTop: "10px", flexDirection: "column"}}>
         {/* Date Picker Section */}
+        <span style={{
+  fontSize: '20px',          // Font size
+  color: 'black',             // Text color
+  fontWeight: 'bold',        // Font weight
+  marginTop: '0px',         // Space above the element
+           // Ensures it takes full width (optional)
+  textAlign: 'center',       // Center the text (optional)
+  
+}}>
+  Select range of data from sensors
+</span>
           <button
             onClick={() => {
               setClicked((prevState) => !prevState);
             }}
             className="button-64"
-            style={{ marginRight: '0px', marginBottom: '10px', marginTop: "10px"}}
+            style={{ marginRight: '0px', marginBottom: '10px', marginTop: "10px", width: "50px", maring: "0 auto"}}
           >
             <span>{!clicked ? "Date Picker" : "Set Date Range"}</span>
           </button>
 
           {clicked && (
-            <div className="datepicker-overlay" style={{ marginLeft: '200px', marginTop:'500px' }}>
+            <div className="datepicker-overlay" style={{ marginLeft: '400px', marginTop: "46.5%" }}>
               <DateRangePicker
                 onChange={handleOnChange}
                 showSelectionPreview={true}
@@ -82,16 +93,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
           )}
 
         {/* Blue Headings Section */}
-        <span style={{
-  fontSize: '20px',          // Font size
-  color: 'black',             // Text color
-  fontWeight: 'bold',        // Font weight
-  marginTop: '20px',         // Space above the element
-           // Ensures it takes full width (optional)
-  textAlign: 'left',       // Center the text (optional)
-}}>
-  Select range of data from sensors
-</span>
+        
       </div>
     </div>
   );

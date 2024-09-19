@@ -60,6 +60,7 @@ function MyCalendar() {
                 background: `linear-gradient(to right, ${
                     data.type === 'critical' ? 'red' : 'orange'
                 } ${percentage}%, transparent ${percentage}%)`,
+                backgroundColor: "#b8b8b8",
                 color: 'white',
                 width: '100%', // Ensure full width
                 height: '30px', // Adjust height as needed

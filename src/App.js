@@ -199,7 +199,7 @@ function BaseConnect() {
               
               {isVisible && (
                 <>
-                    <h2 style={{textAlign: "center", marginTop: "15px"}}>
+                    <h2 style={{textAlign: "center", marginTop: "15px", fontSize: '20px',color: 'black',fontWeight: 'bold'}}>
                       Set Thresholds: 
                     </h2>
                   <div className="threshold-inputs">
@@ -227,7 +227,7 @@ function BaseConnect() {
                   <div className="reset-button">
                     {thresholds[0] !== 28 || thresholds[1] !== 30 ? (
                       <button
-                        style={{ color: 'black', marginTop: '2%' }}
+                        style={{ color: 'black',margin: "0", padding: "0", marginTop: '2%', width: "240px"}}
                         onClick={() => setThresholds([28, 30])}
                       >
                         Reset Thresholds to defaults

@@ -85,7 +85,7 @@ export const Chart = ({ initialData = [], thresholds = [], predictiveDataPar= []
   if (!data[0]) {
     return <>;
  {/* Bar Chart with Zoom Buttons */}
- <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px" }}>
+ <div style={{ width: "100%", overflowX: "auto", overflowY: "hidden", padding: "20px"}}>
  <div style={{ width: "100%" }}>
    <div style={{ height: "500px", width: `${width}px` }}>
    <Bar

@@ -23,10 +23,10 @@
     padding:"10px";
 }
 .rbc-day-bg{
-    background: rgb(130, 240, 139);
+    background: #e6e6e6;
 }
 .rbc-today {
-    background-color: #cde6f9;
+    background-color: lightseagreen;
 }
 
 .rbc-show-more {
@@ -34,7 +34,7 @@
 }
 
 .rbc-off-range-bg{
-    background: lightgray;
+    background: #cfcfcf;
 } 
 .rbc-month-header{
     background: rgb(65, 61, 61);

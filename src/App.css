@@ -91,22 +91,25 @@ table {
 }
 /* Thresholds.css */
 .thresholds-container {
-  width: 95%;
-  padding:10px;
+  width: 90%;
+  /* padding:10px; */
   padding-top: 0px;
   padding-bottom: 0px;
   background-color: white;
-  border-radius: 2px;
-  border: dashed;
+  /* border: dashed; */
+  border-bottom: dashed 2px;
+  border-top: dashed 2px;
   display: flex;
   flex-direction:column;
   align-items: center;
   padding-left: 0px;
   margin: 0 auto;
+  margin-bottom: 0px;
+  justify-content: center
 }
 
 .thresholds-form {
-
+  margin-bottom: 10px;
   width: 100%;
   max-width: 600px;
 }
@@ -150,6 +153,9 @@ table {
 
 .reset-button {
   margin-top: 20px; /* Increased space above the reset button */
+  margin: 0 auto;
+  margin: 10px 0px;
+  margin-left: 27%;
 }
 
 .reset-btn {
@@ -197,6 +203,7 @@ table {
   touch-action: manipulation;
   white-space: nowrap;
   cursor: pointer;
+  margin: 43.5%;
 }
 
 .button-64:active,
