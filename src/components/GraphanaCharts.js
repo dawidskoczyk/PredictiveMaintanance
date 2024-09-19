@@ -115,7 +115,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
       </div></div>
         <div style={{ display: 'flex',justifyContent: "center", margin: "0 auto", marginTop: "5%", marginBottom: "5%"}}>
             <div>
-                <h5>Actual Temperature of device</h5>
+                <h5>Actual Temperature</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
@@ -171,7 +171,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                 />
             </div>
             <div>
-                <h5>Amount of warnings</h5>
+                <h5>Warnings</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
@@ -208,7 +208,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                 />
             </div>
             <div>
-                <h5>Amount of critical warnings</h5>
+                <h5>Critical warnings</h5>
                 <GaugeComponent
                     type="semicircle"
                     arc={{
