@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { toast } from 'react-toastify';
 import validator from 'validator'; // Import validator
 import { useAuth } from '../login/AuthContext'; // Import AuthProvider for current user
 import './UserManagement.css'; // Ensure this path is correct
+import { useNavigate, useLocation } from 'react-router-dom';
 
 export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCreatingUser }) => {
   const [username, setUsername] = useState('');
@@ -12,11 +13,13 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
   const [loading, setLoading] = useState(false);
-  const [isDirty, setIsDirty] = useState(false);
+  const [isDirty, setIsDirty] = useState(false); // Track if form is dirty
+  const [showExitModal, setShowExitModal] = useState(false); // Show exit confirmation modal
+  const navigate = useNavigate();
+  const location = useLocation(); // Track location changes
 
   useEffect(() => {
     if (selectedUser && !isCreatingUser) {
-      console.log('Selected User:', selectedUser); // Log selectedUser to verify data
       setUsername(selectedUser.username);
       setRole(selectedUser.role); // Check if role is coming through correctly
       setEmail(selectedUser.email);
@@ -24,6 +27,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
       setUsername('');
       setPassword('');
       setEmail('');
+      setRole(''); // Reset role when creating a new user
     }
   }, [selectedUser, isCreatingUser]);
 
@@ -34,7 +38,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
         e.returnValue = ''; // Chrome requires returnValue to be set
       }
     };
-    
+
     window.addEventListener('beforeunload', handleBeforeUnload);
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
@@ -76,7 +80,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
       } else {
         const updatedUser = { ...selectedUser, username, email };
         if (password) updatedUser.password = password;
-          updatedUser.role = role;
+        updatedUser.role = role;
         await onUpdateUser(updatedUser);
       }
     } catch (err) {
@@ -84,6 +88,23 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleNavigation = (path) => {
+    if (isDirty) {
+      setShowExitModal(true);
+    } else {
+      navigate(path);
+    }
+  };
+
+  const handleConfirmExit = () => {
+    setShowExitModal(false);
+    navigate(location.pathname); // Replace with desired navigation path if needed
+  };
+
+  const handleCloseExitModal = () => {
+    setShowExitModal(false);
   };
 
   return (
@@ -98,6 +119,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             placeholder="Enter nickname"
             value={username}
             onChange={handleInputChange(setUsername)}
+            disabled={!isCreatingUser && !selectedUser}
           />
         </Form.Group>
 
@@ -108,6 +130,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             placeholder="Enter email"
             value={email}
             onChange={handleInputChange(setEmail)}
+            disabled={!isCreatingUser && !selectedUser}
           />
         </Form.Group>
 
@@ -118,12 +141,13 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             placeholder="Enter new password"
             value={password}
             onChange={handleInputChange(setPassword)}
+            disabled={!isCreatingUser}
           />
         </Form.Group>
 
         <Form.Group>
           <Form.Label>Role</Form.Label>
-          <Form.Control as="select" value={role} onChange={handleInputChange(setRole)}>
+          <Form.Control as="select" value={role} onChange={handleInputChange(setRole)} disabled={!isCreatingUser && !selectedUser}>
             <option value="user">User</option>
             <option value="admin">Admin</option>
           </Form.Control>
@@ -133,13 +157,34 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
           variant="primary"
           onClick={handleSave}
           style={{ marginTop: '10px' }}
-          disabled={loading}
+          disabled={loading || (!isCreatingUser && !selectedUser)}
         >
           {loading
             ? (isCreatingUser ? 'Creating...' : 'Updating...')
             : (isCreatingUser ? 'Create account' : 'Manage user')}
         </Button>
       </Form>
+
+      {/* Exit Confirmation Modal */}
+      <Modal show={showExitModal} onHide={handleCloseExitModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Unsaved Changes</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          You have unsaved changes. Are you sure you want to leave without saving?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseExitModal}>
+            Stay
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleConfirmExit}
+          >
+            Leave
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

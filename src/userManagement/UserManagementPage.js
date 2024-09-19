@@ -2,22 +2,23 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserList } from './UserList';
 import { UserManagement } from './UserManagement';
-import { useNavigate, useLocation  } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { Spinner } from 'react-bootstrap';
+import { Modal, Button, Spinner } from 'react-bootstrap';
 import './UserManagementPage.css'; // Ensure this path is correct
 import { useAuth } from '../login/AuthContext'; // Import your useAuth hook
 
 export const UserManagementPage = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
-  const [isCreatingUser, setIsCreatingUser] = useState(false); 
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false); // Declare state for the modal
   const { isAuthenticated, role, email, username } = useAuth(); // Access role and email directly from context
   const [isFormDirty, setIsFormDirty] = useState(false); // To track unsaved changes
   const navigate = useNavigate(); // To handle navigation
-  
+
   // Function to handle browser refresh or tab close
   function handleBeforeUnload(event) {
     event.preventDefault();
@@ -43,15 +44,11 @@ export const UserManagementPage = () => {
 
     fetchUsers();
 
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
   }, []);
 
-  // Handle route change using React Router's Prompt
-  const handlePromptBeforeUnload = (nextLocation) => {
-    if (isFormDirty) {
-      return window.confirm("You have unsaved changes. Are you sure you want to leave?");
-    }
-    return true;
-  };
   const handleSelectUser = (user) => {
     setSelectedUser(user);
     setIsCreatingUser(false);
@@ -68,7 +65,7 @@ export const UserManagementPage = () => {
       const checkResponse = await fetch('http://localhost:5001/check-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: newUser.email, username: newUser.username})
+        body: JSON.stringify({ email: newUser.email, username: newUser.username })
       });
 
       const { emailExists, usernameExists } = await checkResponse.json();
@@ -97,7 +94,6 @@ export const UserManagementPage = () => {
         setIsCreatingUser(false); // Exit creation mode on success
         const updatedUsers = await axios.get('http://localhost:5001/api/users');
         setUsers(updatedUsers.data);
-        console.log(newUser.role);
       } else {
         toast.error('Error registering user');
       }
@@ -108,25 +104,35 @@ export const UserManagementPage = () => {
     }
   };
 
-  const handleRemoveUser = async () => {
-    if(selectedUser.username === username){
+  const handleShowDeleteModal = (user) => {
+    setSelectedUser(user);
+    setShowDeleteModal(true); // Correctly set modal visibility
+  };
+
+  const handleCloseDeleteModal = () => {
+    setShowDeleteModal(false); // Correctly set modal visibility
+    setSelectedUser(null);
+  };
+
+  const handleConfirmDelete = async () => {
+    if (selectedUser.username === username) {
       toast.error("You can't delete yourself Admin!");
+      handleCloseDeleteModal();
       return;
     }
-    if (selectedUser) {
-      setLoading(true);
-      try {
-        await axios.delete(`http://localhost:5001/api/users/${selectedUser._id}`);
-        const response = await axios.get('http://localhost:5001/api/users');
-        setUsers(response.data);
-        toast.success("User has been deleted!");
-        setSelectedUser(null);
-      } catch (error) {
-        toast.error("Cannot delete user");
-        console.error('Error removing user:', error);
-      } finally {
-        setLoading(false);
-      }
+
+    setLoading(true);
+    try {
+      await axios.delete(`http://localhost:5001/api/users/${selectedUser._id}`);
+      const response = await axios.get('http://localhost:5001/api/users');
+      setUsers(response.data);
+      toast.success("User has been deleted!");
+    } catch (error) {
+      toast.error("Cannot delete user");
+      console.error('Error removing user:', error);
+    } finally {
+      setLoading(false);
+      handleCloseDeleteModal();
     }
   };
 
@@ -136,7 +142,6 @@ export const UserManagementPage = () => {
       await axios.put(`http://localhost:5001/api/users/${updatedUser._id}`, updatedUser);
       const response = await axios.get('http://localhost:5001/api/users');
       setUsers(response.data);
-      console.log(updatedUser.role)
       toast.success("User has been updated!");
       setSelectedUser(updatedUser);
     } catch (error) {
@@ -151,7 +156,7 @@ export const UserManagementPage = () => {
     if (!email) {
       toast.error('No user email available');
       return;
-    } 
+    }
 
     try {
       const response = await fetch('http://localhost:5001/api/send-email', {
@@ -169,20 +174,18 @@ export const UserManagementPage = () => {
       }
 
       const data = await response.json();
-      toast.success("Testing mail has been send  " + selectedUser.email);
+      toast.success("Testing mail has been sent to " + selectedUser.email);
     } catch (error) {
-      toast.error("Choose user to send email!"); 
+      toast.error("Choose user to send email!");
       console.error('Error sending email:', error);
     }
   };
 
   return (
     <div>
-      
       {loading && (
         <div className="d-flex justify-content-center" style={{ padding: '20px' }}>
           <Spinner animation="border" role="status" />
-          
         </div>
       )}
       <UserList
@@ -190,19 +193,38 @@ export const UserManagementPage = () => {
         selectedUser={selectedUser}
         onSelectUser={handleSelectUser}
         onAddUser={handleAddUser}
-        onRemoveUser={handleRemoveUser}
-
+        onRemoveUser={handleShowDeleteModal} // Use modal for delete confirmation
       />
       <UserManagement
-  selectedUser={selectedUser} // Ensure selectedUser includes `role`
-  onUpdateUser={handleUpdateUser}
-  onCreateUser={handleCreateUser}
-  isCreatingUser={isCreatingUser}/>
+        selectedUser={selectedUser}
+        onUpdateUser={handleUpdateUser}
+        onCreateUser={handleCreateUser}
+        isCreatingUser={isCreatingUser}
+      />
       <button
-      style={{ marginTop: '20px', backgroundColor: 'yellowgreen', color: 'white' }}
-      onClick={handleSendEmail}>
+        style={{ marginTop: '20px', backgroundColor: 'yellowgreen', color: 'white' }}
+        onClick={handleSendEmail}
+      >
         Send Test Email
       </button>
+
+      {/* Delete Confirmation Modal */}
+      <Modal show={showDeleteModal} onHide={handleCloseDeleteModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Delete</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to delete this user?
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseDeleteModal}>
+            Cancel
+          </Button>
+          <Button variant="danger" onClick={handleConfirmDelete}>
+            Delete
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
