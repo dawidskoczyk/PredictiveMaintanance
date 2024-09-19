@@ -82,32 +82,36 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
     }, [predictiveDataPar]);
     
     return (
-        <><div style={{display:'flex'}}><div style={{ margin:'25px 20px'}}> {(anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[0].predicted_count < 15
-            ? <img src={green} alt="Green" style={{  width: '100px', height: '80px' }} />
-            : (anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25
-            ? <img src={orangeEng} alt="Orange" style={{ width: '100px', height: '80px'}} />
-            : <img src={redEng} alt="Red" style={{ width: '100px', height: '80px' }} />}</div>
-            <div style={{
-            color: (anomalyCount / 96) * 100 > 25 ? 'red' : ((anomalyCount / 96) * 100 < 25 && (anomalyCount / 96) * 100 > 15) ? 'orange' : 'green',
+        <><div style={{ display: 'flex' }}>
+        <div style={{ margin: '25px 20px' }}>
+          {(critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[0].predicted_count < 15
+            ? <img src={green} alt="Green" style={{ width: '100px', height: '80px' }} />
+            : (critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25
+            ? <img src={orangeEng} alt="Orange" style={{ width: '100px', height: '80px' }} />
+            : <img src={redEng} alt="Red" style={{ width: '100px', height: '80px' }} />}
+        </div>
+        <div
+          style={{
+            color: (critAnomalyCount / 96) * 100 > 25 ? 'red' : ((critAnomalyCount / 96) * 100 < 25 && (critAnomalyCount / 96) * 100 > 15) ? 'orange' : 'green',
             fontWeight: predictiveData.length > 0 && predictiveData[0].predicted_count > 25 ? 'bold' : 'normal',
-            fontSize:'28px',
-            textAlign:'center',
-            width:'1000px',
-            marginTop:'40px'
-        }}>
-            
-        Risk of failure is {((anomalyCount / 96) * 100).toPrecision(4)},
-        inspection {((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 15)
-          ? "is not required"
-          : ((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 15)
-          ? "is not required, but the condition must be monitored as getting worse is expected"
-          : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
-          ? 'is required within 2 months, but its predicted condition does not become worse'
-          : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 25)
-          ? 'is required within 1 month and its condition may become progressively worse'
-          : ((anomalyCount / 96) * 100 > 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
-          ? 'is required within 1 month, but its predicted condition does not become worse'
-          : 'is required within 1 week and its condition should be closely monitored'}
+            fontSize: '28px',
+            textAlign: 'center',
+            width: '1000px',
+            marginTop: '40px'
+          }}
+        >
+          Risk of failure is {((critAnomalyCount / 96) * 100).toPrecision(4)},
+          inspection {((critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 15)
+            ? "is not required"
+            : ((critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 15)
+            ? "is not required, but the condition must be monitored as getting worse is expected"
+            : ((critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+            ? 'is required within 1 month and its condition may become progressively worse'
+            : ((critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 25)
+            ? 'is required within 1 month and its condition may become progressively worse'
+            : ((critAnomalyCount / 96) * 100 > 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+            ? 'is required within 1 week and its condition should be closely monitored'
+            : 'is required within 1 week and its condition should be closely monitored'}
       </div></div>
         <div style={{ display: 'flex',justifyContent: "center", margin: "0 auto", marginTop: "5%", marginBottom: "5%"}}>
             <div>
@@ -163,7 +167,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                         ]
                     }}
                     pointer={{ type: "blob", animationDelay: 0 }}
-                    value={(anomalyCount / 96) * 100}
+                    value={(critAnomalyCount / 96) * 100}
                 />
             </div>
             <div>
