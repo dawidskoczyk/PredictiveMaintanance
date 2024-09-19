@@ -16,6 +16,7 @@ import { ToastContainer } from 'react-toastify';  // Import ToastContainer
 import { GraphanaCharts } from "./components/GraphanaCharts.js";
 import { rgb } from "chroma-js";
 import { toast } from 'react-toastify';
+import BackToTopButton from "./BackToTopButton.js";
 
 let dynamicData = [];
 
@@ -286,6 +287,7 @@ function BaseConnect() {
           </tr>
         </tbody>
       </Table>
+      <BackToTopButton/>
     </div>
   );
 }
