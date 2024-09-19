@@ -1,13 +1,19 @@
 import { GaugeComponent } from 'react-gauge-component';
 import React, { useState, useEffect } from "react";
-
-export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [] }) => {
+import green from './icons/green.png'; 
+import redEng from './icons/redEng.png'; 
+import orangeEng from './icons/orangeEng.png'
+export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [], predictiveDataPar= [] }) => {
     const [data, setData] = useState(dynamicData);
     const [thresh, setThresh] = useState(thresholds);
     const [liveDataGraph, setLiveDataGraph] = useState(liveData);
     const [anomalyCount, setAnomalyCount] = useState(0);
     const [critAnomalyCount, setCritAnomalyCount] = useState(0);
     const [thresholdsUpdated, setThresholdsUpdated] = useState(false);
+    const [predictiveData, setPredictiveData] = useState([]);
+
+
+
 
     const countAnomaly = () => {
         const initialValue = 0;
@@ -52,7 +58,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
             setThresholdsUpdated(false); // Reset the flag
         }
     }, [thresholdsUpdated]);
-    
+
 
     // When dynamic data changes, update data and recalculate anomalies
     useEffect(() => {
@@ -65,8 +71,45 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
         setLiveDataGraph(liveData);
     }, [liveData]);
 
+    useEffect(() => {
+        setPredictiveData(predictiveDataPar);
+        
+        if (predictiveDataPar.length > 0 && predictiveDataPar[0].predicted_count !== undefined) {
+            console.log(predictiveDataPar[0].predicted_count);
+        } else {
+            console.log("Predictive data is not available or has no predicted_count.");
+        }
+    }, [predictiveDataPar]);
+    
     return (
-        <div style={{ display: 'flex',justifyContent: "center", margin: "0 auto", marginTop: "15%", marginBottom: "5%"}}>
+        <><div style={{display:'flex'}}><div style={{ margin:'25px 20px'}}> {(anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[0].predicted_count < 15
+            ? <img src={green} alt="Green" style={{  width: '100px', height: '80px' }} />
+            : (anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25
+            ? <img src={orangeEng} alt="Orange" style={{ width: '100px', height: '80px'}} />
+            : <img src={redEng} alt="Red" style={{ width: '100px', height: '80px' }} />}</div>
+            <div style={{
+            color: (anomalyCount / 96) * 100 > 25 ? 'red' : ((anomalyCount / 96) * 100 < 25 && (anomalyCount / 96) * 100 > 15) ? 'orange' : 'green',
+            fontWeight: predictiveData.length > 0 && predictiveData[0].predicted_count > 25 ? 'bold' : 'normal',
+            fontSize:'28px',
+            textAlign:'center',
+            width:'1000px',
+            marginTop:'40px'
+        }}>
+            
+        Risk of failure is {((anomalyCount / 96) * 100).toPrecision(4)},
+        inspection {((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 15)
+          ? "is not required"
+          : ((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 15)
+          ? "is not required, but the condition must be monitored as getting worse is expected"
+          : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+          ? 'is required within 2 months, but its predicted condition does not become worse'
+          : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 25)
+          ? 'is required within 1 month and its condition may become progressively worse'
+          : ((anomalyCount / 96) * 100 > 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+          ? 'is required within 1 month, but its predicted condition does not become worse'
+          : 'is required within 1 week and its condition should be closely monitored'}
+      </div></div>
+        <div style={{ display: 'flex',justifyContent: "center", margin: "0 auto", marginTop: "5%", marginBottom: "5%"}}>
             <div>
                 <h5>Actual Temperature of device</h5>
                 <GaugeComponent
@@ -113,17 +156,14 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                         colorArray: ['#00FF15', '#FF2121'],
                         padding: 0.02,
                         subArcs: [
-                            { limit: 40 },
+                            { limit: 15 },
+                            { limit: 25 },
                             { limit: 60 },
-                            { limit: 70 },
-                            {},
-                            {},
-                            {},
-                            {}
+
                         ]
                     }}
                     pointer={{ type: "blob", animationDelay: 0 }}
-                    value={50}
+                    value={(anomalyCount / 96) * 100}
                 />
             </div>
             <div>
@@ -201,5 +241,6 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                 />
             </div>
         </div>
+        </>
     );
 };

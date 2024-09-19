@@ -154,7 +154,7 @@ function BaseConnect() {
     <div>
       {data ? (
         <div>
-           <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} />
+           <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} predictiveDataPar={dynamicPredictiveData || []} />
           {/* <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2> */}
           {/* <Table responsive style={{ width: "90%"}}>
             <thead>
