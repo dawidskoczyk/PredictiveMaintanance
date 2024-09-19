@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { UserList } from './UserList';
 import { UserManagement } from './UserManagement';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation  } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Spinner } from 'react-bootstrap';
@@ -15,8 +15,19 @@ export const UserManagementPage = () => {
   const [isCreatingUser, setIsCreatingUser] = useState(false); 
   const [loading, setLoading] = useState(false);
   const { isAuthenticated, role, email, username } = useAuth(); // Access role and email directly from context
+  const [isFormDirty, setIsFormDirty] = useState(false); // To track unsaved changes
+  const navigate = useNavigate(); // To handle navigation
+  
+  // Function to handle browser refresh or tab close
+  function handleBeforeUnload(event) {
+    event.preventDefault();
+    event.returnValue = ''; // Required for showing the confirmation dialog in some browsers
+  }
 
+  // Add event listener for beforeunload and fetch users
   useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload, { capture: true });
+
     const fetchUsers = async () => {
       setLoading(true);
       try {
@@ -31,8 +42,16 @@ export const UserManagementPage = () => {
     };
 
     fetchUsers();
+
   }, []);
 
+  // Handle route change using React Router's Prompt
+  const handlePromptBeforeUnload = (nextLocation) => {
+    if (isFormDirty) {
+      return window.confirm("You have unsaved changes. Are you sure you want to leave?");
+    }
+    return true;
+  };
   const handleSelectUser = (user) => {
     setSelectedUser(user);
     setIsCreatingUser(false);
