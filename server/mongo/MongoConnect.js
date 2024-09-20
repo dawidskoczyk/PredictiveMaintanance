@@ -19,8 +19,8 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect to the "NormalBase" database and access its "NormalData" collection
-    const database = client.db("Cluster001");
-    const collection = database.collection("TestData");
+    const database = client.db("temperature_db");
+    const collection = database.collection("temperature_datas");
     const result = await collection.find({}, {value: 1, date: 1}).sort({date:-1}).limit(100).toArray();
     // Insert the defined document into the "NormalData" collection
     //const result = await collection.insertMany(documents);

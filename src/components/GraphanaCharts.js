@@ -84,15 +84,15 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
     return (
         <><div style={{ display: 'flex' }}>
         <div style={{ margin: '25px 20px' }}>
-          {(critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[0].predicted_count < 15
+          {(anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[0].predicted_count < 15
             ? <img src={green} alt="Green" style={{ width: '100px', height: '80px' }} />
-            : (critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25
+            : (anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25
             ? <img src={orangeEng} alt="Orange" style={{ width: '100px', height: '80px' }} />
             : <img src={redEng} alt="Red" style={{ width: '100px', height: '80px' }} />}
         </div>
         <div
           style={{
-            color: (critAnomalyCount / 96) * 100 > 25 ? 'red' : ((critAnomalyCount / 96) * 100 < 25 && (critAnomalyCount / 96) * 100 > 15) ? 'orange' : 'green',
+            color: (anomalyCount / 96) * 100 > 25 ? 'red' : ((anomalyCount / 96) * 100 < 25 && (anomalyCount / 96) * 100 > 15) ? 'orange' : 'green',
             fontWeight: predictiveData.length > 0 && predictiveData[0].predicted_count > 25 ? 'bold' : 'normal',
             fontSize: '28px',
             textAlign: 'center',
@@ -100,16 +100,16 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
             marginTop: '40px'
           }}
         >
-          Risk of failure is {((critAnomalyCount / 96) * 100).toPrecision(4)},
-          inspection {((critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 15)
+          Risk of failure is {((anomalyCount / 96) * 100).toPrecision(4)},
+          inspection {((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 15)
             ? "is not required"
-            : ((critAnomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 15)
+            : ((anomalyCount / 96) * 100 < 15 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 15)
             ? "is not required, but the condition must be monitored as getting worse is expected"
-            : ((critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+            : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
             ? 'is required within 1 month and its condition may become progressively worse'
-            : ((critAnomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 25)
+            : ((anomalyCount / 96) * 100 < 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count > 25)
             ? 'is required within 1 month and its condition may become progressively worse'
-            : ((critAnomalyCount / 96) * 100 > 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
+            : ((anomalyCount / 96) * 100 > 25 && predictiveData.length > 0 && predictiveData[predictiveData.length - 1].predicted_count < 25)
             ? 'is required within 1 week and its condition should be closely monitored'
             : 'is required within 1 week and its condition should be closely monitored'}
       </div></div>
@@ -123,8 +123,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                         padding: 0.005,
                         cornerRadius: 1,
                         subArcs: [
-                            { limit: 20, color: '#EA4228', showTick: true, tooltip: { text: 'Too low temperature!' }},
-                            { limit: 23, color: '#F5CD19', showTick: true, tooltip: { text: 'Low temperature!' }},
+
                             { limit: thresh[0], color: '#5BE12C', showTick: true, tooltip: { text: 'OK temperature!' }},
                             { limit: thresh[1], color: '#F5CD19', showTick: true, tooltip: { text: 'High temperature!' }},
                             { color: '#EA4228', tooltip: { text: 'Too high temperature!' }}
@@ -167,7 +166,7 @@ export const GraphanaCharts = ({ dynamicData = [], thresholds = [], liveData = [
                         ]
                     }}
                     pointer={{ type: "blob", animationDelay: 0 }}
-                    value={(critAnomalyCount / 96) * 100}
+                    value={(anomalyCount / 96) * 100}
                 />
             </div>
             <div>

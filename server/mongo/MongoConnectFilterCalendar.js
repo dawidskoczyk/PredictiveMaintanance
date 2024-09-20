@@ -26,8 +26,8 @@ async function run() {
     // dynamicImport();
     // console.log(`2.startdata ${sd}, enddata ${ed}`);
     console.log(startDate);
-    const database = client.db("Cluster001");
-    const collection = database.collection("TestData");
+    const database = client.db("temperature_db");
+    const collection = database.collection("temperature_datas");
     const query = {
       date: {
           $gte: startDate,
