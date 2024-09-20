@@ -192,18 +192,29 @@ oauth2Client.getAccessToken((err, accessToken) => {
   const userRouter = express.Router();
 
   userRouter.put('/users/:id', async (req, res) => {
-    const { username, email, role } = req.body;
-
+    const { username, password, email, role } = req.body;
+  
     try {
+      // Prepare an object for fields to be updated
+      const updateFields = { username, email, role };
+  
+      // If a new password is provided, hash it and add to the update object
+      if (password) {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        updateFields.password = hashedPassword;
+      }
+  
+      // Find the user by ID and update with new values
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
-        { username, role: role },  // Ustawiamy domyślną rolę, jeśli nie jest podana
-        { new: true }
+        updateFields,
+        { new: true }  // Return the updated user document
       );
+  
       res.json(updatedUser);
     } catch (err) {
-      console.error('Błąd podczas aktualizacji użytkownika:', err);
-      res.status(500).json({ message: 'Błąd podczas aktualizacji użytkownika' });
+      console.error('Error updating user:', err);
+      res.status(500).json({ message: 'Error updating user' });
     }
   });
 

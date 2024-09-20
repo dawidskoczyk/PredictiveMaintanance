@@ -141,7 +141,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
             placeholder="Enter new password"
             value={password}
             onChange={handleInputChange(setPassword)}
-            disabled={!isCreatingUser}
+            disabled={!selectedUser && !isCreatingUser}
           />
         </Form.Group>
 
