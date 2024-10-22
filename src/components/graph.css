@@ -1,0 +1,40 @@
+.anomaly-indicator {
+  font-size: 28px;
+  text-align: center;
+  width: 60%;
+  margin-top: 40px;
+}
+.responsive-margin {
+  margin: 25px 0 0 15%; /* Domyślny margines */
+}
+.responsive-margin img {
+  width: 100px;
+  height: 80px;
+}
+
+/* Style dla telefonów (mniejsze ekrany poniżej 768px) */
+@media (max-width: 768px) {
+  .anomaly-indicator {
+    font-size: 18px; /* Zmniejszenie rozmiaru czcionki na telefonach */
+    width: 100%; /* Ustaw szerokość na 100% */
+    padding: 0 10px; /* Dodaj padding dla lepszego odstępu */
+    margin-top: 20px;
+    text-align: center; /* Zmniejsz odstęp u góry */
+  }
+  .responsive-margin {
+    margin: 25px 0 0 5%; /* Zmniejszenie lewego marginesu na 5% dla telefonów */
+  }
+  .responsive-margin img {
+    width: 50px;
+    height: 40px;
+    margin-top: 5px; /* Zmniejszenie lewego marginesu na 5% dla telefonów */
+  }
+}
+
+/* Style dla bardzo małych ekranów (poniżej 576px) */
+@media (max-width: 576px) {
+  .anomaly-indicator {
+    font-size: 16px; /* Jeszcze mniejsza czcionka dla bardzo małych ekranów */
+    margin-top: 15px;
+  }
+}

@@ -1,55 +1,90 @@
 /* Custom CSS for Navbar */
 .navbar {
-    background-color: #f8f9fa; /* Light background color */
-    border-bottom: 1px solid #dee2e6; /* Subtle border at the bottom */
-  }
-  
-  .navbar-brand {
-    color: #343a40; /* Dark color for brand text */
-    font-weight: bold; /* Make brand text bold */
-  }
-  
-  .navbar-brand:hover {
-    color: #007bff; /* Change color on hover */
-  }
-  
-  .navbar-text {
-    color: #343a40; /* Dark color for text */
-  }
-  
-  .navbar-text:hover {
-    color: #007bff; /* Change color on hover */
-  }
-  /* Custom CSS for Buttons */
-.navbar-brand, .navbar-text {
-    padding: 10px;
-    border-radius: 5px;
-  }
-  
-  .navbar-brand:hover, .navbar-text:hover {
-    background-color: #e9ecef; /* Light background on hover */
-    transition: background-color 0.3s ease;
-  }
-  /* Ensure proper spacing and alignment */
+  background-color: #f8f9fa; /* Light background color */
+  border-bottom: 1px solid #dee2e6; /* Subtle border at the bottom */
+}
+
+.navbar-brand {
+  color: #343a40; /* Dark color for brand text */
+  font-weight: bold; /* Make brand text bold */
+}
+
+.navbar-brand:hover {
+  color: #007bff; /* Change color on hover */
+}
+
+.navbar-text {
+  color: #343a40; /* Dark color for text */
+}
+
+.navbar-text:hover {
+  color: #007bff; /* Change color on hover */
+}
+/* Custom CSS for Buttons */
+.navbar-brand,
+.navbar-text {
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.navbar-brand:hover,
+.navbar-text:hover {
+  background-color: #e9ecef; /* Light background on hover */
+  transition: background-color 0.3s ease;
+}
+/* Ensure proper spacing and alignment */
 .navbar .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-toggle {
+  border: 1px solid #007bff; /* Border color for toggle button */
+}
+
+.navbar-collapse {
+  flex-grow: 1;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.active-link {
+  color: #2571c2; /* Change color for active link */
+  font-weight: bold; /* Make active link text bold */
+  background-color: #e9ecef; /* Optional: Background color for active link */
+  border-radius: 5px; /* Optional: Rounded corners */
+}
+
+/* Mobile View Adjustments */
+@media (max-width: 768px) {
+  .navbar-brand,
+  .navbar-text {
+    padding: 8px; /* Reduce padding for mobile */
+    font-size: 16px; /* Adjust font size */
   }
-  
+
   .navbar-toggle {
-    border: 1px solid #007bff; /* Border color for toggle button */
+    margin-bottom: 10px; /* Add some space below the toggle */
+    padding: 8px;
   }
-  
-  .navbar-collapse {
-    flex-grow: 1;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
+
   .active-link {
-    color: #2571c2; /* Change color for active link */
-    font-weight: bold; /* Make active link text bold */
-    background-color: #e9ecef; /* Optional: Background color for active link */
-    border-radius: 5px; /* Optional: Rounded corners */
+    padding: 8px;
+    font-size: 16px; /* Adjust the size of active links on mobile */
   }
+}
+
+/* Extra small devices (phones, less than 576px) */
+@media (max-width: 576px) {
+  .navbar-brand,
+  .navbar-text {
+    font-size: 14px;
+    margin-right: 2%; /* Further adjust font size for smaller phones */
+  }
+
+  .navbar-toggle {
+    /* Make the toggle button take full width */
+    text-align: center; /* Center-align the text inside the button */
+  }
+}

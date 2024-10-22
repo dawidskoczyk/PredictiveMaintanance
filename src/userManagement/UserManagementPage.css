@@ -1,25 +1,52 @@
 /* UserManagementPage Styles */
 .d-flex {
-    border-radius: 5px; /* Zaokrąglenie rogów dla spinnera */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Delikatny cień */
-    padding: 20px;
-    background-color: #fff; /* Tło dla spinnera */
+  border-radius: 5px; /* Zaokrąglenie rogów dla spinnera */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Delikatny cień */
+  padding: 20px;
+  background-color: #fff; /* Tło dla spinnera */
 }
 
 /* Przycisk dodawania użytkownika */
 .btn-success {
-    background-color: #4CAF50; /* Zielony */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-weight: bold;
+  background-color: #4caf50; /* Zielony */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
 }
 
 /* Przycisk usuwania użytkownika */
 .btn-danger {
-    background-color: #f44336; /* Czerwony */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-weight: bold;
+  background-color: #f44336; /* Czerwony */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+
+.send-email-btn {
+  padding: 10px 20px; /* Standardowy padding */
+  font-size: 16px; /* Standardowy rozmiar czcionki */
+  border: none;
+  border-radius: 5px;
+  margin-top: 20px;
+  margin-left: 160px;
+}
+
+/* Style dla ekranów poniżej 768px (telefony) */
+@media (max-width: 768px) {
+  .send-email-btn {
+    width: 100%; /* Zajmuje całą szerokość kontenera */
+    font-size: 14px; /* Mniejsza czcionka */
+    padding: 12px 16px;
+    margin-left: 0; /* Większy padding, aby było łatwiej kliknąć */
+  }
+}
+
+/* Style dla bardzo małych ekranów (poniżej 576px) */
+@media (max-width: 576px) {
+  .send-email-btn {
+    font-size: 12px; /* Jeszcze mniejsza czcionka */
+    padding: 10px 14px; /* Dopasowany padding */
+  }
 }

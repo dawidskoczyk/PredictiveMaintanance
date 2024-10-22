@@ -1,40 +1,42 @@
 import "./App.css";
-import React from 'react';
+import React from "react";
 import { useEffect, useState } from "react";
 import Table from "react-bootstrap/Table";
 import { addDays } from "date-fns";
 import DatePicker from "./components/Filter.js";
 import { Chart } from "./components/Chart.js";
 import { Menu } from "./components/Menu.js";
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import { History } from "./components/AnomalyHistory/AnomalyHistory.js";
-import { Login } from './login/SignIn.js';  // Import SignIn component
-import { AuthProvider, useAuth } from './login/AuthContext.js';  // Import AuthContext
+import { Login } from "./login/SignIn.js"; // Import SignIn component
+import { AuthProvider, useAuth } from "./login/AuthContext.js"; // Import AuthContext
 import { UserManagementPage } from "./userManagement/UserManagementPage.js";
-import { ProtectedRoute } from './login/ProtectedRoute.js'; // Import ProtectedRoute
-import { ToastContainer } from 'react-toastify';  // Import ToastContainer
+import { ProtectedRoute } from "./login/ProtectedRoute.js"; // Import ProtectedRoute
+import { ToastContainer } from "react-toastify"; // Import ToastContainer
 import { GraphanaCharts } from "./components/GraphanaCharts.js";
 import { rgb } from "chroma-js";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import BackToTopButton from "./BackToTopButton.js";
 
 let dynamicData = [];
 
 function App() {
   const [ranges, setRanges] = useState({ startDate: null, endDate: null });
-  
+
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       setIsAuthenticated(true);
     }
   }, []);
-
-
 
   function HomePage() {
     const { isAuthenticated } = useAuth();
@@ -42,8 +44,7 @@ function App() {
       <div>
         {isAuthenticated ? (
           <>
-            
-            <BaseConnect  />
+            <BaseConnect />
           </>
         ) : (
           <div className="home-page">
@@ -59,10 +60,19 @@ function App() {
     <AuthProvider>
       <Menu />
       <Routes>
-        <Route path="/home" element={<ProtectedRoute element={<HomePage />} />} />
-        <Route path="/user-management" element={<ProtectedRoute element={<UserManagementPage />} />} />
-        <Route path="/history" element={<ProtectedRoute element={<History />} />} />
-        <Route path="/login" element={<Login/>} />
+        <Route
+          path="/home"
+          element={<ProtectedRoute element={<HomePage />} />}
+        />
+        <Route
+          path="/user-management"
+          element={<ProtectedRoute element={<UserManagementPage />} />}
+        />
+        <Route
+          path="/history"
+          element={<ProtectedRoute element={<History />} />}
+        />
+        <Route path="/login" element={<Login />} />
       </Routes>
     </AuthProvider>
   );
@@ -94,9 +104,9 @@ function BaseConnect() {
 
   useEffect(() => {
     fetch("http://localhost:5001/api/dataPred", {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     })
       .then((res) => res.json())
@@ -107,8 +117,8 @@ function BaseConnect() {
       .catch((err) => console.error(err));
   }, []);
 
-  const handleChange = event => {
-    setIsVisible(current => !current);
+  const handleChange = (event) => {
+    setIsVisible((current) => !current);
   };
 
   const handleSubmit = async (startDate, endDate) => {
@@ -119,7 +129,10 @@ function BaseConnect() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ startDate: startDate.toISOString(), endDate: endDate.toISOString() }),
+        body: JSON.stringify({
+          startDate: startDate.toISOString(),
+          endDate: endDate.toISOString(),
+        }),
       });
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
@@ -154,7 +167,12 @@ function BaseConnect() {
     <div>
       {data ? (
         <div>
-           <GraphanaCharts dynamicData={dynamicData || []} thresholds={thresholds || []} liveData={data || []} predictiveDataPar={dynamicPredictiveData || []} />
+          <GraphanaCharts
+            dynamicData={dynamicData || []}
+            thresholds={thresholds || []}
+            liveData={data || []}
+            predictiveDataPar={dynamicPredictiveData || []}
+          />
           {/* <h2 style={{ marginLeft: "4%", marginTop:'2%', fontSize:'28px', color:'red', textAlign:'center'}}>Latest twelve data points</h2> */}
           {/* <Table responsive style={{ width: "90%"}}>
             <thead>
@@ -196,29 +214,38 @@ function BaseConnect() {
 
           <div className="thresholds-container">
             <div className="thresholds-form">
-              
               {isVisible && (
                 <>
-                    <h2 style={{textAlign: "center", marginTop: "15px", fontSize: '20px',color: 'black',fontWeight: 'bold'}}>
-                      Set Thresholds: 
-                    </h2>
+                  <h2
+                    style={{
+                      textAlign: "center",
+                      marginTop: "15px",
+                      fontSize: "20px",
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    Set Thresholds:
+                  </h2>
                   <div className="threshold-inputs">
-                    
-
-                    <label style={{ minWidth: '150px' }}>Threshold warning</label>
+                    <label style={{ minWidth: "150px" }}>
+                      Threshold warning
+                    </label>
                     <input
                       type="number"
                       placeholder=""
-                      name='warn'
+                      name="warn"
                       value={thresholds[0]}
                       onChange={(e) => handleThresh(0, e.target.value)}
                       className="threshold-input"
                     />
-                    
-                    <label style={{ minWidth: '150px' }}>Threshold critical</label>
+
+                    <label style={{ minWidth: "150px" }}>
+                      Threshold critical
+                    </label>
                     <input
                       type="number"
-                      name='crit'
+                      name="crit"
                       value={thresholds[1]}
                       onChange={(e) => handleThresh(1, e.target.value)}
                       className="threshold-input"
@@ -227,47 +254,77 @@ function BaseConnect() {
                   <div className="reset-button">
                     {thresholds[0] !== 28 || thresholds[1] !== 30 ? (
                       <button
-                        style={{ color: 'black',margin: "0", padding: "0", marginTop: '2%', width: "240px"}}
+                        style={{
+                          color: "black",
+                          margin: "0",
+                          padding: "0",
+                          marginTop: "2%",
+                          width: "240px",
+                        }}
                         onClick={() => setThresholds([28, 30])}
                       >
                         Reset Thresholds to defaults
                       </button>
-                    ) : ''}
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </>
               )}
             </div>
-            </div>
-            <DatePicker onChange={OnChange} />
-            {/* <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3> */}
-           
-            <div className="chart-container">
-              <Chart initialData={dynamicData || []} thresholds={thresholds || []} predictiveDataPar={dynamicPredictiveData || []} />
-            </div>
-          
+          </div>
+          <DatePicker onChange={OnChange} />
+          {/* <h3 style={{ color: 'blue' }}>Press ctrl to move and zoom charts</h3> */}
+
+          <div className="chart-container">
+            <Chart
+              initialData={dynamicData || []}
+              thresholds={thresholds || []}
+              predictiveDataPar={dynamicPredictiveData || []}
+            />
+          </div>
         </div>
       ) : (
         <p></p>
       )}
-      <h2 style={{ marginLeft: "4%", marginTop: "5%", color: "blue", fontSize: "48px" }}>Filtered data</h2>
+      <h2
+        style={{
+          marginLeft: "4%",
+          marginTop: "5%",
+          color: "blue",
+          fontSize: "48px",
+        }}
+      >
+        Filtered data
+      </h2>
       <Table responsive>
         <thead>
           <tr>
             <th style={{ backgroundColor: "black", color: "white" }}>Date:</th>
             {Array.from({ length: 12 }).map((_, index) => (
               <th key={index}>
-                {dynamicData[index]?.date
-                  .replace("2024-", " ")
-                  .replace("T", " ")
-                  .replace("Z", " ")
-                  .split('.')[0]}
+                {
+                  dynamicData[index]?.date
+                    .replace("2024-", " ")
+                    .replace("T", " ")
+                    .replace("Z", " ")
+                    .split(".")[0]
+                }
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style={{ width: "120px", backgroundColor: "purple", color: "white" }}>Temperature (&#176;C)</td>
+            <td
+              style={{
+                width: "120px",
+                backgroundColor: "purple",
+                color: "white",
+              }}
+            >
+              Temperature (&#176;C)
+            </td>
             {Array.from({ length: 12 }).map((_, index) => (
               <td
                 key={index}
@@ -287,7 +344,7 @@ function BaseConnect() {
           </tr>
         </tbody>
       </Table>
-      <BackToTopButton/>
+      <BackToTopButton />
     </div>
   );
 }
