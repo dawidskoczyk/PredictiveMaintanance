@@ -96,14 +96,14 @@ function BaseConnect() {
   const thresholdDowndB = 35;
 
   useEffect(() => {
-    fetch("http://localhost:5001/api")
+    fetch("http://https://predictivemaintanance.onrender.com/api")
       .then((res) => res.json())
       .then((data) => setData(data.message))
       .catch((err) => console.log(err));
   }, [data]);
 
   useEffect(() => {
-    fetch("http://localhost:5001/api/dataPred", {
+    fetch("http://https://predictivemaintanance.onrender.com/api/dataPred", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -124,16 +124,19 @@ function BaseConnect() {
   const handleSubmit = async (startDate, endDate) => {
     console.log(`handle submit start ${startDate} koniec ${endDate}`);
     try {
-      const response = await fetch("http://localhost:5001/api/data", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          startDate: startDate.toISOString(),
-          endDate: endDate.toISOString(),
-        }),
-      });
+      const response = await fetch(
+        "http://https://predictivemaintanance.onrender.com/api/data",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            startDate: startDate.toISOString(),
+            endDate: endDate.toISOString(),
+          }),
+        }
+      );
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }

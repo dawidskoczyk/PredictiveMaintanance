@@ -18,11 +18,14 @@ export const Login = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password }),
-      });
+      const response = await fetch(
+        "http://https://predictivemaintanance.onrender.com/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ username, password }),
+        }
+      );
       if (response.ok) {
         toast.success("Logged in sucesfully");
         const data = await response.json();

@@ -34,7 +34,9 @@ export const UserManagementPage = () => {
     const fetchUsers = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5001/api/users");
+        const response = await axios.get(
+          "http://https://predictivemaintanance.onrender.com/api/users"
+        );
         setUsers(response.data);
       } catch (error) {
         toast.error("Error fetching users");
@@ -64,14 +66,17 @@ export const UserManagementPage = () => {
   const handleCreateUser = async (newUser) => {
     setLoading(true);
     try {
-      const checkResponse = await fetch("http://localhost:5001/check-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: newUser.email,
-          username: newUser.username,
-        }),
-      });
+      const checkResponse = await fetch(
+        "http://https://predictivemaintanance.onrender.com/check-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: newUser.email,
+            username: newUser.username,
+          }),
+        }
+      );
 
       const { emailExists, usernameExists } = await checkResponse.json();
       if (emailExists) {
@@ -88,16 +93,21 @@ export const UserManagementPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newUser),
-      });
+      const response = await fetch(
+        "http://https://predictivemaintanance.onrender.com/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(newUser),
+        }
+      );
 
       if (response.ok) {
         toast.success("Registered successfully!");
         setIsCreatingUser(false); // Exit creation mode on success
-        const updatedUsers = await axios.get("http://localhost:5001/api/users");
+        const updatedUsers = await axios.get(
+          "http://https://predictivemaintanance.onrender.com/api/users"
+        );
         setUsers(updatedUsers.data);
       } else {
         toast.error("Error registering user");
@@ -128,8 +138,12 @@ export const UserManagementPage = () => {
 
     setLoading(true);
     try {
-      await axios.delete(`http://localhost:5001/api/users/${selectedUser._id}`);
-      const response = await axios.get("http://localhost:5001/api/users");
+      await axios.delete(
+        `http://https://predictivemaintanance.onrender.com/api/users/${selectedUser._id}`
+      );
+      const response = await axios.get(
+        "http://https://predictivemaintanance.onrender.com/api/users"
+      );
       setUsers(response.data);
       toast.success("User has been deleted!");
     } catch (error) {
@@ -145,10 +159,12 @@ export const UserManagementPage = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://localhost:5001/api/users/${updatedUser._id}`,
+        `http://https://predictivemaintanance.onrender.com/api/users/${updatedUser._id}`,
         updatedUser
       );
-      const response = await axios.get("http://localhost:5001/api/users");
+      const response = await axios.get(
+        "http://https://predictivemaintanance.onrender.com/api/users"
+      );
       setUsers(response.data);
       toast.success("User has been updated!");
       setSelectedUser(updatedUser);
@@ -167,15 +183,18 @@ export const UserManagementPage = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:5001/api/send-email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          to: selectedUser.email, // Ensure this matches the backend expected field
-          subject: "Notification",
-          text: "This is a test email from your React app!",
-        }),
-      });
+      const response = await fetch(
+        "http://https://predictivemaintanance.onrender.com/api/send-email",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            to: selectedUser.email, // Ensure this matches the backend expected field
+            subject: "Notification",
+            text: "This is a test email from your React app!",
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);

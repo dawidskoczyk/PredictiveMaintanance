@@ -165,16 +165,19 @@ function MyCalendar() {
       const formattedStartDate = moment(startDate).format("YYYY-MM-DD");
       const formattedEndDate = moment(endDate).format("YYYY-MM-DD");
 
-      const response = await fetch("http://localhost:5001/api/dataCal", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          startDate: formattedStartDate,
-          endDate: formattedEndDate,
-        }),
-      });
+      const response = await fetch(
+        "http://https://predictivemaintanance.onrender.com/api/dataCal",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            startDate: formattedStartDate,
+            endDate: formattedEndDate,
+          }),
+        }
+      );
       const weekEvents = await response.json();
       setDataWeek(weekEvents.message); // Assuming you're storing events in state
 
