@@ -35,7 +35,7 @@ export const UserManagementPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://https://predictivemaintanance.onrender.com/api/users"
+          "https://predictivemaintanance.onrender.com/api/users"
         );
         setUsers(response.data);
       } catch (error) {
@@ -67,7 +67,7 @@ export const UserManagementPage = () => {
     setLoading(true);
     try {
       const checkResponse = await fetch(
-        "http://https://predictivemaintanance.onrender.com/check-email",
+        "https://predictivemaintanance.onrender.com/check-email",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -94,7 +94,7 @@ export const UserManagementPage = () => {
 
     try {
       const response = await fetch(
-        "http://https://predictivemaintanance.onrender.com/register",
+        "https://predictivemaintanance.onrender.com/register",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -106,7 +106,7 @@ export const UserManagementPage = () => {
         toast.success("Registered successfully!");
         setIsCreatingUser(false); // Exit creation mode on success
         const updatedUsers = await axios.get(
-          "http://https://predictivemaintanance.onrender.com/api/users"
+          "https://predictivemaintanance.onrender.com/api/users"
         );
         setUsers(updatedUsers.data);
       } else {
@@ -139,10 +139,10 @@ export const UserManagementPage = () => {
     setLoading(true);
     try {
       await axios.delete(
-        `http://https://predictivemaintanance.onrender.com/api/users/${selectedUser._id}`
+        `https://predictivemaintanance.onrender.com/api/users/${selectedUser._id}`
       );
       const response = await axios.get(
-        "http://https://predictivemaintanance.onrender.com/api/users"
+        "https://predictivemaintanance.onrender.com/api/users"
       );
       setUsers(response.data);
       toast.success("User has been deleted!");
@@ -159,11 +159,11 @@ export const UserManagementPage = () => {
     setLoading(true);
     try {
       await axios.put(
-        `http://https://predictivemaintanance.onrender.com/api/users/${updatedUser._id}`,
+        `https://predictivemaintanance.onrender.com/api/users/${updatedUser._id}`,
         updatedUser
       );
       const response = await axios.get(
-        "http://https://predictivemaintanance.onrender.com/api/users"
+        "https://predictivemaintanance.onrender.com/api/users"
       );
       setUsers(response.data);
       toast.success("User has been updated!");
@@ -184,7 +184,7 @@ export const UserManagementPage = () => {
 
     try {
       const response = await fetch(
-        "http://https://predictivemaintanance.onrender.com/api/send-email",
+        "https://predictivemaintanance.onrender.com/api/send-email",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -19,7 +19,7 @@ export const Login = () => {
 
     try {
       const response = await fetch(
-        "http://https://predictivemaintanance.onrender.com/login",
+        "https://predictivemaintanance.onrender.com/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
