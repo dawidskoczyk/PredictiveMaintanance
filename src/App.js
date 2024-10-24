@@ -96,14 +96,14 @@ function BaseConnect() {
   const thresholdDowndB = 35;
 
   useEffect(() => {
-    fetch("https://predictivemaintanance.onrender.com/api")
+    fetch("https://predictivemaintanance-1.onrender.com/api")
       .then((res) => res.json())
       .then((data) => setData(data.message))
       .catch((err) => console.log(err));
   }, [data]);
 
   useEffect(() => {
-    fetch("https://predictivemaintanance.onrender.com/api/dataPred", {
+    fetch("https://predictivemaintanance-1.onrender.com/api/dataPred", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -125,7 +125,7 @@ function BaseConnect() {
     console.log(`handle submit start ${startDate} koniec ${endDate}`);
     try {
       const response = await fetch(
-        "https://predictivemaintanance.onrender.com/api/data",
+        "https://predictivemaintanance-1.onrender.com/api/data",
         {
           method: "POST",
           headers: {

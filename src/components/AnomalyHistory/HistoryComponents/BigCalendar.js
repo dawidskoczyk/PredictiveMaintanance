@@ -166,7 +166,7 @@ function MyCalendar() {
       const formattedEndDate = moment(endDate).format("YYYY-MM-DD");
 
       const response = await fetch(
-        "https://predictivemaintanance.onrender.com/api/dataCal",
+        "https://predictivemaintanance-1.onrender.com/api/dataCal",
         {
           method: "POST",
           headers: {
