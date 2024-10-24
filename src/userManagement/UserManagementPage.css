@@ -35,6 +35,14 @@
 
 /* Style dla ekranów poniżej 768px (telefony) */
 @media (max-width: 768px) {
+  .btn-danger {
+    font-size: 8px;
+    padding: 5px 10px;
+  }
+  .btn-success {
+    font-size: 8px;
+    padding: 5px 10px;
+  }
   .send-email-btn {
     width: 100%; /* Zajmuje całą szerokość kontenera */
     font-size: 14px; /* Mniejsza czcionka */

@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import { Form, Button, Modal } from 'react-bootstrap';
-import { toast } from 'react-toastify';
-import validator from 'validator'; // Import validator
-import { useAuth } from '../login/AuthContext'; // Import AuthProvider for current user
-import './UserManagement.css'; // Ensure this path is correct
-import { useNavigate, useLocation } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import PropTypes from "prop-types";
+import { Form, Button, Modal } from "react-bootstrap";
+import { toast } from "react-toastify";
+import validator from "validator"; // Import validator
+import { useAuth } from "../login/AuthContext"; // Import AuthProvider for current user
+import "./UserManagement.css"; // Ensure this path is correct
+import { useNavigate, useLocation } from "react-router-dom";
 
-export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCreatingUser }) => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+export const UserManagement = ({
+  selectedUser,
+  onUpdateUser,
+  onCreateUser,
+  isCreatingUser,
+}) => {
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [loading, setLoading] = useState(false);
   const [isDirty, setIsDirty] = useState(false); // Track if form is dirty
   const [showExitModal, setShowExitModal] = useState(false); // Show exit confirmation modal
@@ -24,10 +29,10 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
       setRole(selectedUser.role); // Check if role is coming through correctly
       setEmail(selectedUser.email);
     } else if (isCreatingUser) {
-      setUsername('');
-      setPassword('');
-      setEmail('');
-      setRole(''); // Reset role when creating a new user
+      setUsername("");
+      setPassword("");
+      setEmail("");
+      setRole(""); // Reset role when creating a new user
     }
   }, [selectedUser, isCreatingUser]);
 
@@ -35,13 +40,13 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
     const handleBeforeUnload = (e) => {
       if (isDirty) {
         e.preventDefault();
-        e.returnValue = ''; // Chrome requires returnValue to be set
+        e.returnValue = ""; // Chrome requires returnValue to be set
       }
     };
 
-    window.addEventListener('beforeunload', handleBeforeUnload);
+    window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [isDirty]);
 
@@ -55,20 +60,23 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
     setIsDirty(false); // Reset dirty flag on save
     // Validate fields
     if (!username || !email || (isCreatingUser && !password)) {
-      toast.error('Please fill in all fields.');
+      toast.error("Please fill in all fields.");
       setLoading(false);
       return;
     }
 
     if (!validator.isEmail(email)) {
-      toast.error('Invalid email format.');
+      toast.error("Invalid email format.");
       setLoading(false);
       return;
     }
 
-    const passwordValidation = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordValidation =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (isCreatingUser && !passwordValidation.test(password)) {
-      toast.error('Password must be at least 8 characters long, and include uppercase letters, lowercase letters, numbers, and special characters.');
+      toast.error(
+        "Password must be at least 8 characters long, and include uppercase letters, lowercase letters, numbers, and special characters."
+      );
       setLoading(false);
       return;
     }
@@ -84,7 +92,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
         await onUpdateUser(updatedUser);
       }
     } catch (err) {
-      toast.error('Failed to save user. Please try again.');
+      toast.error("Failed to save user. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -108,9 +116,9 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
   };
 
   return (
-    <div style={{ width: '60%', float: 'right', padding: '10px' }}>
-      <h3>{isCreatingUser ? 'Create user' : 'Manage users!'}</h3>  {/* Dynamic title */}
-
+    <div style={{ width: "60%", float: "right", padding: "10px" }}>
+      <h3>{isCreatingUser ? "Create user" : "Manage users!"}</h3>{" "}
+      {/* Dynamic title */}
       <Form>
         <Form.Group>
           <Form.Label>Nickname</Form.Label>
@@ -135,7 +143,7 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
         </Form.Group>
 
         <Form.Group>
-          <Form.Label>Password {isCreatingUser && '(Required)'}</Form.Label>
+          <Form.Label>Password {isCreatingUser && "(Required)"}</Form.Label>
           <Form.Control
             type="password"
             placeholder="Enter new password"
@@ -147,7 +155,12 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
 
         <Form.Group>
           <Form.Label>Role</Form.Label>
-          <Form.Control as="select" value={role} onChange={handleInputChange(setRole)} disabled={!isCreatingUser && !selectedUser}>
+          <Form.Control
+            as="select"
+            value={role}
+            onChange={handleInputChange(setRole)}
+            disabled={!isCreatingUser && !selectedUser}
+          >
             <option value="user">User</option>
             <option value="admin">Admin</option>
           </Form.Control>
@@ -156,31 +169,32 @@ export const UserManagement = ({ selectedUser, onUpdateUser, onCreateUser, isCre
         <Button
           variant="primary"
           onClick={handleSave}
-          style={{ marginTop: '10px' }}
+          style={{ marginTop: "10px" }}
           disabled={loading || (!isCreatingUser && !selectedUser)}
         >
           {loading
-            ? (isCreatingUser ? 'Creating...' : 'Updating...')
-            : (isCreatingUser ? 'Create account' : 'Manage user')}
+            ? isCreatingUser
+              ? "Creating..."
+              : "Updating..."
+            : isCreatingUser
+            ? "Create account"
+            : "Manage user"}
         </Button>
       </Form>
-
       {/* Exit Confirmation Modal */}
       <Modal show={showExitModal} onHide={handleCloseExitModal}>
         <Modal.Header closeButton>
           <Modal.Title>Unsaved Changes</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          You have unsaved changes. Are you sure you want to leave without saving?
+          You have unsaved changes. Are you sure you want to leave without
+          saving?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseExitModal}>
             Stay
           </Button>
-          <Button
-            variant="primary"
-            onClick={handleConfirmExit}
-          >
+          <Button variant="primary" onClick={handleConfirmExit}>
             Leave
           </Button>
         </Modal.Footer>
@@ -193,9 +207,9 @@ UserManagement.propTypes = {
   selectedUser: PropTypes.shape({
     _id: PropTypes.string.isRequired,
     username: PropTypes.string.isRequired,
-    role: PropTypes.string
+    role: PropTypes.string,
   }),
   onUpdateUser: PropTypes.func.isRequired,
   onCreateUser: PropTypes.func.isRequired,
-  isCreatingUser: PropTypes.bool.isRequired  // Flag to indicate if creating user
+  isCreatingUser: PropTypes.bool.isRequired, // Flag to indicate if creating user
 };

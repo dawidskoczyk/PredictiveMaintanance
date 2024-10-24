@@ -152,9 +152,13 @@ export const GraphanaCharts = ({
         style={{
           display: "flex",
           justifyContent: "center",
+          flexWrap: "wrap",
           margin: "0 auto",
           marginTop: "5%",
           marginBottom: "5%",
+          width: "100%",
+
+          "@media (max-width: 768px)": {},
         }}
       >
         <div>
@@ -196,6 +200,7 @@ export const GraphanaCharts = ({
                 valueConfig: {
                   formatTextValue: (value) => value + "ºC",
                   fontSize: 10,
+                  color: "black",
                 },
                 ticks: [{ value: 13 }, { value: 23 }, { value: 32 }],
               },
@@ -205,7 +210,15 @@ export const GraphanaCharts = ({
             maxValue={40}
           />
         </div>
-        <div>
+        <div
+          style={{
+            "@media (max-width: 768px)": {
+              flexBasis: "20%",
+              boxSizing: "border-box",
+              padding: "10px",
+            },
+          }}
+        >
           <h5>Risk of failure</h5>
           <GaugeComponent
             type="semicircle"
@@ -218,7 +231,15 @@ export const GraphanaCharts = ({
             value={(anomalyCount / 96) * 100}
           />
         </div>
-        <div>
+        <div
+          style={{
+            "@media (max-width: 768px)": {
+              flexBasis: "20%",
+              boxSizing: "border-box",
+              padding: "10px",
+            },
+          }}
+        >
           <h5>Warnings</h5>
           <GaugeComponent
             type="semicircle"
@@ -272,7 +293,15 @@ export const GraphanaCharts = ({
             maxValue={70}
           />
         </div>
-        <div>
+        <div
+          style={{
+            "@media (max-width: 768px)": {
+              flexBasis: "20%",
+              boxSizing: "border-box",
+              padding: "10px",
+            },
+          }}
+        >
           <h5>Critical warnings</h5>
           <GaugeComponent
             type="semicircle"

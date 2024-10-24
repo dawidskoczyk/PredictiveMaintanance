@@ -6,9 +6,9 @@ import "react-date-range/dist/styles.css"; // main css file
 import "react-date-range/dist/theme/default.css"; // theme css file
 import { DateRangePicker } from "react-date-range";
 import { addDays, subDays } from "date-fns";
-import green from "./icons/green.png"
-import orange from "./icons/orangeEng.png"
-import red from "./icons/redEng.png"
+import green from "./icons/green.png";
+import orange from "./icons/orangeEng.png";
+import red from "./icons/redEng.png";
 
 let firstCLick = true;
 
@@ -32,7 +32,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
   };
 
   const [clicked, setClicked] = useState(false);
-  const [imageSrc, setImageSrc] = useState('./icons/green.png'); // Default image
+  const [imageSrc, setImageSrc] = useState("./icons/green.png"); // Default image
 
   // Function to change image dynamically
   const changeImage = (newImage) => {
@@ -40,7 +40,7 @@ const Filter = ({ onChange, startDate, endDate }) => {
   };
 
   return (
-<div style={{display: "flex"}}>
+    <div style={{ display: "flex" }}>
       {/* Image Heading */}
       {/* <div style={{ display: "flex", alignItems: "center", margin: '40px 50px', textAlign: 'center' }}>
       <h1 style={{ color: "green" }}>
@@ -55,45 +55,61 @@ const Filter = ({ onChange, startDate, endDate }) => {
       </div> */}
 
       {/* Flex Container for Date Picker and Heading    border: "dashed",*/}
-      <div style={{ display: "flex", width: "90%", margin: "0 auto", marginTop: "10px", flexDirection: "column"}}>
+      <div
+        style={{
+          display: "flex",
+          width: "90%",
+          margin: "0 auto",
+          marginTop: "10px",
+          flexDirection: "column",
+          position: "relative",
+        }}
+      >
         {/* Date Picker Section */}
-        <span style={{
-  fontSize: '20px',          // Font size
-  color: 'black',             // Text color
-  fontWeight: 'bold',        // Font weight
-  marginTop: '0px',         // Space above the element
-           // Ensures it takes full width (optional)
-  textAlign: 'center',       // Center the text (optional)
-  
-}}>
-  Select range of data from sensors
-</span>
-          <button
-            onClick={() => {
-              setClicked((prevState) => !prevState);
-            }}
-            className="button-64"
-            style={{ marginRight: '0px', marginBottom: '10px', marginTop: "10px", width: "50px", maring: "0 auto"}}
-          >
-            <span>{!clicked ? "Date Picker" : "Set Date Range"}</span>
-          </button>
+        <span
+          style={{
+            //fontSize: "20px", // Font size
+            color: "black", // Text color
+            fontWeight: "bold", // Font weight
+            marginTop: "0px", // Space above the element
+            // Ensures it takes full width (optional)
+            textAlign: "center", // Center the text (optional)
+            marginBottom: "2%",
+          }}
+        >
+          Select range of data from sensors
+        </span>
+        <button
+          onClick={() => {
+            setClicked((prevState) => !prevState);
+          }}
+          className="button-64"
+          style={{
+            marginRight: "0px",
+            marginBottom: "10px",
+            marginTop: "10px",
 
-          {clicked && (
-            <div className="datepicker-overlay" style={{ marginLeft: '400px', marginTop: "50%" }}>
-              <DateRangePicker
-                onChange={handleOnChange}
-                showSelectionPreview={true}
-                moveRangeOnFirstSelection={false}
-                retainEndDateOnFirstSelection={false}
-                months={1}
-                ranges={date}
-                direction="horizontal"
-              />
-            </div>
-          )}
+            margin: "0 auto",
+          }}
+        >
+          <span>{!clicked ? "Date Picker" : "Set Date Range"}</span>
+        </button>
+
+        {clicked && (
+          <div className="datepicker-overlay" style={{}}>
+            <DateRangePicker
+              onChange={handleOnChange}
+              showSelectionPreview={true}
+              moveRangeOnFirstSelection={false}
+              retainEndDateOnFirstSelection={false}
+              months={1}
+              ranges={date}
+              direction="horizontal"
+            />
+          </div>
+        )}
 
         {/* Blue Headings Section */}
-        
       </div>
     </div>
   );

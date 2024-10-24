@@ -8,11 +8,12 @@ body {
   height: 40vmin;
   pointer-events: none;
 }
-th{
-  text-align: center !important; 
-  
+th {
+  text-align: center !important;
 }
-h5{text-align: center;}
+h5 {
+  text-align: center;
+}
 
 /* Stylizacja dla Toastów */
 .Toastify__toast {
@@ -44,9 +45,9 @@ h5{text-align: center;}
     animation: App-logo-spin infinite 20s linear;
   }
 }
-.rdrStaticRange{
-background-color: transparent;
-color: black;
+.rdrStaticRange {
+  background-color: transparent;
+  color: black;
 }
 .App-header {
   background-color: #282c34;
@@ -88,6 +89,8 @@ table {
   z-index: 999;
   background-color: white;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  margin-left: 400px;
+  margin-top: 45%;
 }
 /* Thresholds.css */
 .thresholds-container {
@@ -100,12 +103,12 @@ table {
   border-bottom: dashed 2px;
   border-top: dashed 2px;
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   align-items: center;
   padding-left: 0px;
   margin: 0 auto;
   margin-bottom: 0px;
-  justify-content: center
+  justify-content: center;
 }
 
 .thresholds-form {
@@ -128,13 +131,13 @@ table {
   align-items: center;
   display: flex;
   flex-direction: row;
-  
+  margin-left: 10%;
 }
 
 .input-group {
   display: flex;
   align-items: center;
-  }
+}
 
 .input-group label {
   margin-right: 15px; /* Increased space between label and input */
@@ -143,7 +146,7 @@ table {
 
 .threshold-input {
   padding: 2px; /* Added padding for better visual appeal */
-  margin-right:5%;
+  margin-right: 15%;
   border: 1px solid #ced4da;
   border-radius: 4px;
   width: 80px; /* Increased width for better usability */
@@ -156,6 +159,7 @@ table {
   margin: 0 auto;
   margin: 10px 0px;
   margin-left: 27%;
+  width: "240px";
 }
 
 .reset-btn {
@@ -174,7 +178,6 @@ table {
 
 .chart-container {
   width: 100%;
-  max-width: 1200px;
   margin-top: 20px;
 }
 
@@ -204,6 +207,7 @@ table {
   white-space: nowrap;
   cursor: pointer;
   margin: 43.5%;
+  width: "50px";
 }
 
 .button-64:active,
@@ -224,7 +228,9 @@ table {
 .button-64:hover span {
   background: none;
 }
-
+h2 {
+  font-size: 20px;
+}
 @media (min-width: 768px) {
   .button-64 {
     font-size: 16px;
@@ -248,4 +254,81 @@ table {
 
 .authenticated-content {
   padding: 20px;
+}
+label {
+  width: "150px";
+  margin-right: 2%;
+}
+span {
+  font-size: 20px;
+}
+@media (max-width: 768px) {
+  .datepicker-overlay {
+    position: absolute;
+    left: 40%;
+    transform: translateX(-50%);
+    width: 100%; /* Szerokość na mobile */
+    margin: 0; /* Usuń wszystkie marginesy */
+  }
+  .threshold_container {
+    width: 100%;
+  }
+  .threshold-inputs {
+    width: 100%;
+    font-size: 12px;
+  }
+
+  .threshold-input {
+    font-size: 12px;
+  }
+
+  .thresholds-form h2 {
+    font-size: 14px;
+  }
+  label {
+    width: "70px";
+  }
+  .reset-button {
+    width: 150px !important;
+    margin-left: 20%;
+  }
+  .button-64 {
+    width: 40%;
+  }
+  .button-64 span {
+    font-size: 14px;
+  }
+  span {
+    font-size: 14px;
+  }
+
+  /* Add this to your CSS file */
+  .rdrCalendarWrapper {
+    width: 250px !important; /* or whatever width you want */
+  }
+
+  .rdrMonth {
+    width: 100% !important;
+  }
+
+  .rdrDateRangePickerWrapper {
+    width: 80% !important;
+  }
+
+  /* If you want to adjust height */
+  .rdrMonthAndYearWrapper {
+    height: auto !important;
+  }
+
+  .rdrMonthsVertical {
+    height: 80px !important; /* or whatever height you want */
+  }
+  h2 {
+    font-size: 18px;
+  }
+  button {
+    height: 50px;
+    width: 80px;
+    font-size: 10px;
+  }
 }

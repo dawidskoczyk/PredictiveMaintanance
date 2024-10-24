@@ -37,4 +37,7 @@
     font-size: 16px; /* Jeszcze mniejsza czcionka dla bardzo małych ekranów */
     margin-top: 15px;
   }
+  h5 {
+    font-size: 16px;
+  }
 }

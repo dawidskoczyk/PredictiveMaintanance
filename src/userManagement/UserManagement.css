@@ -1,30 +1,36 @@
 /* UserManagement Styles */
 div[style*="width: 60%"] {
-    background-color: #f9f9f9; /* Bardzo jasne tło */
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Delikatny cień */
-    padding: 20px;
-    margin-top: 20px; /* Odstęp od góry */
+  background-color: #f9f9f9; /* Bardzo jasne tło */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+  padding: 20px;
+  margin-top: 20px; /* Odstęp od góry */
 }
 
 h3 {
-    color: #333;
-    margin-bottom: 20px;
+  color: #333;
+  margin-bottom: 20px;
 }
 
 /* Stylizacja formularza */
 .form-control {
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Delikatny cień */
-    margin-bottom: 15px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+  margin-bottom: 15px;
 }
 
 /* Stylizacja przycisków */
 .btn-primary {
-    background-color: #007bff; /* Niebieski */
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-weight: bold;
+  background-color: #007bff; /* Niebieski */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
+}
+@media (max-width: 768px) {
+  .btn-primary {
+    font-size: 10px;
+    padding: 5px 10px;
+  }
 }

@@ -220,7 +220,6 @@ function BaseConnect() {
                     style={{
                       textAlign: "center",
                       marginTop: "15px",
-                      fontSize: "20px",
                       color: "black",
                       fontWeight: "bold",
                     }}
@@ -228,9 +227,7 @@ function BaseConnect() {
                     Set Thresholds:
                   </h2>
                   <div className="threshold-inputs">
-                    <label style={{ minWidth: "150px" }}>
-                      Threshold warning
-                    </label>
+                    <label style={{}}>Threshold warning</label>
                     <input
                       type="number"
                       placeholder=""
@@ -240,9 +237,7 @@ function BaseConnect() {
                       className="threshold-input"
                     />
 
-                    <label style={{ minWidth: "150px" }}>
-                      Threshold critical
-                    </label>
+                    <label style={{}}>Threshold critical</label>
                     <input
                       type="number"
                       name="crit"
