@@ -1,17 +1,17 @@
-require('dotenv').config(); // Ładujemy zmienne środowiskowe z pliku .env
-const express = require('express');
-const mongoose = require('mongoose');
-const bp = require('body-parser');
-const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs'); // Import bcrypt do haszowania haseł
-const nodemailer = require('nodemailer'); // Import nodemailer do wysyłania e-maili
-const { OAuth2Client } = require('google-auth-library'); // Import klienta OAuth2 z Google
-const { connectToDatabase } = require('./db.js'); // Import połączenia z MongoDB
-const { mainFilter } = require('./mongo/MongoConnectFilter.js');
-const { mainoo } = require('./mongo/MongoConnect.js');
-const { mainFilterCal } = require('./mongo/MongoConnectFilterCalendar.js');
-const { Predictive } = require('./mongo/MongoConnectPredictive.js');
+require("dotenv").config(); // Ładujemy zmienne środowiskowe z pliku .env
+const express = require("express");
+const mongoose = require("mongoose");
+const bp = require("body-parser");
+const cors = require("cors");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs"); // Import bcrypt do haszowania haseł
+const nodemailer = require("nodemailer"); // Import nodemailer do wysyłania e-maili
+const { OAuth2Client } = require("google-auth-library"); // Import klienta OAuth2 z Google
+const { connectToDatabase } = require("./db.js"); // Import połączenia z MongoDB
+const { mainFilter } = require("./mongo/MongoConnectFilter.js");
+const { mainoo } = require("./mongo/MongoConnect.js");
+const { mainFilterCal } = require("./mongo/MongoConnectFilterCalendar.js");
+const { Predictive } = require("./mongo/MongoConnectPredictive.js");
 
 // Inicjalizacja aplikacji
 const app = express();
@@ -20,68 +20,71 @@ app.use(bp.json());
 app.use(bp.urlencoded({ extended: true }));
 
 // Model użytkownika
-const User = mongoose.model('User', new mongoose.Schema({
-  username: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  email: { type: String, required: true },
-  role: { type: String, default: 'user' } // Ustawiamy domyślną rolę
-}));
+const User = mongoose.model(
+  "User",
+  new mongoose.Schema({
+    username: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    email: { type: String, required: true },
+    role: { type: String, default: "user" }, // Ustawiamy domyślną rolę
+  })
+);
 
 const secret = process.env.JWT_SECRET; // Klucz tajny do JWT z pliku .env
 
 const oauth2Client = new OAuth2Client(
   process.env.OAUTH_CLIENT_ID,
   process.env.OAUTH_CLIENT_SECRET,
-  process.env.REDIRECT_URI, // Użyj redirect_uri z pliku .env
+  process.env.REDIRECT_URI // Użyj redirect_uri z pliku .env
 );
 
 oauth2Client.setCredentials({
-  refresh_token: process.env.OAUTH_REFRESH_TOKEN
+  refresh_token: process.env.OAUTH_REFRESH_TOKEN,
 });
 
 oauth2Client.getAccessToken((err, accessToken) => {
   if (err) {
-    console.error('Error getting access token:', err);
+    console.error("Error getting access token:", err);
     return;
   }
 
   const transporter = nodemailer.createTransport({
-    service: 'Gmail',
+    service: "Gmail",
     auth: {
-      type: 'OAuth2',
+      type: "OAuth2",
       user: process.env.EMAIL_USER,
       clientId: process.env.OAUTH_CLIENT_ID,
       clientSecret: process.env.OAUTH_CLIENT_SECRET,
       refreshToken: process.env.OAUTH_REFRESH_TOKEN,
       accessToken: accessToken,
-    }
+    },
   });
 
   // Generujemy URL autoryzacji
-  const scopes = ['https://mail.google.com/'];
+  const scopes = ["https://mail.google.com/"];
   const authUrl = oauth2Client.generateAuthUrl({
-    access_type: 'offline', // 'offline' uzyskuje refresh token
+    access_type: "offline", // 'offline' uzyskuje refresh token
     scope: scopes,
-    redirect_uri: process.env.REDIRECT_URI // Używaj redirect_uri z pliku .env
+    redirect_uri: process.env.REDIRECT_URI, // Używaj redirect_uri z pliku .env
   });
 
-  console.log('Autoryzuj tę aplikację, odwiedzając ten URL:', authUrl);
+  console.log("Autoryzuj tę aplikację, odwiedzając ten URL:", authUrl);
 
   // Połączenie z bazą danych
   connectToDatabase();
 
   // Definicja tras
-  app.get('/api', async (req, res) => {
+  app.get("/api", async (req, res) => {
     try {
       const result = await mainoo();
       res.json({ message: result });
     } catch (error) {
-      console.error('Błąd podczas pobierania danych:', error);
-      res.status(500).json({ message: 'Błąd wewnętrzny serwera' });
+      console.error("Błąd podczas pobierania danych:", error);
+      res.status(500).json({ message: "Błąd wewnętrzny serwera" });
     }
   });
 
-  app.post('/api/data', async (req, res) => {
+  app.post("/api/data", async (req, res) => {
     const { startDate, endDate } = req.body;
     try {
       const startingDate = new Date(startDate);
@@ -90,16 +93,19 @@ oauth2Client.getAccessToken((err, accessToken) => {
       startingDate.setHours(startingDate.getHours() + 2);
       endingDate.setHours(endingDate.getHours() + 26);
 
-      const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
-      
+      const result = await mainFilterCal(
+        startingDate.toISOString(),
+        endingDate.toISOString()
+      );
+
       res.json({ message: result });
     } catch (error) {
-      console.error('Błąd podczas przetwarzania danych:', error);
-      res.status(500).json({ message: 'Błąd wewnętrzny serwera' });
+      console.error("Błąd podczas przetwarzania danych:", error);
+      res.status(500).json({ message: "Błąd wewnętrzny serwera" });
     }
   });
 
-  app.post('/check-email', async (req, res) => {
+  app.post("/check-email", async (req, res) => {
     const { email, username } = req.body;
 
     try {
@@ -108,63 +114,75 @@ oauth2Client.getAccessToken((err, accessToken) => {
 
       if (existingUserByEmail) {
         return res.json({ emailExists: true, usernameExists: false });
-      } 
+      }
       if (existingUserByUsername) {
         return res.json({ emailExists: false, usernameExists: true });
-      } 
+      }
       return res.json({ emailExists: false, usernameExists: false });
     } catch (err) {
       console.error(err);
-      return res.status(500).json({ error: 'Błąd serwera' });
+      return res.status(500).json({ error: "Błąd serwera" });
     }
   });
 
-  app.post('/api/dataPred', async (req, res) => {
+  app.post("/api/dataPred", async (req, res) => {
     try {
       const result = await Predictive();
-      console.log('predictive', result)
+      console.log("predictive", result);
       res.json({ message: result });
     } catch (error) {
-      console.error('Błąd podczas przetwarzania danych:', error);
-      res.status(500).json({ message: 'Błąd wewnętrzny serwera' });
+      console.error("Błąd podczas przetwarzania danych:", error);
+      res.status(500).json({ message: "Błąd wewnętrzny serwera" });
     }
   });
 
-  app.post('/api/dataCal', async (req, res) => {
+  app.post("/api/dataCal", async (req, res) => {
     const { startDate, endDate } = req.body;
     try {
       const startingDate = new Date(startDate);
       const endingDate = new Date(endDate);
 
-      startingDate.setHours(startingDate.getHours() );
+      startingDate.setHours(startingDate.getHours());
       endingDate.setHours(endingDate.getHours() + 24);
-      const result = await mainFilterCal(startingDate.toISOString(), endingDate.toISOString());
+      const result = await mainFilterCal(
+        startingDate.toISOString(),
+        endingDate.toISOString()
+      );
       res.json({ message: result });
     } catch (error) {
-      console.error('Błąd podczas przetwarzania danych:', error);
-      res.status(500).json({ message: 'Błąd wewnętrzny serwera' });
+      console.error("Błąd podczas przetwarzania danych:", error);
+      res.status(500).json({ message: "Błąd wewnętrzny serwera" });
     }
   });
 
-  app.post('/register', async (req, res) => {
-    const { username, password, email, role } = req.body;  // Upewnij się, że rola jest przekazywana
+  app.post("/register", async (req, res) => {
+    const { username, password, email, role } = req.body; // Upewnij się, że rola jest przekazywana
 
     if (!username || !password || !email) {
-      return res.status(400).json({ message: 'Proszę wypełnić wszystkie pola' });
+      return res
+        .status(400)
+        .json({ message: "Proszę wypełnić wszystkie pola" });
     }
 
     try {
       const hashedPassword = bcrypt.hashSync(password, 8);
-      const newUser = new User({ username, email, password: hashedPassword, role: role }); // Ustaw domyślną rolę, jeśli nie jest podana
+      const newUser = new User({
+        username,
+        email,
+        password: hashedPassword,
+        role: role,
+      }); // Ustaw domyślną rolę, jeśli nie jest podana
       await newUser.save();
-      res.status(201).send('Użytkownik zarejestrowany');
+      res.status(201).send("Użytkownik zarejestrowany");
     } catch (err) {
-      console.error('Błąd podczas rejestracji:', err);
-      res.status(500).json({ message: 'Użytkownik już istnieje lub błąd wewnętrzny' });
+      console.error("Błąd podczas rejestracji:", err);
+      res
+        .status(500)
+        .json({ message: "Użytkownik już istnieje lub błąd wewnętrzny" });
     }
   });
 
-  app.post('/login', async (req, res) => {
+  app.post("/login", async (req, res) => {
     const { username, password } = req.body;
     try {
       // Szukamy użytkownika w bazie danych
@@ -175,74 +193,81 @@ oauth2Client.getAccessToken((err, accessToken) => {
         const token = jwt.sign(
           { username: user.username, role: user.role, email: user.email }, // Dodajemy email do tokena
           secret,
-          { expiresIn: '1h' }
+          { expiresIn: "1h" }
         );
         // Zwracamy token, nazwę użytkownika i rolę
-        res.json({ token, username: user.username, role: user.role, email: user.email });
+        res.json({
+          token,
+          username: user.username,
+          role: user.role,
+          email: user.email,
+        });
       } else {
-        res.status(401).send('Nieprawidłowe dane logowania');
+        res.status(401).send("Nieprawidłowe dane logowania");
       }
     } catch (err) {
-      console.error('Błąd podczas logowania:', err);
-      res.status(500).json({ message: 'Błąd wewnętrzny serwera' });
+      console.error("Błąd podczas logowania:", err);
+      res.status(500).json({ message: "Błąd wewnętrzny serwera" });
     }
   });
 
   // Definiujemy router do zarządzania użytkownikami
   const userRouter = express.Router();
 
-  userRouter.put('/users/:id', async (req, res) => {
+  userRouter.put("/users/:id", async (req, res) => {
     const { username, password, email, role } = req.body;
-  
+
     try {
       // Prepare an object for fields to be updated
       const updateFields = { username, email, role };
-  
+
       // If a new password is provided, hash it and add to the update object
       if (password) {
         const hashedPassword = await bcrypt.hash(password, 10);
         updateFields.password = hashedPassword;
       }
-  
+
       // Find the user by ID and update with new values
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         updateFields,
-        { new: true }  // Return the updated user document
+        { new: true } // Return the updated user document
       );
-  
+
       res.json(updatedUser);
     } catch (err) {
-      console.error('Error updating user:', err);
-      res.status(500).json({ message: 'Error updating user' });
+      console.error("Error updating user:", err);
+      res.status(500).json({ message: "Error updating user" });
     }
   });
 
-  userRouter.delete('/users/:id', async (req, res) => {
+  userRouter.delete("/users/:id", async (req, res) => {
     try {
       await User.findByIdAndDelete(req.params.id);
-      res.json({ message: 'Użytkownik usunięty' });
+      res.json({ message: "Użytkownik usunięty" });
     } catch (err) {
-      console.error('Błąd podczas usuwania użytkownika:', err);
-      res.status(500).json({ message: 'Błąd podczas usuwania użytkownika' });
+      console.error("Błąd podczas usuwania użytkownika:", err);
+      res.status(500).json({ message: "Błąd podczas usuwania użytkownika" });
     }
   });
 
-  userRouter.get('/users', async (req, res) => {
+  userRouter.get("/users", async (req, res) => {
     try {
       const users = await User.find();
       res.json(users);
     } catch (err) {
-      console.error('Błąd podczas pobierania użytkowników:', err);
-      res.status(500).json({ message: 'Błąd podczas pobierania użytkowników' });
+      console.error("Błąd podczas pobierania użytkowników:", err);
+      res.status(500).json({ message: "Błąd podczas pobierania użytkowników" });
     }
   });
 
-  app.post('/api/send-email', async (req, res) => {
+  app.post("/api/send-email", async (req, res) => {
     const { to, subject, text } = req.body;
 
     if (!to || !subject || !text) {
-      return res.status(400).json({ error: 'Brak wymaganych pól: do, temat lub treść' });
+      return res
+        .status(400)
+        .json({ error: "Brak wymaganych pól: do, temat lub treść" });
     }
 
     const mailOptions = {
@@ -254,20 +279,26 @@ oauth2Client.getAccessToken((err, accessToken) => {
 
     try {
       const info = await transporter.sendMail(mailOptions);
-      res.status(200).json({ message: `E-mail wysłany pomyślnie: ${info.response}` });
+      res
+        .status(200)
+        .json({ message: `E-mail wysłany pomyślnie: ${info.response}` });
     } catch (error) {
       if (error.responseCode === 535) {
-        res.status(500).json({ error: 'Błąd uwierzytelniania: Nieprawidłowe dane logowania' });
+        res.status(500).json({
+          error: "Błąd uwierzytelniania: Nieprawidłowe dane logowania",
+        });
       } else {
-        res.status(500).json({ error: 'Błąd podczas wysyłania e-maila' });
+        res.status(500).json({ error: "Błąd podczas wysyłania e-maila" });
       }
-      console.error('Błąd podczas wysyłania e-maila:', error);
+      console.error("Błąd podczas wysyłania e-maila:", error);
     }
   });
 
-  app.use('/api', userRouter);
+  app.use("/api", userRouter);
 
-  app.listen(5001, () => {
-    console.log('Serwer nasłuchuje na porcie 5001');
+  const port = process.env.PORT || 5001;
+
+  app.listen(port, () => {
+    console.log(`Serwer nasłuchuje na porcie ${port}`);
   });
 });
