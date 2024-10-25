@@ -127,5 +127,6 @@ button:active {
   }
   button.rbc-button-link span {
     font-size: 6px;
+    text-align: left;
   }
 }
