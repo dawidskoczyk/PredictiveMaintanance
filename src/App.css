@@ -84,7 +84,7 @@ table {
 
 .datepicker-overlay {
   position: absolute;
-  top: -450px;
+  top: -550px;
   left: 50px;
   z-index: 999;
   background-color: white;
