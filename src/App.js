@@ -290,7 +290,7 @@ function BaseConnect() {
           marginLeft: "4%",
           marginTop: "5%",
           color: "blue",
-          fontSize: "48px",
+          //fontSize: "48px",
         }}
       >
         Filtered data

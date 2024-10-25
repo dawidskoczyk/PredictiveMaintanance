@@ -125,4 +125,7 @@ button:active {
     touch-action: manipulation; /* Optymalizacja dla dotyku */
     -webkit-tap-highlight-color: transparent; /* Usuwa domyślne podświetlenie na iOS */
   }
+  button.rbc-button-link span {
+    font-size: 6px;
+  }
 }
